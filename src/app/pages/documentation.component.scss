@@ -1,0 +1,254 @@
+:host {
+    display: block;
+    //color: #3C3C3C;
+}
+
+.page {
+    display: flex;
+    max-width: 1140px;
+    margin: auto;
+}
+
+.docs-header {
+    padding: 30px 0;
+}
+
+.docs-logo {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #171B1E;
+    letter-spacing: 1px;
+
+    img {
+        height: 26px;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    div {
+        margin-left: 10px;
+        position: relative;
+    }
+}
+
+.project {
+    color: #888;
+}
+
+.content {
+    //text-align: left;
+    padding: 50px;
+    margin: 0;
+    font-size: 15px;
+    color: rgb(230, 231, 232);
+    line-height: 170%;
+    max-width: 750px;
+    text-align: justify;
+    flex: 1;
+    //box-shadow: -1px 0 1px 0 rgba(196, 196, 196, 0.50);
+
+    ::ng-deep {
+        h1, h2, h3, h4, h5 {
+            text-align: left;
+            color: white;
+        }
+        //  color: #333333;
+        //}
+
+        overflow: hidden;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 36px;
+        }
+
+        h2 {
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 600;
+            margin-top: 35px;
+        }
+
+        h2 {
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        h3, h4 {
+            font-weight: bold;
+        }
+
+        //.subline {
+        //  color: #7c7c7c;
+        //}
+    }
+}
+
+.table-of-content {
+    text-align: left;
+    max-width: 250px;
+    padding-top: 80px;
+    margin-right: 20px;
+
+    a {
+        display: block;
+        font-size: 14px;
+        padding: 3px 0;
+
+        &.h4 {
+            padding-left: 15px;
+        }
+
+        &.h5 {
+            padding-left: 25px;
+        }
+    }
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    flex-basis: 220px;
+    margin-left: 20px;
+    max-width: 300px;
+    text-align: left;
+    max-height: 100vh;
+
+    overflow: auto;
+    overflow: overlay;
+    scrollbar-width: thin;
+
+    a {
+        &.active {
+            color: var(--color-link-active);
+        }
+    }
+
+    &::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(169, 173, 175, 0.77);
+        border-radius: 8px;
+        border: 2px solid rgba(0, 0, 0, 0.01);
+        background-clip: padding-box;
+
+        &:hover {
+            background: #727475;
+            border: 2px solid rgba(0, 0, 0, 0.01);
+            background-clip: padding-box;
+        }
+    }
+
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0;
+
+    &.showMenu {
+        position: absolute;
+        z-index: 1000;
+        margin-left: 0;
+        top: 35px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0 25px;
+        max-width: unset;
+        background-color: white;
+        text-align: center;
+
+        .docs-logo {
+            justify-content: center;
+        }
+    }
+}
+
+.table-of-content, nav .category {
+    a, a:link {
+        display: block;
+        color: #D1D1D1;
+        font-weight: 500;
+        margin-top: 1px;
+        text-decoration: none;
+        font-size: 13px;
+
+        &:hover {
+            color: var(--color-link-hover);
+        }
+
+        &.active {
+            font-weight: bold;
+            color: var(--color-link-active);
+        }
+    }
+
+    .category-title {
+        font-weight: bold;
+        color: white;
+    }
+
+    &.category {
+        margin-bottom: 35px;
+    }
+
+    .section-title {
+        font-size: 13px;
+        margin-top: 10px;
+        color: grey;
+    }
+
+    section {
+        padding-left: 5px;
+        margin-bottom: 15px;
+    }
+}
+
+.chapters {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 15px;
+
+    svg {
+        margin-left: 5px;
+        position: relative;
+        top: 2px;
+    }
+}
+
+@media(max-width: 800px) {
+    .chapters {
+        display: flex;
+        cursor: pointer;
+    }
+    .wrapper {
+        display: block;
+        padding-top: 15px;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .table-of-content {
+        display: none;
+    }
+
+    nav.showMenu {
+        display: block;
+    }
+
+    .content {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,176 @@
+# Event System
+
+An event system allows application components within the same process to communicate by sending and listening to events. This aids in code modularization by facilitating message exchanges between functions that might not directly be aware of each other.
+
+The application or library provides an opportunity to execute additional functions at specific points during its operation. These additional functions register themselves as what are termed "event listeners".
+
+An event can take various forms:
+
+- The application starts up or shuts down.
+- A new user is created or deleted.
+- An error is thrown.
+- A new HTTP request is received.
+
+The Deepkit Framework and its associated libraries offer a range of events that users can listen to and respond to. However, users also have the flexibility to create as many custom events as needed, allowing for modular expansion of the application.
+
+Below is an example of the low-level API from @deepkit/event. When using the Deepkit Framework, event listeners are not registered directly via the EventDispatcher, but rather through modules. But you can still use the low-level API if you want to.
+
+```typescript
+import { EventDispatcher, EventToken } from '@deepkit/event';
+
+//first argument can be a injector context to resolve dependencies for dependency injection
+const dispatcher = new EventDispatcher();
+const MyEvent = new EventToken('my-event');
+
+dispatcher.listen(MyEvent, (event) => {
+    console.log('MyEvent triggered!');
+});
+dispatcher.dispatch(MyEvent);
+```
+
+## Installation
+
+Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+
+Once this is successfully accomplished, you can install @deepkit/event or the entire Deepkit Framework, which already includes the library under the hood.
+
+```sh
+npm install @deepkit/event
+```
+
+It's important to note that @deepkit/event relies on TypeScript decorators for its class listeners. Therefore, when using a class, you'll need to enable the `experimentalDecorators` feature.
+
+_File: tsconfig.json_
+
+```json
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es6",
+    "moduleResolution": "node",
+    "experimentalDecorators": true
+  },
+  "reflection": true
+}
+```
+
+As soon as the library is installed, the API can be used directly.
+
+## Event Token
+
+At the core of Deepkit's event system are Event Tokens. These are unique objects that specify both the event ID and the type of event. An event token serves two primary purposes:
+
+- It acts as a trigger for an event.
+- It listens to the event it triggers.
+
+When an event gets triggered from an event token, the owner of that token is conceptually the entity that initiated the event. The event token decides the data available at the event and whether asynchronous event listeners are allowed.
+
+```typescript
+import { EventToken } from '@deepkit/event';
+
+const MyEvent = new EventToken('my-event');
+
+dispatcher.listen(MyEvent, (event) => {
+    console.log('MyEvent triggered!');
+});
+dispatcher.dispatch(MyEvent);
+```
+
+### Creating Custom Event Data:
+
+
+Using `DataEventToken` from @deepkit/event:
+
+```typescript
+import { DataEventToken } from '@deepkit/event';
+class User {}
+
+const MyEvent = new DataEventToken<User>('my-event');
+```
+
+Extending BaseEvent:
+
+```typescript
+class MyEvent extends BaseEvent {
+    user: User = new User;
+}
+const MyEventToken = new EventToken<MyEvent>('my-event');
+```
+
+## Functional Listeners
+
+Functional listeners allow users to register a simple function callback with the dispatcher directly. Here's how:
+
+```typescript
+dispatcher.listen(MyEvent, (event) => {
+    console.log('MyEvent triggered!');
+});
+```
+
+If you wish to introduce additional arguments like `logger: Logger`, they are automatically injected by the dependency injection system, thanks to Deepkit's runtime type reflection.
+
+```typescript
+dispatcher.listen(MyEvent, (event, logger: Logger) => {
+    console.log('MyEvent triggered!');
+});
+```
+
+Note that the first argument has to be the event itself. You can not avoid this argument.
+
+If you use `@deepkit/app`, you can also use app.listen() to register a functional listener.
+
+```typescript
+import {App} from '@deepkit/app';
+
+new App()
+    .listen(MyEvent, (event) => {
+        console.log('MyEvent triggered!');
+    })
+    .run();
+```
+
+## Class-based Listeners
+
+Class listeners are classes adorned with decorators. They offer a structured way to listen to events.
+
+```typescript
+import {App} from '@deepkit/app';
+
+class MyListener {
+    @eventDispatcher.listen(UserAdded)
+    onUserAdded(event: typeof UserAdded.event) {
+        console.log('User added!', event.user.username);
+    }
+}
+
+new App({
+    listeners: [MyListener],
+}).run();
+```
+
+For class listeners, dependency injection works through either the method arguments or the constructor.
+
+## Dependency Injection
+
+Deepkit's event system boasts a powerful dependency injection mechanism. When using functional listeners, additional arguments get automatically injected thanks to the runtime type reflection system. Similarly, class-based listeners support dependency injection through either the constructor or method arguments.
+
+For example, in the case of a functional listener, if you add an argument like `logger: Logger`, the correct Logger instance gets automatically provided when the function gets called.
+
+## Event Propagation
+
+Every event object comes equipped with a stop() function, allowing you to control the propagation of the event. If an event is halted, no subsequent listeners (in the order they were added) will be executed. This provides granular control over the execution and handling of events, especially useful in scenarios where certain conditions may require the halting of event processing.
+
+For instance:
+
+```typescript
+dispatcher.listen(MyEventToken, (event) => {
+    if (someCondition) {
+        event.stop();
+    }
+    // Further processing
+});
+```
+
+With the Deepkit framework's event system, developers can create modular, scalable, and maintainable applications with ease. Understanding the event system provides the flexibility to tailor the application's behavior based on specific occurrences or conditions.
+
+

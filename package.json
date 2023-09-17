@@ -2,10 +2,20 @@
   "name": "deepkit-website2",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "app:start": "NODE_OPTIONS=--preserve-symlinks ng serve",
+    "app:build": "NODE_OPTIONS=--preserve-symlinks ng build --configuration production",
+    "app:build:dev": "NODE_OPTIONS=--preserve-symlinks ng build --watch --configuration development",
+    "app:watch": "NODE_OPTIONS=--preserve-symlinks ng build --watch --configuration development",
+    "app:test": "NODE_OPTIONS=--preserve-symlinks ng test",
+    "ssr:build": "NODE_OPTIONS=--preserve-symlinks ng run app:server",
+    "ssr:watch": "NODE_OPTIONS=--preserve-symlinks ng run app:server:development --watch",
+    "server": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node --watch -r ts-node/register -r tsconfig-paths/register src/server/app.ts server:start",
+    "server:prod": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register dist/src/server/app.js server:start",
+    "server:build": "tsc -p tsconfig.server.json",
+    "dev": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\" \"npm run server\"",
+    "app": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register src/server/app.ts",
+    "watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server src/server/app.ts",
+    "build": "npm run app:build && npm run ssr:build && npm run server:build"
   },
   "private": true,
   "dependencies": {
@@ -16,8 +26,20 @@
     "@angular/forms": "^16.2.0",
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
+    "@angular/platform-server": "^16.2.5",
     "@angular/router": "^16.2.0",
+    "@deepkit/app": "^1.0.1-alpha.98",
+    "@deepkit/core": "^1.0.1-alpha.97",
+    "@deepkit/framework": "^1.0.1-alpha.99",
+    "@deepkit/orm": "^1.0.1-alpha.98",
+    "@deepkit/type": "^1.0.1-alpha.97",
+    "@moox/markdown-to-json": "^1.0.0",
+    "@nguniversal/common": "^16.2.0",
+    "@types/prismjs": "^1.26.0",
+    "prismjs": "^1.29.0",
     "rxjs": "~7.8.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
@@ -25,6 +47,7 @@
     "@angular-devkit/build-angular": "^16.2.2",
     "@angular/cli": "~16.2.2",
     "@angular/compiler-cli": "^16.2.0",
+    "@deepkit/type-compiler": "^1.0.1-alpha.97",
     "typescript": "~5.1.3"
   }
 }

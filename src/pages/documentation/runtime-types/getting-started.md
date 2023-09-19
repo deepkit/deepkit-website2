@@ -25,8 +25,8 @@ _File: tsconfig.json_
 
 ## Type compiler
 
-TypeScript itself does not allow to configure the type compiler via a `tsconfig.json`. It is necessary to either use the TypeScript compiler API directly or a build system like Webpack with _ts-loader_. To save this inconvenient way for Deepkit users, the Deepkit type compiler automatically installs itself in `node_modulestypescript` once `@deepkit/type-compiler` is installed (this is done via NPM install hooks).
-This makes it possible for all build tools that access the locally installed TypeScript (the one in `node_modulestypescript`) to automatically have the type compiler enabled. This makes _tsc_, Angular, webpack, _ts-node_, and some other tools automatically work with the deepkit type compiler.
+TypeScript itself does not allow to configure the type compiler via a `tsconfig.json`. It is necessary to either use the TypeScript compiler API directly or a build system like Webpack with _ts-loader_. To save this inconvenient way for Deepkit users, the Deepkit type compiler automatically installs itself in `node_modules/typescript` once `@deepkit/type-compiler` is installed (this is done via NPM install hooks).
+This makes it possible for all build tools that access the locally installed TypeScript (the one in `node_modules/typescript`) to automatically have the type compiler enabled. This makes _tsc_, Angular, webpack, _ts-node_, and some other tools automatically work with the deepkit type compiler.
 
 If the type compiler could not be successfully installed automatically (for example because NPM install hooks are disabled), this can be done manually with the following command:
 

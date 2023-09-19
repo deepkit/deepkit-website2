@@ -1,11 +1,20 @@
 # Framework
 
+Deepkit Framework is a highly modular, scalable, and fast TypeScript framework for building web applications, APIs, and microservices. 
+It is designed to be as flexible as necessary and as structured as required, allowing developers to maintain high development speeds, both in the short term and the long term.
+
 ## Installation
 
-Deepkit Framework is based on runtime types in Deepkit Type. Make sure that `@deepkit/type` is installed correctly. See xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+Deepkit Framework is based on TypeScript and runtime types in Deepkit Type. Let's start by installing the required packages.
 
 ```sh
-npm install typescript ts-node @deepkit/framework
+npm install typescript ts-node @deepkit/framework @deepkit/type @deepkit/http @deepkit/type-compiler
+```
+
+Next, we make sure Deepkit's type compiler is installed into the installed TypeScript package at `node_modules/typescript`:
+
+```sh
+./node_modules/.bin/deepkit-type-install
 ```
 
 Make sure that all peer dependencies are installed. By default, NPM 7+ installs them automatically.
@@ -54,26 +63,18 @@ _File: app.ts_
 #!/usr/bin/env ts-node-script
 import { App } from '@deepkit/app';
 import { Logger } from '@deepkit/logger';
-import { cli, Command } from '@deepkit/app';
 import { FrameworkModule } from '@deepkit/framework';
 
-@cli.controller('test')
-export class TestCommand implements Command {
-    constructor(protected logger: Logger) {
-    }
-
-    async execute() {
-        this.logger.log('Hello World!');
-    }
-}
-
 new App({
-    controllers: [TestCommand],
-    imports: [new FrameworkModule]
-}).run();
+    imports: [new FrameworkModule({debug: true})]
+})
+    .command('test', (logger: Logger) => {
+        logger.log('Hello World!');
+    })
+    .run();
 ```
 
-In this code, you can see that we have defined a test command using the `TestCommand` class and created a new app that we run directly using `run()`. By running this script, we start the app.
+In this code, you can see that we have defined a test command and created a new app that we run directly using `run()`. By running this script, we start the app.
 
 With the shebang in the first line (`#!...`) we can make our script executable with the following command.
 
@@ -81,7 +82,7 @@ With the shebang in the first line (`#!...`) we can make our script executable w
 chmod +x app.ts
 ```
 
-Und dann ausführen:
+and then run it directly.
 
 ```sh
 $ ./app.ts
@@ -100,42 +101,98 @@ COMMANDS
   test
 ```
 
+Alternatively, you can use `ts-node` to run the script.
+
 Now, to execute our test command, we run the following command.
 
 ```sh
+$ ts-node app.ts text
+Hello World
+
 $ ./app.ts test
 Hello World
 ```
 
 In Deepkit Framework everything is now done via this `app.ts`. You can rename the file as you like or create more. Custom CLI commands, HTTP/RPC server, migration commands, and so on are all started from this entry point.
 
-To start the HTTP/RPC server, run the following:
+Since the app also imports the `FrameworkModule`, we see there are more commands available grouped into topics. 
+One of them is `server:start`, which starts the HTTP server.
 
 ```sh
-./app.ts server:start
+$ ./app.ts server:start
+```
+
+This currently does nothing since we have not defined any HTTP controllers yet. Let's do that now.
+
+```typescript
+import { App } from '@deepkit/app';
+import { HttpRouterRegistry } from '@deepkit/http';
+
+const app = new App({
+    imports: [new FrameworkModule({debug: true})]
+});
+
+app.command('test', (logger: Logger) => {
+    logger.log('Hello World!');
+});
+
+
+const router = app.get(HttpRouterRegistry);
+
+router.get('/', () => {
+    return 'Hello World';
+})
+
+app.run();
+```
+
+When you execute the `server:start` command again, you will see that the HTTP server is now started and the route `/` is available.
+
+```sh
+$ curl http://localhost:8080/
+Hello World
 ```
 
 To serve requests please read chapter xref:http.adoc[HTTP] or xref:rpc.adoc[RPC]. In chapter xref:cli.adoc[CLI] you can learn more about CLI commands.
 
 ## App
 
-Via the `App` object starts like application.
+The `App` class is the main entry point for your application. It is responsible for loading all modules, configuration, and starting the application.
+It is also responsible for loading all CLI commands and executing them. Modules like FrameworkModule provide additional commands, register event listeners,
+provide controllers for HTTP/RPC, service providers and so on.
 
-The `run()` method lists the arguments and executes the corresponding CLI controller. Since `FrameworkModule` provides its own CLI controllers, which are responsible for starting the HTTP server, for example, these can be called via it.
-
-The `App` object can also be used to access the Dependency Injection container without running a CLI controller.
+This `app` object can also be used to access the Dependency Injection container without running a CLI controller.
 
 ```typescript
 const app = new App({
-    controllers: [TestCommand],
     imports: [new FrameworkModule]
 });
 
 //get access to all registered services
 const eventDispatcher = app.get(EventDispatcher);
+```
 
-//then run the app, or do something else
-app.run();
+You can retrieve the `EventDispatcher` because the `FrameworkModule` registers it as a service provider like many other (Logger, ApplicationServer, and [much more](https://github.com/deepkit/deepkit-framework/blob/master/packages/framework/src/module.ts)).
+
+You can also register your own service.
+
+```typescript
+
+class MyService {
+    constructor(private logger: Logger) {}
+    helloWorld() {
+        this.logger.log('Hello World');
+    }
+}
+
+const app = new App({
+    providers: [MyService],
+    imports: [new FrameworkModule]
+});
+
+const service = app.get(MyService);
+
+service.helloWorld();
 ```
 
 ## Modules

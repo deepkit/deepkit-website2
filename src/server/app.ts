@@ -35,7 +35,7 @@ new App({
     .command('search:index', (algolia: Algolia) => algolia.index())
     .command('search:find', (query: string, algolia: Algolia) => algolia.find(query))
     .command('ml:gen-question', mlGenQuestionCommand)
-    .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_' })
+    .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);
         if (assets) {

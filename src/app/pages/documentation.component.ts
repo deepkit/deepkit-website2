@@ -7,6 +7,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
+import { LoadingComponent } from "@app/app/components/loading";
 
 @Component({
     standalone: true,
@@ -18,7 +19,8 @@ import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
         RouterLinkActive,
         RouterLink,
         NgForOf,
-        FormsModule
+        FormsModule,
+        LoadingComponent
     ],
     styleUrls: ['./documentation.component.scss'],
     template: `
@@ -142,18 +144,19 @@ import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
             </nav>
             <div class="content">
 
+                <app-loading *ngIf="loading"></app-loading>
+
                 <app-title *ngIf="project" value="{{project}}"></app-title>
+                <div class="error" *ngIf="error">
+                    {{error}}
+                </div>
                 <div *ngIf="page">
                     <app-title value="{{page.title}}"></app-title>
 
                     <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
 
                     <div *ngIf="project" class="project">{{project}}</div>
-                    <h1>{{page.title}}</h1>
-
-                    <app-render-content *ngIf="subline" [content]="subline"></app-render-content>
-                    <app-render-content [content]="intro"></app-render-content>
-                    <app-render-content [content]="rest"></app-render-content>
+                    <app-render-content [content]="page.body"></app-render-content>
                 </div>
             </div>
 
@@ -171,10 +174,10 @@ export class DocumentationComponent implements OnInit {
     project = '';
 
     page?: Page;
+    error?: string;
+    loading = false;
 
     subline?: Content;
-    intro: Content[] = [];
-    rest: Content[] = [];
 
     public headers: { label: string, indent: number, link: string }[] = [];
 
@@ -206,6 +209,8 @@ export class DocumentationComponent implements OnInit {
                 this.load(url[1].path, url[0].path);
             } else if (url.length === 1) {
                 this.load(url[0].path);
+            } else {
+                this.load('');
             }
         });
     }
@@ -214,18 +219,23 @@ export class DocumentationComponent implements OnInit {
         this.project = projectMap[project] || project;
         path = path || 'index';
         if (project) path = project + '/' + path;
+        this.error = undefined;
+        this.loading = true;
+        this.cd.detectChanges();
+
         try {
             this.page = await this.client.main.getPage('documentation/' + path);
             if (!this.page) return;
 
             const parsed = parseBody(this.page.body);
             this.subline = parsed.subline;
-            this.intro = parsed.intro;
-            this.rest = parsed.rest;
             // console.log(this.subline, this.intro, this.rest);
             this.loadTableOfContent();
         } catch (error) {
             this.page = undefined;
+            this.error = String(error);
+        } finally {
+            this.loading = false;
         }
         this.cd.detectChanges();
     }

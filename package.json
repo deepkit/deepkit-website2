@@ -12,7 +12,7 @@
     "server": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node --watch -r ts-node/register -r tsconfig-paths/register src/server/app.ts server:start",
     "server:prod": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register dist/src/server/app.js server:start",
     "server:build": "tsc -p tsconfig.server.json",
-    "server:watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server src/server/app.ts server:start",
+    "server:watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server --watch-path src/pages src/server/app.ts server:start",
     "dev": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\" \"npm run server:watch\"",
     "app": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register src/server/app.ts",
     "build": "npm run app:build && npm run ssr:build && npm run server:build"

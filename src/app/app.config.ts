@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         AppMetaStack,
         provideClientHydration(),
-        provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration: 'enabled'})),
+        provideRouter(routes, withInMemoryScrolling({anchorScrolling: 'enabled',  scrollPositionRestoration: 'enabled'})),
         withZoneModule(),
         ControllerClient,
         createRpcWebSocketClientProvider(),

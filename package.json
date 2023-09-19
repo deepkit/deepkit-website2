@@ -12,9 +12,9 @@
     "server": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node --watch -r ts-node/register -r tsconfig-paths/register src/server/app.ts server:start",
     "server:prod": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register dist/src/server/app.js server:start",
     "server:build": "tsc -p tsconfig.server.json",
-    "dev": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\" \"npm run server\"",
+    "server:watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server src/server/app.ts server:start",
+    "dev": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\" \"npm run server:watch\"",
     "app": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register src/server/app.ts",
-    "watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server src/server/app.ts",
     "build": "npm run app:build && npm run ssr:build && npm run server:build"
   },
   "private": true,
@@ -36,8 +36,11 @@
     "@moox/markdown-to-json": "^1.0.0",
     "@nguniversal/common": "^16.2.0",
     "@types/prismjs": "^1.26.0",
+    "algoliasearch": "^4.20.0",
     "prismjs": "^1.29.0",
     "rxjs": "~7.8.0",
+    "tiny-glob": "^0.2.9",
+    "openai": "^4.8.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.3.0",
@@ -48,6 +51,7 @@
     "@angular/cli": "~16.2.2",
     "@angular/compiler-cli": "^16.2.0",
     "@deepkit/type-compiler": "^1.0.1-alpha.97",
+    "concurrently": "^8.2.1",
     "typescript": "~5.1.3"
   }
 }

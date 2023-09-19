@@ -92,6 +92,12 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 this.renderer.addClass(element, 'text');
             }
 
+            if (content.tag.startsWith('h') && content.props && content.props.id) {
+                const a = this.renderer.createElement('a');
+                this.renderer.setAttribute(a, 'name', content.props.id);
+                this.renderer.appendChild(parent, a);
+            }
+
             if (content.tag === 'img') {
                 const wrapperDiv = this.renderer.createElement('div');
                 this.renderer.addClass(wrapperDiv, 'image');

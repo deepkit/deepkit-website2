@@ -7,6 +7,7 @@
     display: flex;
     max-width: 1140px;
     margin: auto;
+    padding: 0;
 }
 
 .docs-header {
@@ -38,9 +39,22 @@
     color: #888;
 }
 
+.search {
+    position: relative;
+    .search-results {
+        position: absolute;
+        left: 0;
+        top: 50px;
+        width: 350px;
+        background-color: black;
+    }
+}
+
 .content {
+    min-height: 100vh;
     //text-align: left;
     padding: 50px;
+    padding-top: 120px;
     margin: 0;
     font-size: 15px;
     color: rgb(230, 231, 232);
@@ -64,6 +78,7 @@
             font-size: 28px;
             font-weight: 600;
             line-height: 36px;
+            margin-top: 0;
         }
 
         h2 {
@@ -102,6 +117,13 @@
         font-size: 14px;
         padding: 3px 0;
 
+        &.intend-1 {
+            padding-left: 15px;
+        }
+        &.intend-2 {
+            padding-left: 30px;
+        }
+
         &.h4 {
             padding-left: 15px;
         }
@@ -114,7 +136,7 @@
 
 nav {
     position: sticky;
-    top: 0;
+    margin-top: 90px;
     flex-basis: 220px;
     margin-left: 20px;
     max-width: 300px;
@@ -171,6 +193,10 @@ nav {
             justify-content: center;
         }
     }
+}
+
+.table-of-content {
+    padding-top: 90px;
 }
 
 .table-of-content, nav .category {

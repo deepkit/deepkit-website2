@@ -1,5 +1,8 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NgForOf, NgIf } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { SearchComponent } from "@app/app/components/search.component";
 
 @Component({
     selector: 'dw-header',
@@ -9,10 +12,12 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
             <a class="logo" routerLink="/"><img src="/assets/images/deepkit_white.svg"/></a>
             <!--            <a class="logo" *ngIf="startPage" routerLink="/"><img src="/assets/images/deepkit_white_text.svg"/></a>-->
 
+            <app-search *ngIf="search"></app-search>
+
             <a class="burger" (click)="toggleMenu()">
-                <svg width="21px" height="16px" viewBox="0 0 21 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <svg width="21px" height="16px" viewBox="0 0 21 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="burger" [attr.fill]="startPage ? 'white' : 'black'">
+                        <g id="burger" [attr.fill]="'white'">
                             <rect id="Rectangle" x="0" y="0" width="21" height="2"></rect>
                             <rect id="Rectangle" x="0" y="7" width="21" height="2"></rect>
                             <rect id="Rectangle" x="0" y="14" width="21" height="2"></rect>
@@ -27,23 +32,25 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
                 <a routerLinkActive="active" routerLink="/community">Community</a>
                 <a routerLinkActive="active" routerLink="/documentation">Documentation</a>
             </nav>
-
         </div>
     `,
     host: {
-        '[class.fromStartPage]': 'fromStartPage',
-        '[class.startPage]': 'startPage',
+        '[class.sticky]': 'sticky',
     },
     imports: [
         RouterLink,
-        RouterLinkActive
+        RouterLinkActive,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule,
+        SearchComponent
     ],
     styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
     public menu = '';
-    @Input() startPage: boolean = false;
-    @Input() fromStartPage: boolean = false;
+    @Input() sticky: boolean = false;
+    @Input() search: boolean = false;
 
     protected lastTimeout: any;
 

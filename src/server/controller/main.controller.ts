@@ -1,14 +1,15 @@
 import { rpc } from "@deepkit/rpc";
-import { Page } from "@app/common/models";
+import { IndexEntry, Page } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { deserialize } from "@deepkit/type";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { Logger } from "@deepkit/logger";
+import { Algolia } from "@app/server/algolia";
 
 @rpc.controller('/main')
 export class MainController {
-    constructor(private logger: Logger) {
+    constructor(private logger: Logger, private algolia: Algolia) {
     }
 
     @rpc.action()
@@ -22,59 +23,11 @@ export class MainController {
         return content;
     }
 
-    //
-    // @rpc.action()
-    // async getPosts(): Promise<Post[]> {
-    //     const dir = await findParentPath('src/posts', __dirname);
-    //     const posts: Post[] = [];
-    //
-    //     //read all markdown files in the posts folder
-    //     if (!dir) return posts;
-    //
-    //     const mdjs = require("@moox/markdown-to-json");
-    //
-    //     const files = await readdir(dir);
-    //     for (const file of files) {
-    //         const content = await readFile(join(dir, file), 'utf8');
-    //         const json = mdjs.markdownAsJsTree(content);
-    //         if (json.private) continue;
-    //         const post = deserialize<Post>(json);
-    //         posts.push(post);
-    //     }
-    //
-    //     //sort by date
-    //     posts.sort((a, b) => {
-    //         return b.date.getTime() - a.date.getTime();
-    //     });
-    //
-    //     return posts;
-    // }
-
-    // @rpc.action()
-    // async getWork(): Promise<Work[]> {
-    //     const dir = await findParentPath('src/work', __dirname);
-    //     const posts: Work[] = [];
-    //
-    //     //read all markdown files in the posts folder
-    //     if (!dir) return posts;
-    //
-    //     const mdjs = require("@moox/markdown-to-json");
-    //
-    //     const files = await readdir(dir);
-    //     for (const file of files) {
-    //         const content = await readFile(join(dir, file), 'utf8');
-    //         const json = mdjs.markdownAsJsTree(content);
-    //         const post = deserialize<Work>(json);
-    //         posts.push(post);
-    //     }
-    //
-    //     //sort by date
-    //     posts.sort((a, b) => {
-    //         return b.date?.getTime() - a.date?.getTime();
-    //     });
-    //
-    //     return posts;
-    // }
+    @rpc.action()
+    async search(query: string): Promise<IndexEntry[]> {
+        const hits = await this.algolia.find(query);
+        return hits;
+    }
 
     @rpc.action()
     async getPage(url: string): Promise<Page | undefined> {

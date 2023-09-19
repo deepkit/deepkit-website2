@@ -4,8 +4,19 @@ export interface Content {
     children?: (string | Content)[];
 }
 
-export function bodyToString(body?: Content | Content[]): string {
+export const projectMap: {[name: string]: string} = {
+    'framework': 'Framework',
+    'runtime-types': 'Runtime Types',
+    'dependency-injection': 'Dependency Injection',
+    'http': 'HTTP',
+    'rpc': 'RPC',
+    'orm': 'ORM',
+    'desktop-ui': 'Desktop UI',
+}
+
+export function bodyToString(body?: string | Content | (string | Content)[]): string {
     if (!body) return '';
+    if ('string' === typeof body) return body;
     if (Array.isArray(body)) {
         return body.map(v => bodyToString(v)).join('');
     }
@@ -61,4 +72,23 @@ export interface Page {
     url?: string;
     date?: Date;
     body: Content;
+}
+
+export interface IndexEntry {
+    objectID: string; // Required by Algolia for unique identification
+    title: string;
+    url: string;
+    tag: string;
+    props: { [name: string]: any };
+    fragment?: string;
+    path: string[]; //e.g. framework, database, orm, http, etc
+    content: string; //the paragraph
+    _highlightResult?: {
+        [name: string]: {
+            fullyHighlighted?: boolean
+            matchLevel?: string,
+            matchedWords?: string[],
+            value?: string
+        }
+    };
 }

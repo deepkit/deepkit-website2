@@ -83,7 +83,7 @@ new App({
 }).run();
 ```
 
-In dem Decorator `@cli.controller` wird als erstes Argument der eindeutige Name der CLI-Anwendung definiert. Weitere Optionen wie eine Beschreibung können im Objekt an der zweiten Stelle optional hinzufügt werden.
+In the decorator `@cli.controller` the unique name of the CLI application is defined as the first argument. Further options like a description can be optionally added in the object at the second position.
 
 This code is already a complete CLI application and can be started this way:
 

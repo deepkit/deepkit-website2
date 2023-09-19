@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
-import { bodyToString, Content, Page, parseBody } from "@app/common/models";
+import { bodyToString, Content, IndexEntry, Page, parseBody, projectMap } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
-import { NgIf } from "@angular/common";
+import { NgForOf, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 
 @Component({
     standalone: true,
@@ -14,7 +16,9 @@ import { NgIf } from "@angular/common";
         ContentRenderComponent,
         NgIf,
         RouterLinkActive,
-        RouterLink
+        RouterLink,
+        NgForOf,
+        FormsModule
     ],
     styleUrls: ['./documentation.component.scss'],
     template: `
@@ -51,7 +55,6 @@ import { NgIf } from "@angular/common";
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/bytecode">Bytecode</a>
                 </div>
 
-
                 <div class="category">
                     <div class="category-title">Dependency Injection</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/dependency-injection">Introduction</a>
@@ -60,6 +63,15 @@ import { NgIf } from "@angular/common";
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/injection">Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/configuration">Configuration</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/scopes">Scopes</a>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">CLI</div>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/cli">Introduction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/controller">Controller</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/dependency-injection">Dependency Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/http/events">Events</a>
                 </div>
 
                 <div class="category">
@@ -107,17 +119,6 @@ import { NgIf } from "@angular/common";
                     </section>
                 </div>
 
-                <!--                <div class="category">-->
-                <!--                    <div class="category-title">RPC</div>-->
-
-                <!--                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/rpc">Getting started</a>-->
-                <!--                    <a routerLinkActive="active" routerLink="/documentation/rpc/server">Server</a>-->
-                <!--                    <a routerLinkActive="active" routerLink="/documentation/rpc/controller">Controller</a>-->
-                <!--                    <a routerLinkActive="active" routerLink="/documentation/rpc/client">Client</a>-->
-                <!--                    <a routerLinkActive="active" routerLink="/documentation/rpc/query">Stream</a>-->
-                <!--                    <a routerLinkActive="active" routerLink="/documentation/rpc/events">Security</a>-->
-                <!--                </div>-->
-
                 <div class="category">
                     <div class="category-title">Desktop UI</div>
 
@@ -140,6 +141,7 @@ import { NgIf } from "@angular/common";
                 </div>
             </nav>
             <div class="content">
+
                 <app-title *ngIf="project" value="{{project}}"></app-title>
                 <div *ngIf="page">
                     <app-title value="{{page.title}}"></app-title>
@@ -154,10 +156,17 @@ import { NgIf } from "@angular/common";
                     <app-render-content [content]="rest"></app-render-content>
                 </div>
             </div>
+
+            <div class="table-of-content" *ngIf="headers.length > 1">
+                <a [href]="router.url.split('#')[0] + '#' + h.link" class="intend-{{h.indent}}" *ngFor="let h of headers">
+                    {{h.label}}
+                </a>
+            </div>
         </div>
     `
 })
 export class DocumentationComponent implements OnInit {
+    bodyToString = bodyToString;
     showMenu: boolean = false;
     project = '';
 
@@ -167,43 +176,77 @@ export class DocumentationComponent implements OnInit {
     intro: Content[] = [];
     rest: Content[] = [];
 
-    projectMap: any = {
-        'framework': 'Framework',
-        'runtime-types': 'Runtime Types',
-        'dependency-injection': 'Dependency Injection',
-        'http': 'HTTP',
-        'rpc': 'RPC',
-        'orm': 'ORM',
-        'desktop-ui': 'Desktop UI',
-    }
+    public headers: { label: string, indent: number, link: string }[] = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private client: ControllerClient,
         private cd: ChangeDetectorRef,
+        public router: Router,
     ) {
+        console.log('new DocumentationComponent');
+    }
+
+    getFragment(value: string): string {
+        if ('string' !== typeof value) return '';
+        return value.trim().replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
+    }
+
+    ngAfterViewInit() {
+        this.loadTableOfContent();
+    }
+
+    onOutlet(event: any) {
+        this.loadTableOfContent();
     }
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe((params) => {
-            this.load(params.path, params.project);
+        this.activatedRoute.firstChild!.url.subscribe((url) => {
+            if (url.length > 1) {
+                this.load(url[1].path, url[0].path);
+            } else if (url.length === 1) {
+                this.load(url[0].path);
+            }
         });
     }
 
     async load(path: string, project: string = '') {
-        this.project = this.projectMap[project] || project;
+        this.project = projectMap[project] || project;
         path = path || 'index';
-        if (project) path  = project + '/' + path;
-        this.page = await this.client.main.getPage('documentation/' + path);
-        if (!this.page) return;
+        if (project) path = project + '/' + path;
+        try {
+            this.page = await this.client.main.getPage('documentation/' + path);
+            if (!this.page) return;
 
-        const parsed = parseBody(this.page.body);
-        this.subline = parsed.subline;
-        this.intro = parsed.intro;
-        this.rest = parsed.rest;
-        console.log(this.subline, this.intro, this.rest);
-        // this.cd.detectChanges();
+            const parsed = parseBody(this.page.body);
+            this.subline = parsed.subline;
+            this.intro = parsed.intro;
+            this.rest = parsed.rest;
+            // console.log(this.subline, this.intro, this.rest);
+            this.loadTableOfContent();
+        } catch (error) {
+            this.page = undefined;
+        }
+        this.cd.detectChanges();
     }
 
-    protected readonly bodyToString = bodyToString;
+    loadTableOfContent() {
+        this.headers = [];
+        if (!this.page) return [];
+
+        console.log('this.page.body', this.page.body);
+        for (const child of this.page.body.children || []) {
+            if ('string' === typeof child) continue;
+            if (!child.children) continue;
+            const first = child.children[1];
+            if ('string' !== typeof first) continue;
+            if (!child.props) continue;
+
+            if (child.tag === 'h2') {
+                this.headers.push({ label: first, indent: 0, link: child.props.id });
+            } else if (child.tag === 'h3') {
+                this.headers.push({ label: first, indent: 1, link: child.props.id });
+            }
+        }
+    }
 }

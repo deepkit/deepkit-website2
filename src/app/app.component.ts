@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AppTitle } from "@app/app/components/title";
 import { HeaderComponent } from "@app/app/components/header.component";
 import { FooterComponent } from "@app/app/components/footer.component";
@@ -10,9 +10,9 @@ import { FooterComponent } from "@app/app/components/footer.component";
     standalone: true,
     imports: [CommonModule, RouterOutlet, AppTitle, HeaderComponent, FooterComponent],
     template: `
-        <app-title value="Deepkit High-Performance TypeScript Framework"></app-title>+
+        <app-title value="Deepkit High-Performance TypeScript Framework"></app-title>
 
-        <dw-header></dw-header>
+        <dw-header [sticky]="activeRoute.firstChild?.snapshot?.data?.stickyHeader" [search]="activeRoute.firstChild?.snapshot?.data?.search"></dw-header>
 
         <router-outlet></router-outlet>
 
@@ -21,5 +21,6 @@ import { FooterComponent } from "@app/app/components/footer.component";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    title = 'deepkit-website2';
+    constructor(public activeRoute: ActivatedRoute) {
+    }
 }

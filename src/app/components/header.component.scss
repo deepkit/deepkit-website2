@@ -5,9 +5,7 @@
     left: 0;
     right: 0;
     top: 0;
-    //background: #202020;
     background: rgba(0, 0, 0, 0.85);
-    user-select: none;
 
     a.logo {
         img {
@@ -17,13 +15,20 @@
     }
 }
 
+:host.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
 @keyframes fadeInHeader {
 }
 
 .wrapper {
-    height: 80px;
     display: flex;
     align-items: center;
+    height: 80px;
 
     > a {
         line-height: 0;

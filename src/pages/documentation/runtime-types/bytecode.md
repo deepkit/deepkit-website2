@@ -72,4 +72,4 @@ log.__type = ['message', 'log', 'P&2!$/"'];
 
 ## Virtual Machine
 
-A virtual machine (in `@deepkit/type` the class Processor) at runtime is responsible for decoding and executing the encoded bytecode. It always returns a type object, see the Reflection section above.
+A virtual machine (in `@deepkit/type` the class Processor) at runtime is responsible for decoding and executing the encoded bytecode. It always returns a type object as described in the [Reflection API](./reflection.md).

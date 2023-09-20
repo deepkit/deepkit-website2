@@ -43,7 +43,7 @@ class RootConfiguration {
 
 ## Validation
 
-Also, all serialization and validation types from the previous chapters xref:validation.adoc[Validation] and xref:serialization.adoc[Serialization] can be used to specify in great detail what type and content restrictions an option must have.
+Also, all serialization and validation types from the previous chapters [Validation](validation.md) and [Serialization](serialization.md) can be used to specify in great detail what type and content restrictions an option must have.
 
 ```typescript
 class RootConfiguration {

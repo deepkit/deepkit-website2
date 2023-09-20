@@ -3,6 +3,7 @@ import { Content } from '@app/common/models';
 import { NgForOf, NgIf } from '@angular/common';
 import { ScreenComponent, ScreensComponent } from '@app/app/components/screens.component';
 import { HighlightCodeComponent } from "@app/app/components/highlight-code.component";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-render-content',
@@ -17,10 +18,12 @@ import { HighlightCodeComponent } from "@app/app/components/highlight-code.compo
 })
 export class ContentRenderComponent implements OnInit, OnChanges {
     @Input() content!: Content[] | Content | string;
+    @Input() linkRelativeTo: string = '/';
 
     constructor(
         private viewRef: ViewContainerRef,
         private renderer: Renderer2,
+        private router: Router,
         private resolver: ComponentFactoryResolver
     ) {
     }
@@ -88,6 +91,15 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 }
             }
 
+            if (content.tag === 'a') {
+                //if content.props.href is relative, convert path to an absolute using this.linkRelativeTo
+                // resolve correctly so that ../ and ./ are handled correctly
+                if (content.props?.href) {
+                    const base = new URL('http://none/'+ this.router.url);
+                    const url = new URL(content.props.href, new URL(this.router.url, base));
+                    this.renderer.setAttribute(element, 'href', url.pathname.replace('.md', ''));
+                }
+            }
             if (content.tag === 'p' || content.tag === 'div') {
                 this.renderer.addClass(element, 'text');
             }

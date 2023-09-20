@@ -41,6 +41,7 @@
 
 .search {
     position: relative;
+
     .search-results {
         position: absolute;
         left: 0;
@@ -56,6 +57,7 @@
     padding: 50px;
     padding-top: 120px;
     margin: 0;
+    margin-left: 200px;
     font-size: 15px;
     color: rgb(230, 231, 232);
     line-height: 170%;
@@ -69,6 +71,7 @@
             text-align: left;
             color: white;
         }
+
         //  color: #333333;
         //}
 
@@ -120,6 +123,7 @@
         &.intend-1 {
             padding-left: 15px;
         }
+
         &.intend-2 {
             padding-left: 30px;
         }
@@ -135,13 +139,14 @@
 }
 
 nav {
-    position: sticky;
+    position: fixed;
+    top: 0;
+    bottom: 10px;
     margin-top: 90px;
     flex-basis: 220px;
     margin-left: 20px;
-    max-width: 300px;
     text-align: left;
-    max-height: 100vh;
+    width: 200px;
 
     overflow: auto;
     overflow: overlay;

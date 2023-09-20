@@ -25,7 +25,6 @@ In your tsconfig you have to adjust following settings: `jsx` and `jsxImportSour
 Now you can use TSX directly in your controller.
 
 ```typescript
-#!/usr/bin/env ts-node-script
 import { App } from '@deepkit/app';
 import { FrameworkModule } from '@deepkit/framework';
 import { http } from '@deepkit/http';
@@ -94,7 +93,7 @@ class Database {
     users: any[] = [{ username: 'Peter' }];
 }
 
-function UserList(props: {}, children: any, database: Database) {
+function UserList(props: {}, database: Database) {
     return <div>{database.users.length}</div>;
 }
 
@@ -150,7 +149,7 @@ The template engine has automatically cleaned up all the variables used, so you 
 
 ```typescript
 import { html } from '@deepkit/template';
-helloWorld() {
+function helloWorld() {
     const yes = "<b>yes!</b>";
     return <div style="color: red">Hello World. {html(yes)}</div>;
 }

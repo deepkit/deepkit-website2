@@ -25,7 +25,7 @@ The entity type system is designed in such a way that these types or classes can
 
 ## Installation
 
-Since Deepkit ORM is based on Runtime Types, it is necessary to have `@deepkit/type` already installed correctly. See xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+Since Deepkit ORM is based on Runtime Types, it is necessary to have `@deepkit/type` already installed correctly. See [Runtime Type Installation](runtime-types.md#runtime-types-installation).
 
 If this is done successfully, `@deepkit/orm` itself and a database adapter can be installed.
 
@@ -138,9 +138,9 @@ main();
 ## Entity
 
 An entity is either a class or an object literal (interface) and always has a primary key.
-The entity is decorated with all necessary information using type decorators from `@deepkit/type`. For example, a primary key is defined as well as various fields and their validation constraints. These fields reflect the database structure, usually a table or a collection.
+The entity is decorated with all necessary information using type annotations from `@deepkit/type`. For example, a primary key is defined as well as various fields and their validation constraints. These fields reflect the database structure, usually a table or a collection.
 
-Through special type decorators like `Mapped<'name'>` a field name can also be mapped to another name in the database.
+Through special type annotations like `Mapped<'name'>` a field name can also be mapped to another name in the database.
 
 ### Klasse
 

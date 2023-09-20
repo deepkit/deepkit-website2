@@ -7,7 +7,7 @@ import { serveStaticListener } from '@deepkit/http';
 import { join } from 'path';
 import { Algolia } from "@app/server/algolia";
 import { OpenAI } from "openai";
-import { mlGenQuestionCommand } from "@app/server/commands/ml-fine-tuning";
+import { mlGenAnswerCommand, mlGenQuestionCommand } from "@app/server/commands/ml-fine-tuning";
 
 (global as any).window = undefined;
 (global as any).document = undefined;
@@ -34,7 +34,8 @@ new App({
 })
     .command('search:index', (algolia: Algolia) => algolia.index())
     .command('search:find', (query: string, algolia: Algolia) => algolia.find(query))
-    .command('ml:gen-question', mlGenQuestionCommand)
+    .command('ml:gen-questions', mlGenQuestionCommand)
+    .command('ml:gen-answers', mlGenAnswerCommand)
     .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);

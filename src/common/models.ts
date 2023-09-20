@@ -8,6 +8,7 @@ export const projectMap: {[name: string]: string} = {
     'framework': 'Framework',
     'runtime-types': 'Runtime Types',
     'dependency-injection': 'Dependency Injection',
+    'cli': 'CLI',
     'http': 'HTTP',
     'rpc': 'RPC',
     'orm': 'ORM',

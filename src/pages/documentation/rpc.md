@@ -66,7 +66,7 @@ Backward compatibility can be implemented in the same way as with a normal local
 
 ## Installation
 
-To use Deepkit RPC, it is necessary to have `@deepkit/type` correctly installed because it is based on Runtime Types. See xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+To use Deepkit RPC, it is necessary to have `@deepkit/type` correctly installed because it is based on Runtime Types. See [Runtime Type Installation](runtime-types.md#runtime-types-installation).
 
 Once this is successfully done, `@deepkit/rpc` or the Deepkit Framework, which already uses the library under the hood, can be installed.
 
@@ -447,7 +447,7 @@ If Deepkit RPC is used between two microservices, and thus the client and server
 
 When the Deepkit framework is used, the class is instantiated by the Dependency Injection container and thus automatically has access to all other providers in the application.
 
-See also xref:dependency-injection.adoc[Dependency Injection].
+See also [Dependency Injection](dependency-injection.md#).
 
 ## Streaming RxJS
 

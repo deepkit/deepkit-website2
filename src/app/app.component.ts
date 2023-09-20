@@ -16,11 +16,15 @@ import { FooterComponent } from "@app/app/components/footer.component";
 
         <router-outlet></router-outlet>
 
-        <dw-footer></dw-footer>
+        <dw-footer *ngIf="withFooter"></dw-footer>
     `,
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
     constructor(public activeRoute: ActivatedRoute) {
+    }
+
+    get withFooter(): boolean {
+        return this.activeRoute.firstChild?.snapshot?.data.footer !== false;
     }
 }

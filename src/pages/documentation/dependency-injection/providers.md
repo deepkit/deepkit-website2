@@ -1,4 +1,4 @@
-## Providers
+# Providers
 
 There are several ways to provide dependencies in the Dependency Injection container. The simplest variant is simply the specification of a class. This is also known as short ClassProvider.
 

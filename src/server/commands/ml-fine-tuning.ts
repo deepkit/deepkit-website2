@@ -63,7 +63,7 @@ class Page {
     }
 
     async load() {
-        const text = await readFile(this.questionsPath, 'utf8');
+        const text = await readFile(this.questionsPath, { encoding: 'utf8', flag: 'a+' });
         const texts = text.split(magicSeparator);
         for (const text of texts) {
             const userStart = text.indexOf('User:') + 'User:'.length;
@@ -75,36 +75,47 @@ class Page {
         }
     }
 
+    setQuestions(questions: string[]) {
+        for (const question of questions) {
+            if (this.questions.find(v => v.question === question)) continue;
+            this.questions.push({ question, answer: '' });
+        }
+    }
+
     setAnswers(questions: string[], answers: string[]) {
         for (let i = 0; i < questions.length; i++) {
             const q = questions[i];
             const index = this.questions.findIndex(v => v.question === q);
             if (index === -1) throw new Error('Could not find question ' + q);
+            if (!answers[i]) continue;
             this.questions[index].answer = answers[i];
         }
     }
 }
 
 
-async function genQuestionPrompt(path: string) {
-    path = getPath(path);
-    const content = await readFile(path, 'utf8');
+async function genQuestionPrompt(page: Page) {
     return `
-    Given text from a documentation:
+Given text from a documentation:
 
-\`\`\`${content}\`\`\`
+\`\`\`${await page.getContent()}\`\`\`
 
-Generate me 20 possible questions or queries a potential user could ask/query.
+We have already following questions:
+
+${page.questions.map((v, i) => `${i + 1}. ${v.question}`).join('\n')}
+
+Generate me 30 new possible questions or queries a potential user could ask/query.
 `;
 }
 
 async function genAnswerPrompt(page: Page, questions: string[]) {
     return `
-    Given text from a documentation:
+Given text from a documentation:
 
 \`\`\`${await page.getContent()}\`\`\`
 
 Answer me following questions and prefix the answer with \`Assistant:\` and then the number. For example \`Assistant: 1. ...\`.
+Also try to generate example code if possible and output it as a markdown code block.
 
 ${questions.map((v, i) => `${i + 1}. ${v}`).join('\n')}
 `;
@@ -115,24 +126,51 @@ function parseQuestions(text: string): string[] {
     //Output: [xxx, xxx, xxx]
     return text.split('\n').map((line) => {
         return line.slice(line.indexOf('.') + 1);
-    }).filter(v => !!v);
+    }).map(v => v.trim()).filter(v => !!v);
 }
 
 function parseAnswers(text: string): string[] {
     return ('\n' + text).split('\nAssistant: ').map((line) => {
         return line.slice(line.indexOf('.') + 1);
-    }).filter(v => !!v);
+    }).map(v => v.trim()).filter(v => !!v);
 }
 
+
+ const model = 'gpt-3.5-turbo-16k';
+
 export async function mlGenQuestionCommand(
+    file: string,
     openai: OpenAI
 ) {
     const context = new Context();
 
-    const page = new Page('introduction.md');
+    const page = new Page(file);
     await page.load();
-    console.log(page.questions);
 
+    context.addUser(await genQuestionPrompt(page));
+
+    const completion = await openai.chat.completions.create({
+        messages: context.messages,
+        model,
+    });
+
+    const result = completion.choices[0]['message']['content'];
+    if (!result) throw new Error('No result');
+
+    const questions = parseQuestions(result);
+    console.log('questions', questions);
+    page.setQuestions(questions);
+    await page.save();
+}
+
+export async function mlGenAnswerCommand(
+    file: string,
+    openai: OpenAI
+) {
+    const context = new Context();
+
+    const page = new Page(file);
+    await page.load();
 
     const questions = page.getNextUnansweredQuestions(5);
     console.log(questions);
@@ -140,21 +178,17 @@ export async function mlGenQuestionCommand(
 
     context.addUser(await genAnswerPrompt(page, questions));
 
-    // const path = 'introduction.md';
-    // context.addUser(await genQuestionPrompt('documentation/' + path));
-
     const completion = await openai.chat.completions.create({
         messages: context.messages,
-        model: 'gpt-3.5-turbo',
+        model: model,
     });
 
-    console.log(completion.choices);
     const result = completion.choices[0]['message']['content'];
     if (!result) throw new Error('No result');
 
+    console.log('result', result);
     const answers = parseAnswers(result);
     console.log('answers', answers);
     page.setAnswers(questions, answers);
-    console.log(page.generateContent());
-    // await page.save();
+    await page.save();
 }

@@ -36,6 +36,7 @@ body {
     //--color-text: #C5C5C5;
     //--color-black: #0F0F0F;
     //--code-background: #202020;
+    --color-link: #F35828;
     --color-orange: #F35828;
     --color-link-active: #F35828;
 
@@ -172,7 +173,7 @@ pre > code {
     grid-auto-rows: 1fr;
 }
 
-table.pretty {
+table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
@@ -185,17 +186,17 @@ table.pretty {
     }
 
     tr:nth-child(even) td {
-        background-color: #f8f8f8;
+        background-color: rgba(33, 33, 33, 0.56);
     }
 
     tr:hover td {
-        background-color: #f1f1f1;
+        background-color: rgba(70, 70, 70, 0.56);
     }
 
     th {
         font-weight: bold;
         font-size: 12px;
-        border-bottom: 1px solid #e5e5e5;
+        border-bottom: 1px solid #6e6e6e;
     }
 }
 

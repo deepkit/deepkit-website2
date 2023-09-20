@@ -1,8 +1,8 @@
 # Getting Started
 
-Since Dependency Injection in Deepkit is based on Runtime Types, it is necessary to have `@deepkit/type` already installed correctly. See xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+Since Dependency Injection in Deepkit is based on Runtime Types, it is necessary to have Runtime Types already installed correctly. See [Runtime Type](../runtime-types/getting-started.md).
 
-If this is done successfully, `@deepkit/injector` can be installed by itself or the Deepkit framework which already uses the library under the hood.
+If this is done successfully, `@deepkit/injector` can be installed or the Deepkit framework which already uses the library under the hood.
 
 ```sh
 	npm install @deepkit/injector
@@ -11,7 +11,7 @@ If this is done successfully, `@deepkit/injector` can be installed by itself or 
 Once the library is installed, the API of it can be used directly.
 
 
-## Use
+## Usage
 
 To use Dependency Injection now, there are three ways.
 
@@ -19,11 +19,11 @@ To use Dependency Injection now, there are three ways.
 * Module API
 * App API (Deepkit Framework)
 
-If `@deepkit/injector` is to be used without the deepkit framework, the first two variants are recommended.
+If `@deepkit/injector` is to be used without the Deepkit Framework, the first two variants are recommended.
 
 ### Injector API
 
-The Injector API has already been introduced in the introduction to Dependency Injection. It is characterized by a very simple usage by means of a single class `InjectorContext` that creates a single DI container and is particularly suitable for simpler applications without modules.
+The Injector API has already been introduced in the [introduction to Dependency Injection](../dependency-injection). It is characterized by a very simple usage by means of a single class `InjectorContext` that creates a single DI container and is particularly suitable for simpler applications without modules.
 
 ```typescript
 import { InjectorContext } from '@deepkit/injector';
@@ -36,14 +36,13 @@ const injector = InjectorContext.forProviders([
 const repository = injector.get(UserRepository);
 ```
 
-The `injector` object in this case is the dependency injection container. The function `InjectorContext.forProviders` takes an array of providers. See the section xref:dependency-injection.adoc#di-providers[Dependency Injection Providers] to learn which values can be passed.
+The `injector` object in this case is the dependency injection container. The function `InjectorContext.forProviders` takes an array of providers. See the section [Dependency Injection Providers](dependency-injection.md#di-providers) to learn which values can be passed.
 
-[#di-module-api]
 ### Module API
 
-A more complex API is the `InjectorModule` class, which allows to store the providers in different modules to create multiple encapsulated DI containers per module. Also this allows using configuration classes per module, which makes it easier to provide configuration values automatically validated to the providers. Modules can import themselves among themselves, providers export, in order to build up so a hierarchy and nicely separated architecture.
+A more complex API is the `InjectorModule` class, which allows to store the providers in different modules to create multiple encapsulated DI containers per module. Also this allows using configuration classes per module, which makes it easier to provide configuration values automatically validated to the providers. Modules can import themselves among themselves, providers export, in order to build up a hierarchy and nicely separated architecture.
 
-This API should be used if the application is more complex and the Deepkit framework is not used.
+This API should be used if the application is more complex and the Deepkit Framework is not used.
 
 ```typescript
 import { InjectorModule, InjectorContext } from '@deepkit/injector';
@@ -79,4 +78,4 @@ const lowLevelModule = new InjectorModule([HttpClient])
 
 Once the Deepkit framework is used, modules are defined with the `@deepkit/app` API. This is based on the Module API, so the capabilities from there are also available. In addition, it is possible to work with powerful hooks and define configuration loaders to map even more dynamic architectures.
 
-The xref:framework.adoc#framework-modules[Framework Modules] chapter describes this in more detail.
+The [Framework Modules](../framework/modules.md) chapter describes this in more detail.

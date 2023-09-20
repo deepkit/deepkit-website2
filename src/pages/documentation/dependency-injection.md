@@ -65,7 +65,7 @@ All these variants have in common that they explicitly request the HttpClient de
 
 ## Dependency Injection
 
-With Dependency Injection, nothing is requested, but it is explicitly provided by the user or received by the code. As can be seen in the example of Inversion of Control, the dependency injection pattern has already been applied there. Specifically, constructor injection can be seen there, since the dependency is declared in the constructor. So UserRepository must now be used as follows.
+With Dependency Injection, nothing is requested, but it is explicitly provided by the user or received by the code. As can be seen in the example earlier, the dependency injection pattern has already been applied there. Specifically, constructor injection can be seen there, since the dependency is declared in the constructor. So UserRepository must now be used as follows.
 
 ```typescript
 const users = new UserRepository(new HttpClient());
@@ -78,7 +78,7 @@ The code that wants to use UserRepository must also provide (inject) all its dep
 * The code is more modular, as dependencies can be easily exchanged.
 * It promotes the Separation of Concern principle, as UserRepository is no longer responsible for creating very complex dependencies itself when in doubt.
 
-But an obvious disadvantage can also be recognized directly: Do I really need to create or manage all dependencies like the HttpClient myself? Yes and No. Yes, there are many cases where it is perfectly legitimate to manage the dependencies yourself. The hallmark of a good API is that dependencies don't get out of hand, and that even then they are pleasant to use. For many applications or complex libraries, this may well be the case. To provide a very complex low-level API with many dependencies in a simplified way to the user, facades are wonderfully suitable.
+But an obvious disadvantage can also be recognized directly: Do I really need to create or manage all dependencies like the HttpClient myself? Yes and No. Yes, there are many cases where it is perfectly legitimate to manage the dependencies yourself. The hallmark of a good API is that dependencies don't get out of hand, and that even then they are pleasant to use. For many applications or complex libraries, this may well be the case. To provide a very complex low-level API with many dependencies in a simplified way to the user, the facade pattern is wonderfully suitable.
 
 ## Dependency Injection Container
 
@@ -121,13 +121,13 @@ const injector = InjectorContext.forProviders([
 ]);
 ```
 
-All types of providers are listed and explained in the xref:dependency-injection.adoc#di-providers[Dependency Injection Providers] section.
+All types of providers are listed and explained in the [Dependency Injection Providers](./dependency-injection/providers.md) section.
 
-It should be mentioned here that Deepkit's DI container only works with Deepkit's runtime types. This means that any code that contains classes, types, interfaces, and functions must be compiled by the Deepkit Type Compiler in order to have the type information available at runtime. See the chapter xref:runtime-types.adoc[Runtime Types].
+It should be mentioned here that Deepkit's DI container only works with Deepkit's runtime types. This means that any code that contains classes, types, interfaces, and functions must be compiled by the Deepkit Type Compiler in order to have the type information available at runtime. See the chapter [Runtime Types](./runtime-types.md).
 
 ## Dependency Inversion
 
-The example of UserRepository under Inversion of Control shows that UserRepository depends on a lower level HTTP library. In addition, a concrete implementation (class) is declared as a dependency instead of an abstraction (interface). At first glance, this may seem to be in line with the object-oriented paradigms, but it can lead to problems, especially in complex and large architectures.
+The example of UserRepository earlier shows that UserRepository depends on a lower level HTTP library. In addition, a concrete implementation (class) is declared as a dependency instead of an abstraction (interface). At first glance, this may seem to be in line with the object-oriented paradigms, but it can lead to problems, especially in complex and large architectures.
 
 An alternative variant would be to convert the HttpClient dependency into an abstraction (interface) and thus not import code from an HTTP library into UserRepository.
 
@@ -155,7 +155,7 @@ This is called the dependency inversion principle. UserRepository no longer has 
 Merging the two implementations (UserRepository with an HTTP library) can now be done via the DI container.
 
 ```typescript
-import { HttpClient } from 'http-library';
+import { HttpClient } from './http-client';
 import { UserRepository } from './user-repository';
 
 const injector = InjectorContext.forProviders([
@@ -164,7 +164,9 @@ const injector = InjectorContext.forProviders([
 ]);
 ```
 
-Since Deepkit's DI container is capable of resolving abstract dependencies (interfaces) such as this one of HttpClientInterface, UserRepository automatically gets the implementation of HttpClient since HttpClient implemented the interface HttpClientInterface. This is done either by HttpClient specifically implementing HttpClientInterface (`class HttpClient implements HttpClientInterface`), or by HttpClient's API simply being compatible with HttpClientInterface.
+Since Deepkit's DI container is capable of resolving abstract dependencies (interfaces) such as this one of HttpClientInterface, UserRepository automatically gets the implementation of HttpClient since HttpClient implemented the interface HttpClientInterface. 
+
+This is done either by HttpClient specifically implementing HttpClientInterface (`class HttpClient implements HttpClientInterface`), or by HttpClient's API simply being compatible with HttpClientInterface.
 
 As soon as HttpClient modifies its API (for example, removes the `get` method) and is thus no longer compatible with HttpClientInterface, the DI container throws an error ("the HttpClientInterface dependency was not provided").
 
@@ -174,13 +176,3 @@ It should be noted here that although in theory the dependency inversion princip
 
 Design patterns should not be used blindly and across the board for even the simplest code. However, if the prerequisites such as a complex architecture, large applications, or a scaling team are given, dependency inversion and other design patterns only unfold their true strength.
 
-
-
-
-
-
-
-
-
-
-[#di-setup-calls]

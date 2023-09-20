@@ -7,7 +7,7 @@ export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
 
     {
-        path: 'documentation', component: DocumentationComponent, data: { stickyHeader: true, search: true }, children: [
+        path: 'documentation', component: DocumentationComponent, data: { stickyHeader: true, search: true, footer: false }, children: [
             { path: '**', component: EmptyComponent },
         ]
     },

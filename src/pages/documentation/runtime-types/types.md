@@ -1,36 +1,30 @@
-<a name="runtime-type-decorators"></a>
-# Types
+# Type Annotations
 
-Type decorators are normal TypeScript types that contain meta-information to change the behavior of various functions at runtime. Deepkit already provides some type decorators that cover some use cases. For example, a class property can be marked as primary key, reference, or index. The database library can use this information at runtime to create the correct SQL queries without prior code generation.
+Type annotations are normal TypeScript types that contain meta-information to change the behavior of various functions at runtime. Deepkit already provides some type annotations that cover some use cases. For example, a class property can be marked as primary key, reference, or index. The database library can use this information at runtime to create the correct SQL queries without prior code generation.
 
-Validator constraints such as `MaxLength`, `Maximum`, or `Positive` can also be added to any type. It is also possible to tell the serializer how to serialize or deserialize a particular value. In addition, it is possible to create completely custom type decorators and read them at runtime, in order to use the type system at runtime in a very individual way.
+Validator constraints such as `MaxLength`, `Maximum`, or `Positive` can also be added to any type. It is also possible to tell the serializer how to serialize or deserialize a particular value. In addition, it is possible to create completely custom type annotations and read them at runtime, in order to use the type system at runtime in a very individual way.
 
-Deepkit comes with a whole set of type decorators, all of which can be used directly from `@deepkit/type`. They are designed not to come from multiple libraries, so as not to tie code directly to a particular library such as Deepkit RPC or Deepkit Database. This allows easier reuse of types, even in the frontend, although database type decorators are used for example.
+Deepkit comes with a whole set of type annotations, all of which can be used directly from `@deepkit/type`. They are designed not to come from multiple libraries, so as not to tie code directly to a particular library such as Deepkit RPC or Deepkit Database. This allows easier reuse of types, even in the frontend, although database type annotations are used for example.
 
-Following is a list of existing type decorators. The validator and serializer of `@deepkit/type` and `@deepkit/bson` and Deepkit Database of `@deepkit/orm` used this information differently. See the corresponding chapters to learn more about this.
+Following is a list of existing type annotations. The validator and serializer of `@deepkit/type` and `@deepkit/bson` and Deepkit Database of `@deepkit/orm` used this information differently. See the corresponding chapters to learn more about this.
 
 ## Integer/Float
 
 Integer and floats are defined as a base as `number` and has several sub-variants:
 
-[%autowidth]
-[cols="1,1"]
-|===
-|Type|Description
+| Type    | Description                                |
+|---------|---------------|
+| integer | An integer of arbitrary size.              |
+| int8    | An integer between -128 and 127.           |
+| uint8   | An integer between 0 and 255.              |
+| int16   | An integer between -32768 and 32767.       |
+| uint16  | An integer between 0 and 65535.            |
+| int32   | An integer between -2147483648 and 2147483647.      |
+| uint32  | An integer between 0 and 4294967295.       |
+| float   | Same as number, but might have different meaning in database context. |
+| float32 | A float between -3.40282347e+38 and 3.40282347e+38. Note that JavaScript is not able to check correctly the range due to precision issues, but the information might be handy for the database or binary serializers. |
+| float64 | Same as number, but might have different meaning in database context. |
 
-|integer|An integer of arbitrary size.
-
-|int8|An integer between -128 and 127.
-
-|uint8|An integer between 0 and 255.
-|int16|An integer between -32768 and 32767.
-|uint16|An integer between 0 and 65535.
-|int32|An integer between -2147483648 and 2147483647.
-|uint32|An integer between 0 and 4294967295.
-|float|Same as number, but might have different meaning in database context.
-|float32|A float between -3.40282347e+38 and 3.40282347e+38. Note that JavaScript is not able to check correctly the range due to precision issues, but the information might be handy for the database or binary serializers.
-|float64|Same as number, but might have different meaning in database context.
-|===
 
 ```typescript
 import { integer } from '@deepkit/type';
@@ -158,7 +152,7 @@ serialize<Model>(
 
 ## Data
 
-Each property can add additional meta-data that can be read via the Reflection API. See xref:runtime-types.adoc#runtime-types-reflection[Runtime Types Reflection] for more information.
+Each property can add additional meta-data that can be read via the Reflection API. See [Runtime Types Reflection](runtime-types.md#runtime-types-reflection) for more information.
 
 ```typescript
 import { ReflectionClass } from '@deepkit/type';
@@ -283,7 +277,7 @@ interface User extends Entity<{name: 'user', collection: 'users'> {
 
 TODO
 
-## ResetDecorator
+## Resetannotation
 
 TODO
 
@@ -295,30 +289,30 @@ TODO: PrimaryKey, AutoIncrement, Reference, BackReference, Index, Unique, Databa
 
 TODO
 
-See xref:validation.adoc#validation-constraint-types[Validation Constraint Types].
+See [Validation Constraint Types](validation.md#validation-constraint-types).
 
-### Custom Type Decorators
+### Custom Type annotations
 
-aTypeDecoratorCanBeDefinedAsFollows
+aTypeannotationCanBeDefinedAsFollows
 
 ```typescript
 type MyAnnotation = {__meta?: ['myAnnotation']};
 ```
 
-By convention, a type decorator is defined to be an object literal with a single optional property `__meta` that has a tuple as its type. The first entry in this tuple is its unique name and all subsequent tuple entries are arbitrary options. This allows a type decorator to be equipped with additional options.
+By convention, a type annotation is defined to be an object literal with a single optional property `__meta` that has a tuple as its type. The first entry in this tuple is its unique name and all subsequent tuple entries are arbitrary options. This allows a type annotation to be equipped with additional options.
 
 ```typescript
 type AnnotationOption<T extends {title: string}> = {__meta?: ['myAnnotation', T]};
 ```
 
-The type decorator is used with the intersection operator `&`. Any number of type decorators can be used on one type.
+The type annotation is used with the intersection operator `&`. Any number of type annotations can be used on one type.
 
 ```typescript
 type Username = string & MyAnnotation;
 type Title = string & & MyAnnotation & AnnotationOption<{title: 'Hello'}>;
 ```
 
-The type decorators can be read out via the type objects of `typeOf<T>()` and `metaAnnotation`:
+The type annotations can be read out via the type objects of `typeOf<T>()` and `metaAnnotation`:
 
 ```typescript
 import { typeOf, metaAnnotation } from '@deepkit/type';
@@ -327,8 +321,8 @@ const type = typeOf<Username>();
 const annotation = metaAnnotation.getForName(type, 'myAnnotation'); //[]
 ```
 
-The result in `annotation` is either an array with options if the type decorator `myAnnotation` was used or `undefined` if not. If the type decorator has additional options as seen in `AnnotationOption`, the passed values can be found in the array.
-Already supplied type decorators like `MapName`, `Group`, `Data`, etc have their own annotation object:
+The result in `annotation` is either an array with options if the type annotation `myAnnotation` was used or `undefined` if not. If the type annotation has additional options as seen in `AnnotationOption`, the passed values can be found in the array.
+Already supplied type annotations like `MapName`, `Group`, `Data`, etc have their own annotation object:
 
 ```typescript
 import { typeOf, Group, groupAnnotation } from '@deepkit/type';
@@ -338,4 +332,4 @@ const type = typeOf<Username>();
 groupAnnotation.getAnnotations(type); //['a', 'b']
 ```
 
-See xref:runtime-types.adoc#runtime-types-reflection[Runtime Types Reflection] to learn more.
+See [Runtime Types Reflection](./reflection.md) to learn more.

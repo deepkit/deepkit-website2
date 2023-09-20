@@ -36,19 +36,18 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <a routerLinkActive="active" routerLink="/documentation/framework/modules">Modules</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/services">Services</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/events">Events</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/cli">CLI</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/configuration">Configuration</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/testing">Testing</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/deployment">Deployment</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/workflow">Workflow</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/logger">Logger</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/public-dir">Public directory</a>
                 </div>
 
                 <div class="category">
                     <div class="category-title">Runtime Types</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/runtime-types">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/types">Types</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/types">Type Annotations</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/reflection">Reflection</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/serialization">Serialization</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/validation">Validation</a>
@@ -70,36 +69,34 @@ import { LoadingComponent } from "@app/app/components/loading";
                 <div class="category">
                     <div class="category-title">CLI</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/cli">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/controller">Controller</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/cli/dependency-injection">Dependency Injection</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/events">Events</a>
+                    <a routerLinkActive="active" routerLink="/documentation/cli/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/cli/arguments">Arguments & Flags</a>
+                    <a routerLinkActive="active" routerLink="/documentation/cli/dependency-injection">Dependency Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/cli/events">Events</a>
                 </div>
 
                 <div class="category">
                     <div class="category-title">HTTP</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/http">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/controller">Controller</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/dependency-injection">Dependency Injection</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/template">Template</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/events">Events</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/middleware">Middleware</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/security">Security</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/public-dir">Public directory</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/http/resolver">Resolver</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/input-output">Input & Output</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/dependency-injection">Dependency Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/template">Template</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/events">Events</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/middleware">Middleware</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/security">Security</a>
                 </div>
 
                 <div class="category">
                     <div class="category-title">RPC</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/rpc">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/controller">Controller</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/dependency-injection">Dependency Injection</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/security">Security</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/errors">Errors</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/streaming">Streaming</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/rpc/transport">Transport</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/controller">Controller</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/dependency-injection">Dependency Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/security">Security</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/errors">Errors</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/streaming">Streaming</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/transport">Transport</a>
                 </div>
 
                 <div class="category">
@@ -156,7 +153,7 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
 
                     <div *ngIf="project" class="project">{{project}}</div>
-                    <app-render-content [content]="page.body"></app-render-content>
+                    <app-render-content [linkRelativeTo]="currentPath" [content]="page.body"></app-render-content>
                 </div>
             </div>
 
@@ -178,6 +175,7 @@ export class DocumentationComponent implements OnInit {
     loading = false;
 
     subline?: Content;
+    currentPath: string = '/';
 
     public headers: { label: string, indent: number, link: string }[] = [];
 
@@ -222,9 +220,11 @@ export class DocumentationComponent implements OnInit {
         this.error = undefined;
         this.loading = true;
         this.cd.detectChanges();
+        this.headers = [];
 
         try {
             this.page = await this.client.main.getPage('documentation/' + path);
+            this.currentPath = 'documentation/' + path;
             if (!this.page) return;
 
             const parsed = parseBody(this.page.body);

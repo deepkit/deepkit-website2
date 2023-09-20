@@ -1,4 +1,3 @@
-<a name="runtime-types-reflection"></a>
 # Reflection
 
 To work directly with the type information itself, there are two basic variants: Type objects and Reflection classes. Type objects are regular JS objects returned by `typeOf<T>()`. Reflection classes are discussed below.

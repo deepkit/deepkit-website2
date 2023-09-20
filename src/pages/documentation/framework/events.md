@@ -30,7 +30,7 @@ dispatcher.dispatch(MyEvent);
 
 ## Installation
 
-Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to xref:runtime-types.adoc#runtime-types-installation[Runtime Type Installation].
+Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to [Runtime Type Installation](runtime-types.md#runtime-types-installation).
 
 Once this is successfully accomplished, you can install @deepkit/event or the entire Deepkit Framework, which already includes the library under the hood.
 
@@ -173,4 +173,31 @@ dispatcher.listen(MyEventToken, (event) => {
 
 With the Deepkit framework's event system, developers can create modular, scalable, and maintainable applications with ease. Understanding the event system provides the flexibility to tailor the application's behavior based on specific occurrences or conditions.
 
+## Framework Events
 
+Deepkit Framework itself has several events from the application server that you can listen for.
+
+_Functional Listener_
+```typescript
+import { onServerMainBootstrap } from '@deepkit/framework';
+
+new App({
+    imports: [new FrameworkModule]
+})
+    .listen(onServerMainBootstrap, (event) => {
+        console.log('Server started');
+    })
+    .run();
+```
+
+| Name                         | Description                                                                                                          |
+|------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| onServerBootstrap            | Called only once for application server bootstrap (for main process and workers).                                    |
+| onServerBootstrapDone        | Called only once for application server bootstrap (for main process and workers) as soon as the application server has started. |
+| onServerMainBootstrap        | Called only once for application server bootstrap (in the main process).                                             |
+| onServerMainBootstrapDone    | Called only once for application server bootstrap (in the main process) as soon as the application server has started. |
+| onServerWorkerBootstrap      | Called only once for application server bootstrap (in the worker process).                                           |
+| onServerWorkerBootstrapDone  | Called only once for application server bootstrap (in the worker process) as soon as the application server has started. |
+| ServerShutdownEvent          | Called when application server shuts down (in master process and each worker).                                       |
+| onServerMainShutdown         | Called when application server shuts down in the main process.                                                       |
+| onServerWorkerShutdown       | Called when application server shuts down in the worker process.                                                     |

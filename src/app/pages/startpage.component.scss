@@ -169,6 +169,7 @@ main {
         min-width: 700px;
         max-width: 930px;
         border-spacing: 10px;
+        border-collapse: unset;
         margin: auto;
     }
 
@@ -182,6 +183,7 @@ main {
         color: #CDCDCD;
         line-height: 30px;
         overflow: hidden;
+        vertical-align: middle;
 
         .feature-text {
             font-size: 14px;

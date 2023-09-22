@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular/router';
 
 import { routes } from './app.routes';
 import { withZoneModule } from "@app/app/zone";
@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         AppMetaStack,
         provideClientHydration(),
-        provideRouter(routes, withInMemoryScrolling({anchorScrolling: 'enabled',  scrollPositionRestoration: 'enabled'})),
+        provideRouter(routes, withRouterConfig({}), withInMemoryScrolling({anchorScrolling: 'enabled',  scrollPositionRestoration: 'enabled'})),
         withZoneModule(),
         ControllerClient,
         createRpcWebSocketClientProvider(),

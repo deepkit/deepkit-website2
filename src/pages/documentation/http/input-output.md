@@ -146,7 +146,7 @@ router.post('/', (body: HttpBody<HelloWorldBody>) => {
 
 ### Stream
 
-#### Manual Validation Handling
+### Manual Validation Handling
 
 To manually take over the validation of the body model, a special type `HttpBodyValidation<T>` can be used. It allows to receive also invalid body data and to react very specifically to error messages.
 
@@ -172,7 +172,7 @@ As soon as `valid()` returns `false`, the values in the specified model may be i
 
 The properties in the specified model can contain all TypeScript types and validation types that `@deepkit/type` supports. See the chapter [Serialization](../runtime-types/serialization.md) and [Validation](../runtime-types/validation.md).
 
-#### File Upload
+### File Upload
 
 A special property type on the body model can be used to allow the client to upload files. Any number of `UploadedFile` can be used.
 
@@ -208,7 +208,6 @@ $ curl http://localhost:8080/ -X POST -H "Content-Type: multipart/form-data" -F 
 
 By default, Router saves all uploaded files to a temp folder and removes them once the code in the route has been executed. It is therefore necessary to read the file in the specified path in `path` and save it to a permanent location (local disk, cloud storage, database).
 
-[#http-validation]
 ## Validation
 
 Validation in an HTTP server is a mandatory functionality, because almost always work with data that is not trustworthy. The more places data is validated, the more stable the server is. Validation in HTTP routes can be conveniently used via types and validation constraints and is checked with a highly optimized validator from `@deepkit/type`, so there are no performance problems in this regard. It is therefore highly recommended to use these validation capabilities as well. Better one time too much, than one time too little.
@@ -233,14 +232,14 @@ interface MyQuery {
 
 router.get('/', (query: HttpQueries<MyQuery>) => {
     return 'Hello ' + query.text;
-}
+});
 
 router.post('/', (body: HttpBody<MyQuery>) => {
     return 'Hello ' + body.text;
-}
+});
 ```
 
-See [Validation](validation.md) for more information on this.
+See [Validation](../runtime-types/validation.md) for more information on this.
 
 ## Output
 
@@ -320,22 +319,21 @@ router.get('/user/:id', async (id: number, database: Database) => {
 
 By default, all errors are returned to the client as JSON. This behavior can be customized in the event system under the event `httpWorkflow.onControllerError`. See the section [HTTP Events](./events.md).
 
-|===
-|Error class |Status
+| Error class                    | Status |
+|-------------------------------|--------|
+| HttpBadRequestError           | 400    |
+| HttpUnauthorizedError         | 401    |
+| HttpAccessDeniedError         | 403    |
+| HttpNotFoundError             | 404    |
+| HttpMethodNotAllowedError     | 405    |
+| HttpNotAcceptableError        | 406    |
+| HttpTimeoutError              | 408    |
+| HttpConflictError             | 409    |
+| HttpGoneError                 | 410    |
+| HttpTooManyRequestsError      | 429    |
+| HttpInternalServerError      | 500    |
+| HttpNotImplementedError       | 501    |
 
-|HttpBadRequestError|400
-|HttpUnauthorizedError|401
-|HttpAccessDeniedError|403
-|HttpNotFoundError|404
-|HttpMethodNotAllowedError|405
-|HttpNotAcceptableError|406
-|HttpTimeoutError|408
-|HttpConflictError|409
-|HttpGoneError|410
-|HttpTooManyRequestsError|429
-|HttpInternalServerError|500
-|HttpNotImplementedError|501
-|===
 
 The error `HttpAccessDeniedError` is a special case. As soon as it is thrown, the HTTP workflow (see [HTTP Events](./events.md)) does not jump to `controllerError` but to `accessDenied`.
 

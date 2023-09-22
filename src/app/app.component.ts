@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, ViewportScroller } from '@angular/common';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AppTitle } from "@app/app/components/title";
 import { HeaderComponent } from "@app/app/components/header.component";
@@ -21,7 +21,8 @@ import { FooterComponent } from "@app/app/components/footer.component";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    constructor(public activeRoute: ActivatedRoute) {
+    constructor(public activeRoute: ActivatedRoute, private viewportScroller: ViewportScroller) {
+        viewportScroller.setOffset([0, 84]);
     }
 
     get withFooter(): boolean {

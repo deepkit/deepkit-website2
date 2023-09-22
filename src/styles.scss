@@ -25,7 +25,6 @@ body {
     overflow: auto;
     overflow: overlay;
     scrollbar-width: thin;
-
     //--color-dark2: #171B1E;
     //--color-blue-white: #BACFE4;
     //--color-blue-dark: #264564;
@@ -66,12 +65,17 @@ body {
             background-clip: padding-box;
         }
     }
-
     color: var(--color-text);
 }
 
+
 html, body {
     height: 100%;
+}
+
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id], h7[id], a[name] {
+    position: relative;
+    scroll-margin-top: 84px;
 }
 
 * {

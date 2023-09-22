@@ -5,7 +5,7 @@ To install Deepkit's runtime type system two packages are needed: The Deepkit Ty
 
 ## Installation 
 
-```
+```sh
 npm install --save @deepkit/type
 npm install --save-dev @deepkit/type-compiler typescript ts-node
 ```

@@ -30,13 +30,39 @@ Alternatively, `validatedDeserialize` can be used to validate after deserializat
 
 All functions from serialization and validation throw a `ValidationError` from `@deepkit/type` on errors.
 
-[#serialisation-cast]
 ## Cast
 
-Todo
+The `cast` function expects as first type argument a TypeScript type, and as second argument the data to cast. The data is casted to the given type, and if successful, the data is returned. If the data is not compatible with the given type and can not be converted automatically, a `ValidationError` is thrown.
 
-[#serialisation-serialise]
-## Serialisierung
+```typescript
+import { cast } from '@deepkit/type';
+
+cast<string>(123); //'123'
+cast<number>('123'); //123
+cast<number>('asdasd'); // throws ValidationError
+
+cast<string | number>(123); //123
+```
+
+```typescript
+class MyModel {
+    id: number = 0;
+    created: Date = new Date;
+
+    constructor(public name: string) {
+    }
+}
+
+const myModel = cast<MyModel>({
+    id: 5,
+    created: 'Sat Oct 13 2018 14:17:35 GMT+0200',
+    name: 'Peter',
+});
+```
+
+The `deserialize` function is similar to `cast`, but does not throw an error if the data is not compatible with the given type. Instead, the data is converted as far as possible and the result is returned. If the data is not compatible with the given type, the data is returned as it is.
+
+## Serialization
 
 ```typescript
 import { serialize } from '@deepkit/type';
@@ -63,8 +89,7 @@ const json = JSON.stringify(jsonObject);
 
 The function `serialize` converts the passed data by default with the JSON serializer into a JSON object, that is: String, Number, Boolean, Object, or Array. The result of this can then be safely converted to a JSON using `JSON.stringify`.
 
-[#serialisation-deserialise]
-## Deserialisierung
+## Deserialiazation
 
 The function `deserialize` converts the passed data per default with the JSON serializer into the corresponding specified types. The JSON serializer expects a JSON object, i.e.: string, number, boolean, object, or array. This is usually obtained from a `JSON.parse` call.
 

@@ -73,3 +73,5 @@ log.__type = ['message', 'log', 'P&2!$/"'];
 ## Virtual Machine
 
 A virtual machine (in `@deepkit/type` the class Processor) at runtime is responsible for decoding and executing the encoded bytecode. It always returns a type object as described in the [Reflection API](./reflection.md).
+
+More information can be found in [TypeScript Bytecode Interpreter / Runtime Types #47658](https://github.com/microsoft/TypeScript/issues/47658)

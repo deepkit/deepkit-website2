@@ -203,7 +203,7 @@ new App({
 }).run();
 ```
 
-image::debugger-configuration.png[]
+![Debugger Configuration](/assets/documentation/framework/debugger-configuration.png)
 
 You can also use `ts-node app.ts app:config` to display all available configuration options, the active value, their default value, description and data type.
 

@@ -12,6 +12,7 @@ export const projectMap: {[name: string]: string} = {
     'http': 'HTTP',
     'rpc': 'RPC',
     'orm': 'ORM',
+    'database': 'Database ORM',
     'desktop-ui': 'Desktop UI',
 }
 

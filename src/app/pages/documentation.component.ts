@@ -4,7 +4,7 @@ import { ControllerClient } from "@app/app/client";
 import { bodyToString, Content, IndexEntry, Page, parseBody, projectMap } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
-import { NgForOf, NgIf } from "@angular/common";
+import { NgForOf, NgIf, ViewportScroller } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { LoadingComponent } from "@app/app/components/loading";
@@ -37,6 +37,7 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <a routerLinkActive="active" routerLink="/documentation/framework/services">Services</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/events">Events</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/configuration">Configuration</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/database">Database</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/testing">Testing</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/deployment">Deployment</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/logger">Logger</a>
@@ -91,30 +92,32 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <div class="category-title">RPC</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/rpc">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/rpc/controller">Controller</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/security">Security</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/errors">Errors</a>
-                    <a routerLinkActive="active" routerLink="/documentation/rpc/streaming">Streaming</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/transport">Transport</a>
                 </div>
 
                 <div class="category">
-                    <div class="category-title">ORM</div>
+                    <div class="category-title">Database ORM</div>
 
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/orm">Getting
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/database">Getting
                         started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/entity">Entity</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/session">Session</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/query">Query</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/transactions">Transactions</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/inheritance">Inheritance</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/relations">Relations</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/events">Events</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/composite-primary-key">Composite primary key</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/entity">Entity</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/session">Session</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/query">Query</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/transaction">Transaction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/inheritance">Inheritance</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/relations">Relations</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/events">Events</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/migrations">Migrations</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/orm-browser">ORM Browser</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/raw-access">Raw Access</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/seeding">Seeding</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/composite-primary-key">Composite primary key</a>
                     <div class="section-title">Plugins</div>
                     <section>
-                        <a routerLinkActive="active" routerLink="/documentation/orm/plugin/soft-delete">Soft-Delete</a>
+                        <a routerLinkActive="active" routerLink="/documentation/database/plugin/soft-delete">Soft-Delete</a>
                     </section>
                 </div>
 
@@ -155,6 +158,14 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <div *ngIf="project" class="project">{{project}}</div>
                     <app-render-content [linkRelativeTo]="currentPath" [content]="page.body"></app-render-content>
                 </div>
+
+                <div class="ask-question">
+                    <div class="wrapper">
+                        <div class="box">
+                            <input placeholder="Ask a question">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="table-of-content" *ngIf="headers.length > 1">
@@ -183,6 +194,7 @@ export class DocumentationComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private client: ControllerClient,
         private cd: ChangeDetectorRef,
+        private viewportScroller: ViewportScroller,
         public router: Router,
     ) {
         console.log('new DocumentationComponent');
@@ -238,6 +250,11 @@ export class DocumentationComponent implements OnInit {
             this.loading = false;
         }
         this.cd.detectChanges();
+
+        const fragment = this.activatedRoute.snapshot.fragment;
+        if (fragment) {
+            this.viewportScroller.scrollToAnchor(fragment);
+        }
     }
 
     loadTableOfContent() {

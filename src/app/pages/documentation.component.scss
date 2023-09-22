@@ -14,6 +14,32 @@
     padding: 30px 0;
 }
 
+.ask-question {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 5px;
+    pointer-events: none;
+
+    .wrapper {
+        max-width: 690px;
+    }
+
+    .box {
+        pointer-events: all;
+        padding: 20px 30px;
+        background-color: rgba(14, 18, 23, 0.75);
+    }
+
+    input {
+        height: 36px;
+        width: 100%;
+        font-size: 15px;
+        padding: 8px 14px;
+    }
+}
+
 .docs-logo {
     display: flex;
     align-items: center;
@@ -52,12 +78,14 @@
 }
 
 .content {
+    position: relative;
     min-height: 100vh;
     //text-align: left;
-    padding: 50px;
+    padding: 30px;
     padding-top: 120px;
+    padding-bottom: 250px;
     margin: 0;
-    margin-left: 200px;
+    margin-left: 225px;
     font-size: 15px;
     color: rgb(230, 231, 232);
     line-height: 170%;
@@ -111,7 +139,8 @@
 
 .table-of-content {
     text-align: left;
-    max-width: 250px;
+    width: 220px;
+    overflow: hidden;
     padding-top: 80px;
     margin-right: 20px;
 
@@ -200,11 +229,15 @@ nav {
     }
 }
 
+nav {
+    padding-top: 25px;
+}
+
 .table-of-content {
     padding-top: 90px;
 }
 
-.table-of-content, nav .category {
+.table-of-content, nav {
     a, a:link {
         display: block;
         color: #D1D1D1;
@@ -222,7 +255,9 @@ nav {
             color: var(--color-link-active);
         }
     }
+}
 
+.table-of-content, nav .category {
     .category-title {
         font-weight: bold;
         color: white;

@@ -95,20 +95,26 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 //if content.props.href is relative, convert path to an absolute using this.linkRelativeTo
                 // resolve correctly so that ../ and ./ are handled correctly
                 if (content.props?.href) {
-                    const base = new URL('http://none/'+ this.router.url);
-                    const url = new URL(content.props.href, new URL(this.router.url, base));
-                    this.renderer.setAttribute(element, 'href', url.pathname.replace('.md', ''));
+                    if (content.props.href.startsWith('http://') || content.props.href.startsWith('https://')) {
+                        this.renderer.setAttribute(element, 'target', '_blank');
+                    } else {
+                        const base = new URL('http://none/' + this.router.url);
+                        const url = new URL(content.props.href, new URL(this.router.url, base));
+                        let href = url.pathname.replace('.md', '');
+                        if (url.hash) href += url.hash;
+                        this.renderer.setAttribute(element, 'href', href);
+                    }
                 }
             }
             if (content.tag === 'p' || content.tag === 'div') {
                 this.renderer.addClass(element, 'text');
             }
 
-            if (content.tag.startsWith('h') && content.props && content.props.id) {
-                const a = this.renderer.createElement('a');
-                this.renderer.setAttribute(a, 'name', content.props.id);
-                this.renderer.appendChild(parent, a);
-            }
+            // if (content.tag.startsWith('h') && content.props && content.props.id) {
+            //     const a = this.renderer.createElement('a');
+            //     this.renderer.setAttribute(a, 'name', content.props.id);
+            //     this.renderer.appendChild(parent, a);
+            // }
 
             if (content.tag === 'img') {
                 const wrapperDiv = this.renderer.createElement('div');

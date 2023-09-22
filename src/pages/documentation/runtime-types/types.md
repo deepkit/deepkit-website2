@@ -1,6 +1,6 @@
 # Type Annotations
 
-Type annotations are normal TypeScript types that contain meta-information to change the behavior of various functions at runtime. Deepkit already provides some type annotations that cover some use cases. For example, a class property can be marked as primary key, reference, or index. The database library can use this information at runtime to create the correct SQL queries without prior code generation.
+Type annotations are normal TypeScript types that contain meta-information that can be read and change the behavior of various functions at runtime. Deepkit already provides some type annotations that cover many use cases. For example, a class property can be marked as primary key, reference, or index. The database library can use this information at runtime to create the correct SQL queries without prior code generation.
 
 Validator constraints such as `MaxLength`, `Maximum`, or `Positive` can also be added to any type. It is also possible to tell the serializer how to serialize or deserialize a particular value. In addition, it is possible to create completely custom type annotations and read them at runtime, in order to use the type system at runtime in a very individual way.
 

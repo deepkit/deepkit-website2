@@ -2,6 +2,7 @@ import { Page } from "@app/common/models";
 
 import frontMatterParser from "gray-matter";
 import { cast } from "@deepkit/type";
+import { Client } from "discord.js";
 
 function renderText(node: any): any {
     if (typeof node === "string") return node;
@@ -89,7 +90,19 @@ export class MarkdownParser {
         } as any);
     }
 
+    constructor(
+        private client: Client
+    ) {
+    }
+
     parse(content: string): Page {
+        if (this.client.user) {
+            //replace bot id with @DeepBot
+            content = content.replace(new RegExp(`<@!?${this.client.user.id}>`, 'g'), '@DeepBot');
+        }
+        return this.parseRaw(content);
+    }
+    parseRaw(content: string): Page {
         if (!this.proccesor) throw new Error("MarkdownParser not loaded.");
 
         const front = frontMatterParser(content);

@@ -1,5 +1,10 @@
 export class AppConfig {
-    databaseUrl: string = 'mongodb://localhost/deepkit-website';
+    databaseHost: string = 'localhost';
+    databasePort: number = 5432;
+    databaseName: string = 'postgres';
+    databaseUser: string = 'postgres';
+    databasePassword: string = '';
+
     algoliaAppId: string = 'K2EE7TWRCB';
     algoliaApiKey!: string;
     openaiApiKey: string = '';

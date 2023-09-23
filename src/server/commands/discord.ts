@@ -29,7 +29,6 @@ export async function registerBot(
     });
 
     client.on('interactionCreate', async (interaction) => {
-        console.log(interaction);
         if (interaction.isButton()) {
             if (interaction.customId.startsWith('upvote_answer:')) {
                 const id = Number(interaction.customId.split(':')[1]);
@@ -58,6 +57,7 @@ export async function registerBot(
     });
 
     client.on('threadDelete', async (thread) => {
+        logger.log('threadDelete', thread.id);
         // this removes all answers as well if it's the root message (the thread beginning)
         await database.query(CommunityMessage)
             .filter({ discordThreadId: thread.id })
@@ -65,6 +65,7 @@ export async function registerBot(
     });
 
     client.on('messageDelete', async (message) => {
+        logger.log('messageDelete', message.id);
         // this removes all answers as well if it's the root message (the thread beginning)
         await database.query(CommunityMessage)
             .filter({ discordMessageId: message.id })
@@ -73,6 +74,15 @@ export async function registerBot(
 
     client.on('messageCreate', async (message) => {
         if (!botUserId) return;
+
+        if (message.partial) {
+            try {
+                message = await message.fetch();
+            } catch (error) {
+                logger.error('Could not fetch partial message', error);
+                return;
+            }
+        }
 
         const mentioned = message.mentions.users.has(botUserId);
         if (message.author.id === botUserId) return;
@@ -103,6 +113,7 @@ export async function registerBot(
         const prompt = message.content.replace(`<@!${botUserId}>`, '@DeepBot').trim();
 
         const communityMessage = new CommunityMessage(message.author.id, message.author.displayName, prompt);
+        communityMessage.discordUserAvatarUrl = message.author.avatarURL() || '';
         communityMessage.discordUrl = message.url;
         communityMessage.discordMessageId = message.id;
         if (message.channel.type === ChannelType.GuildText) {
@@ -124,8 +135,14 @@ export async function registerBot(
             communityMessage.order = lastMessage.order + 1;
         }
 
+        let referenceMessage: CommunityMessage | undefined = undefined;
+        if (message.reference) {
+            referenceMessage = await database.query(CommunityMessage).filter({ discordMessageId: message.reference.messageId }).findOneOrUndefined();
+            logger.log('message.reference', message.reference, referenceMessage?.id)
+        }
+
         try {
-            const response = await questions.ask(communityMessage);
+            const response = await questions.ask(communityMessage, referenceMessage);
             if (response.type === 'edit') {
                 await message.react('✅');
             }

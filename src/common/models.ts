@@ -13,7 +13,6 @@ export const projectMap: { [name: string]: string } = {
     'cli': 'CLI',
     'http': 'HTTP',
     'rpc': 'RPC',
-    'orm': 'ORM',
     'database': 'Database ORM',
     'desktop-ui': 'Desktop UI',
 }
@@ -134,6 +133,7 @@ export class CommunityMessage {
     slug: string = '';
 
     category: string = '';
+    discordUserAvatarUrl: string = '';
     discordUrl: string = '';
     discordChannelId?: string;
     discordMessageId?: string & Index;
@@ -141,7 +141,7 @@ export class CommunityMessage {
 
     constructor(
         public userId: string,
-        public displayName: string,
+        public userDisplayName: string,
         public content: string = '',
         public thread?: CommunityMessage & Reference,
     ) {
@@ -170,6 +170,7 @@ export interface CommunityQuestionListItem {
     id: number;
     created: Date;
     discordUrl: string;
+    answerDiscordUrl: string;
     category: string;
     votes: number;
     title: string;
@@ -180,10 +181,12 @@ export interface CommunityQuestion {
     id: number;
     created: Date;
     discordUrl: string;
+    answerDiscordUrl: string;
     category: string;
     votes: number;
     title: string;
     user: string;
+    userAvatar: string;
     question: Content;
-    messages: Content[];
+    messages: {user: string, userAvatar: string, content: Content}[];
 }

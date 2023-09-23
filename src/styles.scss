@@ -397,8 +397,8 @@ pre.console {
     color: #888;
 }
 
-.content,
-.content-full {
+.app-content,
+.app-content-full {
     position: relative;
     min-height: 100vh;
     //text-align: left;
@@ -452,7 +452,7 @@ pre.console {
     }
 }
 
-.content-full {
+.app-content-full {
     max-width: unset;
 }
 
@@ -467,7 +467,7 @@ button, a.button, a.button:link {
     //background: #2B3034;
     //border-radius: 4px;
 
-    padding: 8px 20px;
+    padding: 5px 20px;
     text-align: center;
     color: white;
     font-size: 14px;

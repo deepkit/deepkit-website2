@@ -14,7 +14,7 @@ import { Questions, testQuestions } from "@app/server/questions";
 import { registerBot } from "@app/server/commands/discord";
 import { MainDatabase } from "@app/server/database";
 import { Database } from "@deepkit/orm";
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { Url } from "@app/server/url";
 import { MarkdownParser } from "@app/common/markdown";
 
@@ -45,6 +45,7 @@ new App({
         {
             provide: Client, useFactory() {
                 return new Client({
+                    partials: [Partials.Message, Partials.Channel, Partials.Reaction],
                     intents: [
                         GatewayIntentBits.Guilds,
                         GatewayIntentBits.GuildMessages,
@@ -57,7 +58,9 @@ new App({
         }
     ],
     imports: [
-        new FrameworkModule()
+        new FrameworkModule({
+            migrateOnStartup: true, //yolo
+        })
     ]
 })
     .command('search:index', (algolia: Algolia) => algolia.index())

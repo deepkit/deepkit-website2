@@ -21,7 +21,7 @@ import { ControllerClient } from "@app/app/client";
     ],
     styleUrls: ['./page.component.scss'],
     template: `
-        <div class="content">
+        <div class="app-content">
             <app-loading *ngIf="loading"></app-loading>
 
             <app-title *ngIf="project" value="{{project}}"></app-title>

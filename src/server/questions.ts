@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import { PageProcessor } from "@app/server/page-processor";
 import { Database } from "@deepkit/orm";
-import { CommunityMessage, CommunityMessageVote } from "@app/common/models";
+import { CommunityMessage, CommunityMessageVote, projectMap } from "@app/common/models";
 import { AnyThreadChannel, ButtonStyle, ChannelType, Client, ComponentType, Message } from "discord.js";
 import { Logger } from "@deepkit/logger";
 import { asyncOperation } from "@deepkit/core";
@@ -27,9 +27,12 @@ You answer/output always in this format:
 
 \`\`\`
 type: <type>
+category: <category>
 title: <short title of answer>
 text: <your answer>
 \`\`\`
+
+<category> can be one of: ${Object.keys(projectMap).join(', ')}.
 
 <type> can either be "answer, "edit", "refused". Per default you use "answer". If you don't know the answer or if it's out of scope, you use "refused".
 
@@ -44,7 +47,7 @@ Deepkit is a very modular TypeScript framework that offers a rich set of integra
 Keep the output formatted as described. You can use markdown in the text.
 `;
 
-export type StreamAnswerResponse = { title: string, type: string, text: ReplaySubject<string> };
+export type StreamAnswerResponse = { title: string, type: string, category: string, text: ReplaySubject<string> };
 
 const tooLongText = `...\n\nThe answer is too long for Discord, see Browser link below.`;
 const uuidV4Length = 36;
@@ -137,7 +140,7 @@ export class Questions {
     //     const discordMessage = await channel.messages.fetch(message.id ?? '');
     // }
 
-    async ask(communityMessage: CommunityMessage, url?: string): Promise<StreamAnswerResponse> {
+    async ask(communityMessage: CommunityMessage, references?: CommunityMessage, url?: string): Promise<StreamAnswerResponse> {
         if (!this.client.user) {
             this.logger.error('Discord bot not logged in');
             throw new Error('Discord bot not logged in');
@@ -152,18 +155,23 @@ export class Questions {
         const answer = new CommunityMessage(this.client.user.id, this.client.user.displayName, '', communityMessage.thread ?? communityMessage);
         answer.order = communityMessage.order + 1;
         answer.type = 'answer';
+        answer.category = response.category;
         answer.setTitle(response.title);
+        answer.discordUserAvatarUrl = this.client.user.avatarURL() || '';
         communityMessage.setTitle(response.title);
+        communityMessage.category = response.category;
 
         if (response.type === 'edit') {
             //instead of sending a new message, we edit the previous one (the last one in messages from the assistant)
-            let messageToEdit: CommunityMessage | undefined = undefined;
-            for (const m of messages) if (m.assistant) messageToEdit = m;
+            let messageToEdit: CommunityMessage | undefined = references;
+            if (!references) {
+                for (const m of messages) if (m.assistant) messageToEdit = m;
+            }
+
             if (!messageToEdit) {
                 this.logger.warning('Got an edit answer, but no assistant message in the thread.');
                 throw new Error('Message not found');
             }
-
             communityMessage.type = 'edit';
             this.logger.log('Editing message', messageToEdit.id, messageToEdit.discordMessageId);
             const discordAnswer = await this.findMessage(messageToEdit);
@@ -171,8 +179,9 @@ export class Questions {
             const streamer = new MessageStreamer(this.logger, discordAnswer);
             this.logger.log('Found answer. Stream changes to message ' + discordAnswer.id);
             const text = await streamer.send(response.text);
-            this.logger.log('Stream done. Text: ' + text.replace(/\n/g, '\\n').slice(0, 500));
+            this.logger.log('Stream done. Text: ' + text);
             messageToEdit.setTitle(response.title);
+            messageToEdit.category = response.category;
             messageToEdit.content = text;
             // we don't store `answer`, because it's just an edit of the previous message
             await this.database.persist(messageToEdit, communityMessage);
@@ -197,6 +206,7 @@ export class Questions {
         if (communityMessage.discordMessageId) {
             asyncOperation(async (resolve) => {
                 try {
+                    await this.database.persist(communityMessage); //discord needs the primary key to create URLs
                     const res = await this.sendToDiscord(
                         response,
                         communityMessage,
@@ -325,11 +335,13 @@ ${prompt}
 
         for (const m of existingMessages) {
             if (m.assistant) {
-                messages.push({ role: 'assistant', content: `
+                messages.push({
+                    role: 'assistant', content: `
 type: answer
 title: ${m.title}
 text: ${m.content.substring(0, 2000)}
-` });
+`
+                });
             } else {
                 messages.push({ role: 'user', content: m.content.substring(0, 1000) });
             }
@@ -344,6 +356,7 @@ text: ${m.content.substring(0, 2000)}
         const completion = await this.openAi.chat.completions.create({ messages, model: model, stream: true }, { stream: true });
         let type = '';
         let title = '';
+        let category = '';
         let buffer = '';
         let sendText = false;
         let firstSend = true;
@@ -359,9 +372,13 @@ text: ${m.content.substring(0, 2000)}
                             const typeStart = buffer.indexOf('type:');
                             const titleStart = buffer.indexOf('title:');
                             const answerStart = buffer.indexOf('text:');
+                            const categoryStart = buffer.indexOf('category:');
                             type = buffer.substring(typeStart + 5, titleStart).trim();
                             title = buffer.substring(titleStart + 6, answerStart).trim();
                             const restText = buffer.substring(answerStart + 'text:'.length).trimLeft();
+                            if (categoryStart !== -1) {
+                                category = buffer.substring(categoryStart + 9, buffer.indexOf('\n', categoryStart)).trim();
+                            }
                             sendText = true;
                             text = restText;
                             resolve(undefined);
@@ -391,6 +408,6 @@ text: ${m.content.substring(0, 2000)}
             })().then(() => subject.complete()).catch(error => subject.error(error));
         });
 
-        return { title, type, text: subject };
+        return { title, type, category, text: subject };
     }
 }

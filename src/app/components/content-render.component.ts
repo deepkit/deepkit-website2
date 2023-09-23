@@ -98,9 +98,25 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 }
             }
 
+            // filter forbidden or dangerous tags. we use a whitelist
+            if (!['div', 'p', 'a', 'button', 'pre', 'code', 'strong', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img',].includes(content.tag)) {
+                return;
+            }
+
+            //what else could be dangerous?
+            // <a href="javascript:alert('XSS')">XSS</a>
+            // <a href="jAvAsCrIpT:alert('XSS')">XSS</a>
+            // <a href="jav&#x09;ascript:alert('XSS')">XSS</a>
+            // fix these
+            if (content.tag === 'a' && content.props?.href?.toLowerCase().startsWith('javascript:')) {
+                return;
+            }
+
             let element = this.renderer.createElement(content.tag);
             if (content.props) {
+                const whitelist = ['href', 'target', 'class', 'id', 'src', 'width', 'height', 'name'];
                 for (const [key, value] of Object.entries(content.props)) {
+                    if (!whitelist.includes(key)) continue;
                     this.renderer.setAttribute(element, key, value);
                 }
             }

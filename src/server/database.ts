@@ -1,12 +1,20 @@
 import { Database } from '@deepkit/orm';
-import { MongoDatabaseAdapter } from "@deepkit/mongo";
 import { CommunityMessage, CommunityMessageVote } from "@app/common/models";
 import { AppConfig } from "@app/server/config";
+import { PostgresDatabaseAdapter } from "@deepkit/postgres";
+
+type DbConfig = Pick<AppConfig, 'databaseHost' | 'databaseName' | 'databasePort' | 'databaseUser' | 'databasePassword'>;
 
 export class MainDatabase extends Database {
-    constructor(databaseUrl: AppConfig['databaseUrl']) {
+    constructor(config: DbConfig) {
         super(
-            new MongoDatabaseAdapter(databaseUrl),
+            new PostgresDatabaseAdapter({
+                database: config.databaseName,
+                host: config.databaseHost,
+                password: config.databasePassword,
+                port: config.databasePort,
+                user: config.databaseUser,
+            }),
             [CommunityMessage, CommunityMessageVote]
         );
     }

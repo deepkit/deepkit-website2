@@ -3,9 +3,7 @@ import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { Logger } from "@deepkit/logger";
 import { Algolia } from "@app/server/algolia";
-import { OpenAI } from "openai";
 import { Observable } from "rxjs";
 import { Questions } from "@app/server/questions";
 import { MarkdownParser } from "@app/common/markdown";
@@ -38,11 +36,9 @@ function different(a?: string | Content, b?: string | Content): boolean {
 @rpc.controller('/main')
 export class MainController {
     constructor(
-        private logger: Logger,
         private algolia: Algolia,
         private ml: Questions,
         private page: PageProcessor,
-        private openAi: OpenAI,
         private database: Database,
         private markdownParser: MarkdownParser,
     ) {
@@ -51,40 +47,55 @@ export class MainController {
     @rpc.action()
     async getQuestion(id: number): Promise<CommunityQuestion> {
         const question = await this.database.query(CommunityMessage).filter({ id }).findOne();
-        const messages = await this.database.query(CommunityMessage).filter({ thread: question }).find();
+        const messages = await this.database.query(CommunityMessage).filter({ thread: question, type: { $ne: 'edit' } }).find();
 
         return {
             id: question.id,
             created: question.created,
             discordUrl: question.discordUrl,
+            answerDiscordUrl: messages[0]?.discordUrl || '',
             category: question.category,
             votes: question.votes,
             title: question.title,
-            user: question.displayName,
+            user: question.userDisplayName,
+            userAvatar: question.discordUserAvatarUrl,
             question: this.markdownParser.parse(question.content).body,
-            messages: messages.map(v => this.markdownParser.parse(v.content).body),
+            messages: messages.map(v => ({ user: v.userDisplayName, userAvatar: v.discordUserAvatarUrl, content: this.markdownParser.parse(v.content).body })),
         }
     }
 
-    async getQuestions(): Promise<CommunityQuestionListItem[]> {
-        const questions = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('votes', 'desc').limit(15).find();
-        const answers = await this.database.query(CommunityMessage).filter({ order: 1, thread: { $in: questions } }).find();
+    @rpc.action()
+    async getQuestions(): Promise<{ top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[] }> {
+        const top = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('votes', 'desc').limit(15).find();
+        const newest = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('created', 'desc').limit(15).find();
 
-        const result: CommunityQuestionListItem[] = [];
-        for (const question of questions) {
-            const answer = answers.find(v => v.thread?.id === question.id);
-            if (!answer) continue;
+        const answers = await this.database.query(CommunityMessage).filter({ order: 1, thread: { $in: [...top, ...newest] } }).find();
 
-            result.push({
-                id: question.id,
-                created: question.created,
-                discordUrl: question.discordUrl,
-                category: question.category,
-                votes: question.votes,
-                title: question.title,
-                user: question.displayName,
-            })
+        const result: { top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[] } = { top: [], newest: [] };
+
+        // we could also joins and what not, but we keep it simple since we only fetch 15*2 questions, so should always be fast enough.
+        function add(items: CommunityMessage[], to: CommunityQuestionListItem[]) {
+            for (const question of items) {
+                const answer = answers.find(v => v.thread?.id === question.id);
+                if (!answer) continue;
+                const entry = {
+                    id: question.id,
+                    created: question.created,
+                    discordUrl: question.discordUrl,
+                    answerDiscordUrl: answer.discordUrl,
+                    category: question.category,
+                    votes: question.votes,
+                    title: question.title,
+                    user: question.userDisplayName,
+                };
+
+                to.push(entry);
+            }
         }
+
+        add(top, result.top);
+        add(newest, result.newest);
+
         return result;
     }
 
@@ -109,7 +120,7 @@ export class MainController {
 
                 const question = new CommunityMessage('', 'Anonymous', prompt);
                 //todo: what if next question
-                const response = await this.ml.ask(question, url);
+                const response = await this.ml.ask(question, undefined, url);
 
                 for await (const t of eachValueFrom(response.text)) {
                     content += t;

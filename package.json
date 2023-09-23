@@ -35,6 +35,8 @@
     "@deepkit/http": "^1.0.1-alpha.98",
     "@deepkit/mongo": "^1.0.1-alpha.98",
     "@deepkit/orm": "^1.0.1-alpha.98",
+    "@deepkit/postgres": "^1.0.1-alpha.98",
+    "@deepkit/sql": "^1.0.1-alpha.98",
     "@deepkit/type": "^1.0.1-alpha.97",
     "@nguniversal/common": "^16.2.0",
     "@types/prismjs": "^1.26.0",

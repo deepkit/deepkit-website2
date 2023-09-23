@@ -18,11 +18,19 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
     styles: [`
         .question {
             overflow: hidden;
-            padding: 15px 25px;
-            border-bottom: 1px solid #1E1E1E;
+            padding: 10px 25px;
+
+            &:hover {
+                background: rgba(15, 15, 15, 0.40);
+            }
+
+            &:not(:last-child) {
+                border-bottom: 1px solid #1E1E1E;
+            }
 
             display: flex;
             flex-direction: row;
+            align-items: center;
 
             .title {
                 display: flex;
@@ -43,6 +51,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
             .actions .row {
                 display: flex;
                 flex-direction: row;
+                height: 26px;
 
                 > * {
                     margin-left: 15px;
@@ -67,7 +76,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
                 <div class="actions">
                     <div class="row">
                         <div class="app-tag">{{projectMap[question.category] || 'General'}}</div>
-                        <a class="button" [routerLink]="question.discordUrl">Discord</a>
+                        <a class="button" [href]="question.answerDiscordUrl" target="_blank">Discord</a>
                     </div>
                 </div>
             </div>
@@ -91,7 +100,7 @@ export class RenderQuestions {
     ],
     styleUrls: ['./community-questions.component.scss'],
     template: `
-        <div class="content-full">
+        <div class="app-content-full">
             <h1>Questions & Answers</h1>
             <p>
                 All questions answered by our DeepBot Discord bot and in our chat bot on this documentation site are collected here.
@@ -107,11 +116,32 @@ export class RenderQuestions {
 
             <h2>Top Questions</h2>
 
-            <render-questions [questions]="questions"></render-questions>
+            <render-questions [questions]="questions.top"></render-questions>
 
             <h2>New Questions</h2>
 
-            <render-questions [questions]="questions"></render-questions>
+            <render-questions [questions]="questions.newest"></render-questions>
+
+
+            <h2>How to Chat</h2>
+
+            <p>
+                How does the bot work in Discord? First of all, you have to join our Discord server. Then, you can ping the bot
+                with <code>@DeepBot</code> and ask your question. The bot will automatically create a new thread for you and answer
+                your question in a new message.
+            </p>
+
+            <p>
+                Now, after you got the first answer, you can continue chatting with the bot by keep pinging it. If you are not satisfied
+                with the answer, you can ask the bot to edit and fix it. The bot will then edit its previous message until you are satisfied.
+                You can of course also create follow-up questions, which the bot will answer in the same thread.
+            </p>
+
+            <p>
+                By carefully asking questions and asking the bot to edit its message, you can create a nice and clean documentation page not only for your, but other users as well since
+                all questions and answers are public on this page.
+            </p>
+
         </div>
 
     `
@@ -119,7 +149,7 @@ export class RenderQuestions {
 export class CommunityQuestionsComponent implements OnInit {
     id: string = '';
 
-    questions: CommunityQuestionListItem[] = [];
+    questions: {top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[]} = {top: [], newest: []};
 
     constructor(
         protected activatedRoute: ActivatedRoute,
@@ -129,15 +159,11 @@ export class CommunityQuestionsComponent implements OnInit {
 
     ngOnInit() {
         this.activatedRoute.params.subscribe(params => {
-            this.load(params.id);
+            this.load();
         });
     }
 
-    async load(id?: string) {
-        console.log('load', id);
-        // this.id = id;
-        // if (!this.id) return;
+    async load() {
         this.questions = await this.client.main.getQuestions();
-        console.log('questions', this.questions);
     }
 }

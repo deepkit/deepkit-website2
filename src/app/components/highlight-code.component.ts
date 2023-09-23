@@ -8,6 +8,40 @@ import 'prismjs/components/prism-json';
 
 @Component({
     selector: 'highlight-code',
+    styles: [`
+        :host {
+            display: block;
+            max-width: 100%;
+        }
+
+        pre {
+            overflow: auto;
+            overflow: overlay;
+            scrollbar-width: thin;
+            max-width: 100%;
+            margin: 0;
+
+            &::-webkit-scrollbar {
+                height: 8px;
+                width: 8px;
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgba(169, 173, 175, 0.77);
+                border-radius: 8px;
+                border: 2px solid rgba(0, 0, 0, 0.01);
+                background-clip: padding-box;
+
+                &:hover {
+                    cursor: default;
+                    background: #727475;
+                    border: 2px solid rgba(0, 0, 0, 0.01);
+                    background-clip: padding-box;
+                }
+            }
+        }
+    `],
     standalone: true,
     template: `
         <pre class="code codeHighlight" [innerHTML]="html"></pre>

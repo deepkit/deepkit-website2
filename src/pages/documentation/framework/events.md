@@ -13,48 +13,40 @@ An event can take various forms:
 
 The Deepkit Framework and its associated libraries offer a range of events that users can listen to and respond to. However, users also have the flexibility to create as many custom events as needed, allowing for modular expansion of the application.
 
-Below is an example of the low-level API from @deepkit/event. When using the Deepkit Framework, event listeners are not registered directly via the EventDispatcher, but rather through modules. But you can still use the low-level API if you want to.
+## Usage
+
+If you use a Deepkit Framework app, the event system is already included and ready to use.
 
 ```typescript
-import { EventDispatcher, EventToken } from '@deepkit/event';
+import { App, onAppExecute } from '@deepkit/app';
 
-//first argument can be a injector context to resolve dependencies for dependency injection
-const dispatcher = new EventDispatcher();
-const MyEvent = new EventToken('my-event');
+const app = new App();
 
-dispatcher.listen(MyEvent, (event) => {
+app.listen(onAppExecute, async (event) => {
     console.log('MyEvent triggered!');
 });
-dispatcher.dispatch(MyEvent);
+
+app.run();
 ```
 
-## Installation
+Events can be registered either by using the `listen()` method or a class using the `@eventDispatcher.listen` decorator:
 
-Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to [Runtime Type Installation](runtime-types.md#runtime-types-installation).
+```typescript
+import { App, onAppExecute } from '@deepkit/app';
+import { eventDispatcher } from '@deepkit/event';
 
-Once this is successfully accomplished, you can install @deepkit/event or the entire Deepkit Framework, which already includes the library under the hood.
-
-```sh
-npm install @deepkit/event
-```
-
-It's important to note that @deepkit/event relies on TypeScript decorators for its class listeners. Therefore, when using a class, you'll need to enable the `experimentalDecorators` feature.
-
-_File: tsconfig.json_
-
-```json
-{
-  "compilerOptions": {
-    "module": "CommonJS",
-    "target": "es6",
-    "moduleResolution": "node",
-    "experimentalDecorators": true
-  },
-  "reflection": true
+class MyListener {
+    @eventDispatcher.listen(onAppExecute)
+    onMyEvent(event: typeof onAppExecute.event) {
+        console.log('MyEvent triggered!');
+    }
 }
-```
 
-As soon as the library is installed, the API can be used directly.
+const app = new App({
+    listeners: [MyListener],
+});
+app.run();
+```
 
 ## Event Token
 
@@ -63,27 +55,28 @@ At the core of Deepkit's event system are Event Tokens. These are unique objects
 - It acts as a trigger for an event.
 - It listens to the event it triggers.
 
-When an event gets triggered from an event token, the owner of that token is conceptually the entity that initiated the event. The event token decides the data available at the event and whether asynchronous event listeners are allowed.
+When an event is initiated using an event token, that token's owner is effectively recognized as the source of the event. The token determines the data associated with the event and specifies if asynchronous event listeners can be utilized.
 
 ```typescript
 import { EventToken } from '@deepkit/event';
 
 const MyEvent = new EventToken('my-event');
 
-dispatcher.listen(MyEvent, (event) => {
+app.listen(MyEvent, (event) => {
     console.log('MyEvent triggered!');
 });
-dispatcher.dispatch(MyEvent);
+await app.dispatch(MyEvent);
 ```
 
 ### Creating Custom Event Data:
-
 
 Using `DataEventToken` from @deepkit/event:
 
 ```typescript
 import { DataEventToken } from '@deepkit/event';
-class User {}
+
+class User {
+}
 
 const MyEvent = new DataEventToken<User>('my-event');
 ```
@@ -94,6 +87,7 @@ Extending BaseEvent:
 class MyEvent extends BaseEvent {
     user: User = new User;
 }
+
 const MyEventToken = new EventToken<MyEvent>('my-event');
 ```
 
@@ -102,7 +96,7 @@ const MyEventToken = new EventToken<MyEvent>('my-event');
 Functional listeners allow users to register a simple function callback with the dispatcher directly. Here's how:
 
 ```typescript
-dispatcher.listen(MyEvent, (event) => {
+app.listen(MyEvent, (event) => {
     console.log('MyEvent triggered!');
 });
 ```
@@ -110,7 +104,7 @@ dispatcher.listen(MyEvent, (event) => {
 If you wish to introduce additional arguments like `logger: Logger`, they are automatically injected by the dependency injection system, thanks to Deepkit's runtime type reflection.
 
 ```typescript
-dispatcher.listen(MyEvent, (event, logger: Logger) => {
+app.listen(MyEvent, (event, logger: Logger) => {
     console.log('MyEvent triggered!');
 });
 ```
@@ -120,7 +114,7 @@ Note that the first argument has to be the event itself. You can not avoid this 
 If you use `@deepkit/app`, you can also use app.listen() to register a functional listener.
 
 ```typescript
-import {App} from '@deepkit/app';
+import { App } from '@deepkit/app';
 
 new App()
     .listen(MyEvent, (event) => {
@@ -134,7 +128,7 @@ new App()
 Class listeners are classes adorned with decorators. They offer a structured way to listen to events.
 
 ```typescript
-import {App} from '@deepkit/app';
+import { App } from '@deepkit/app';
 
 class MyListener {
     @eventDispatcher.listen(UserAdded)
@@ -178,6 +172,7 @@ With the Deepkit framework's event system, developers can create modular, scalab
 Deepkit Framework itself has several events from the application server that you can listen for.
 
 _Functional Listener_
+
 ```typescript
 import { onServerMainBootstrap } from '@deepkit/framework';
 
@@ -190,14 +185,63 @@ new App({
     .run();
 ```
 
-| Name                         | Description                                                                                                          |
-|------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| onServerBootstrap            | Called only once for application server bootstrap (for main process and workers).                                    |
-| onServerBootstrapDone        | Called only once for application server bootstrap (for main process and workers) as soon as the application server has started. |
-| onServerMainBootstrap        | Called only once for application server bootstrap (in the main process).                                             |
-| onServerMainBootstrapDone    | Called only once for application server bootstrap (in the main process) as soon as the application server has started. |
-| onServerWorkerBootstrap      | Called only once for application server bootstrap (in the worker process).                                           |
-| onServerWorkerBootstrapDone  | Called only once for application server bootstrap (in the worker process) as soon as the application server has started. |
-| ServerShutdownEvent          | Called when application server shuts down (in master process and each worker).                                       |
-| onServerMainShutdown         | Called when application server shuts down in the main process.                                                       |
-| onServerWorkerShutdown       | Called when application server shuts down in the worker process.                                                     |
+| Name                        | Description                                                                                                                     |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| onServerBootstrap           | Called only once for application server bootstrap (for main process and workers).                                               |
+| onServerBootstrapDone       | Called only once for application server bootstrap (for main process and workers) as soon as the application server has started. |
+| onServerMainBootstrap       | Called only once for application server bootstrap (in the main process).                                                        |
+| onServerMainBootstrapDone   | Called only once for application server bootstrap (in the main process) as soon as the application server has started.          |
+| onServerWorkerBootstrap     | Called only once for application server bootstrap (in the worker process).                                                      |
+| onServerWorkerBootstrapDone | Called only once for application server bootstrap (in the worker process) as soon as the application server has started.        |
+| ServerShutdownEvent         | Called when application server shuts down (in master process and each worker).                                                  |
+| onServerMainShutdown        | Called when application server shuts down in the main process.                                                                  |
+| onServerWorkerShutdown      | Called when application server shuts down in the worker process.                                                                |
+| onAppExecute      | When a CLI command is about to be executed.                                                                |
+| onAppExecuted      | When a CLI command is successfully executed.                                                                |
+| onAppError      | When a CLI command failed to execute                                                                |
+| onAppShutdown      | When the application is about to shut down.                                                                |
+
+## Low Level API
+
+Below is an example of the low-level API from @deepkit/event. When using the Deepkit Framework, event listeners are not registered directly via the EventDispatcher, but rather through modules. But you can still use the low-level API if you want to.
+
+```typescript
+import { EventDispatcher, EventToken } from '@deepkit/event';
+
+//first argument can be a injector context to resolve dependencies for dependency injection
+const dispatcher = new EventDispatcher();
+const MyEvent = new EventToken('my-event');
+
+dispatcher.listen(MyEvent, (event) => {
+    console.log('MyEvent triggered!');
+});
+dispatcher.dispatch(MyEvent);
+```
+
+### Installation
+
+Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to [Runtime Type Installation](runtime-types.md#runtime-types-installation).
+
+Once this is successfully accomplished, you can install @deepkit/event or the entire Deepkit Framework, which already includes the library under the hood.
+
+```sh
+npm install @deepkit/event
+```
+
+It's important to note that @deepkit/event relies on TypeScript decorators for its class listeners. Therefore, when using a class, you'll need to enable the `experimentalDecorators` feature.
+
+_File: tsconfig.json_
+
+```json
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "es6",
+        "moduleResolution": "node",
+        "experimentalDecorators": true
+    },
+    "reflection": true
+}
+```
+
+As soon as the library is installed, the API can be used directly.

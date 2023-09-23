@@ -6,6 +6,8 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { deserialize } from "@deepkit/type";
 import { bodyToString, IndexEntry, Page, projectMap } from "@app/common/models";
+import { markdownAsJsTree } from "@app/common/markdown";
+import { PageProcessor } from "@app/server/page-processor";
 
 function createIndexEntriesForPage(page: Page, rootPath: string = ''): IndexEntry[] {
     const entries: IndexEntry[] = [];
@@ -48,6 +50,7 @@ export class Algolia {
     constructor(
         algoliaAppId: AppConfig['algoliaAppId'],
         algoliaApiKey: AppConfig['algoliaApiKey'],
+        protected page: PageProcessor,
     ) {
         this.client = algoliasearch(algoliaAppId, algoliaApiKey);
     }
@@ -77,12 +80,8 @@ export class Algolia {
 
         const files = await glob('**/*.md', { cwd: pagesDir });
 
-        const mdjs = require("@moox/markdown-to-json");
-
         for (const file of files) {
-            const content = await readFile(join(pagesDir, file), 'utf8');
-            const json = mdjs.markdownAsJsTree(content, () => []);
-            const page = deserialize<Page>(json);
+            const page = await this.page.parse(file);
             // console.log(json);
             // const body = bodyToString(page.body);
             page.url = file.replace('.md', '');

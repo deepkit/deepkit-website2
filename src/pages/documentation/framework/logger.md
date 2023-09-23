@@ -89,11 +89,7 @@ new App()
     .run();
 ```
 
-## Formatter
-
-With formatters, you can change the message format, e.g. add the timestamp. When an application is started via `server:start`, a `DefaultFormatter` is automatically added (which adds timestamp, range and log level) if no other formatter is available.
-
-### Scoped Logger
+## Scoped Logger
 
 Scoped loggers add an arbitrary area name to each log entry, which can be helpful in determining which subarea of your application the log entry originated from.
 
@@ -101,6 +97,25 @@ Scoped loggers add an arbitrary area name to each log entry, which can be helpfu
 const scopedLogger = logger.scoped('database');
 scopedLogger.log('Query', query);
 ```
+
+There is also a `ScopedLogger` type that you can use to inject scoped loggers into your services.
+
+```typescript
+import { ScopedLogger } from '@deepkit/logger';
+
+class MyService {
+    constructor(protected logger: ScopedLogger) {}
+    doSomething() {
+        this.logger.log('This is wild');
+    }
+}
+```
+
+All messages from a scoped logger are prefixed with the `MyService` scope name now.
+
+## Formatter
+
+With formatters, you can change the message format, e.g. add the timestamp. When an application is started via `server:start`, a `DefaultFormatter` is automatically added (which adds timestamp, range and log level) if no other formatter is available.
 
 ## JSON Transporter
 

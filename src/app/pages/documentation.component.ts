@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
 import { bodyToString, Content, IndexEntry, Page, parseBody, projectMap } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
 import { NgForOf, NgIf, ViewportScroller } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { LoadingComponent } from "@app/app/components/loading";
+import { AskComponent } from "@app/app/components/ask.component";
 
 @Component({
     standalone: true,
@@ -20,7 +20,9 @@ import { LoadingComponent } from "@app/app/components/loading";
         RouterLink,
         NgForOf,
         FormsModule,
-        LoadingComponent
+        LoadingComponent,
+        AskComponent,
+        RouterOutlet
     ],
     styleUrls: ['./documentation.component.scss'],
     template: `
@@ -28,6 +30,9 @@ import { LoadingComponent } from "@app/app/components/loading";
             <nav [class.showMenu]="showMenu">
                 <div style="margin-bottom: 25px;">
                     <a routerLinkActive="active" routerLink="/documentation/introduction">Introduction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/questions">Questions & Answers</a>
+                    <a routerLinkActive="active" routerLink="/documentation/community-qanda">Join Discord</a>
+                    <a routerLinkActive="active" routerLink="/documentation/learn-typescript">Learn TypeScript</a>
                 </div>
 
                 <div class="category">
@@ -101,8 +106,8 @@ import { LoadingComponent } from "@app/app/components/loading";
                 <div class="category">
                     <div class="category-title">Database ORM</div>
 
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/database">Getting
-                        started</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/database">Introduction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/getting-started">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/entity">Entity</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/session">Session</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/query">Query</a>
@@ -142,138 +147,17 @@ import { LoadingComponent } from "@app/app/components/loading";
                     <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dialog">Dialog</a>
                 </div>
             </nav>
-            <div class="content">
 
-                <app-loading *ngIf="loading"></app-loading>
-
-                <app-title *ngIf="project" value="{{project}}"></app-title>
-                <div class="error" *ngIf="error">
-                    {{error}}
-                </div>
-                <div *ngIf="page">
-                    <app-title value="{{page.title}}"></app-title>
-
-                    <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
-
-                    <div *ngIf="project" class="project">{{project}}</div>
-                    <app-render-content [linkRelativeTo]="currentPath" [content]="page.body"></app-render-content>
-                </div>
-
-                <div class="ask-question">
-                    <div class="wrapper">
-                        <div class="box">
-                            <input placeholder="Ask a question">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-of-content" *ngIf="headers.length > 1">
-                <a [href]="router.url.split('#')[0] + '#' + h.link" class="intend-{{h.indent}}" *ngFor="let h of headers">
-                    {{h.label}}
-                </a>
-            </div>
+            <router-outlet></router-outlet>
         </div>
     `
 })
-export class DocumentationComponent implements OnInit {
-    bodyToString = bodyToString;
+export class DocumentationComponent {
     showMenu: boolean = false;
-    project = '';
-
-    page?: Page;
-    error?: string;
-    loading = false;
-
-    subline?: Content;
-    currentPath: string = '/';
-
-    public headers: { label: string, indent: number, link: string }[] = [];
-
     constructor(
         private activatedRoute: ActivatedRoute,
-        private client: ControllerClient,
-        private cd: ChangeDetectorRef,
-        private viewportScroller: ViewportScroller,
         public router: Router,
     ) {
         console.log('new DocumentationComponent');
-    }
-
-    getFragment(value: string): string {
-        if ('string' !== typeof value) return '';
-        return value.trim().replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
-    }
-
-    ngAfterViewInit() {
-        this.loadTableOfContent();
-    }
-
-    onOutlet(event: any) {
-        this.loadTableOfContent();
-    }
-
-    ngOnInit() {
-        this.activatedRoute.firstChild!.url.subscribe((url) => {
-            if (url.length > 1) {
-                this.load(url[1].path, url[0].path);
-            } else if (url.length === 1) {
-                this.load(url[0].path);
-            } else {
-                this.load('');
-            }
-        });
-    }
-
-    async load(path: string, project: string = '') {
-        this.project = projectMap[project] || project;
-        path = path || 'index';
-        if (project) path = project + '/' + path;
-        this.error = undefined;
-        this.loading = true;
-        this.cd.detectChanges();
-        this.headers = [];
-
-        try {
-            this.page = await this.client.main.getPage('documentation/' + path);
-            this.currentPath = 'documentation/' + path;
-            if (!this.page) return;
-
-            const parsed = parseBody(this.page.body);
-            this.subline = parsed.subline;
-            // console.log(this.subline, this.intro, this.rest);
-            this.loadTableOfContent();
-        } catch (error) {
-            this.page = undefined;
-            this.error = String(error);
-        } finally {
-            this.loading = false;
-        }
-        this.cd.detectChanges();
-
-        const fragment = this.activatedRoute.snapshot.fragment;
-        if (fragment) {
-            this.viewportScroller.scrollToAnchor(fragment);
-        }
-    }
-
-    loadTableOfContent() {
-        this.headers = [];
-        if (!this.page) return [];
-
-        console.log('this.page.body', this.page.body);
-        for (const child of this.page.body.children || []) {
-            if ('string' === typeof child) continue;
-            if (!child.children) continue;
-            const first = child.children[1];
-            if ('string' !== typeof first) continue;
-            if (!child.props) continue;
-
-            if (child.tag === 'h2') {
-                this.headers.push({ label: first, indent: 0, link: child.props.id });
-            } else if (child.tag === 'h3') {
-                this.headers.push({ label: first, indent: 1, link: child.props.id });
-            }
-        }
     }
 }

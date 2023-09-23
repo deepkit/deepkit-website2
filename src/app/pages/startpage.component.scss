@@ -44,8 +44,7 @@ main {
 }
 
 .feature-end-to-end {
-
-    pre.code {
+    highlight-code {
         max-width: 525px;
         margin: 55px auto auto;
         position: relative;
@@ -58,7 +57,11 @@ main {
         margin: auto;
         position: relative;
         z-index: 99;
-        top: -5px;
+        top: -15px;
+    }
+
+    highlight-code {
+        display: inline-block;
     }
 }
 

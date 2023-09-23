@@ -1,8 +1,10 @@
 import { HtmlResponse, httpWorkflow, RouteConfig } from '@deepkit/http';
 import { join } from 'node:path';
+// @ts-ignore
 import type { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
-import { eventDispatcher } from '@deepkit/event';
+// @ts-ignore
 import type { Router } from '@angular/router';
+import { eventDispatcher } from '@deepkit/event';
 import { Logger } from '@deepkit/logger';
 import { ApplicationServer } from '@deepkit/framework';
 import { findParentPath } from '@deepkit/app';

@@ -17,7 +17,7 @@ import { Router } from "@angular/router";
     template: ``,
 })
 export class ContentRenderComponent implements OnInit, OnChanges {
-    @Input() content!: Content[] | Content | string;
+    @Input() content!: (Content | string)[] | Content | string;
     @Input() linkRelativeTo: string = '/';
 
     constructor(
@@ -29,13 +29,27 @@ export class ContentRenderComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        // console.log('ContentRenderComponent onChanges');
         this.render();
     }
 
     ngOnInit() {
         // console.log('ContentRenderComponent onInit');
         // this.render();
+    }
+
+    render() {
+        const childElements = this.viewRef.element.nativeElement.children;
+        for (let i = childElements.length; i > 0; i--) {
+            this.renderer.removeChild(this.viewRef.element.nativeElement, childElements[i - 1]);
+        }
+
+        //and all text nodes
+        const childNodes = this.viewRef.element.nativeElement.childNodes;
+        for (let i = childNodes.length; i > 0; i--) {
+            this.renderer.removeChild(this.viewRef.element.nativeElement, childNodes[i - 1]);
+        }
+
+        this.renderContent(this.viewRef.injector, this.viewRef.element.nativeElement, this.content);
     }
 
     renderContent(injector: Injector, parent: any, content: (Content | string)[] | Content | string) {
@@ -92,7 +106,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             }
 
             if (content.tag === 'a') {
-                //if content.props.href is relative, convert path to an absolute using this.linkRelativeTo
+                //if content.props.href is relative
                 // resolve correctly so that ../ and ./ are handled correctly
                 if (content.props?.href) {
                     if (content.props.href.startsWith('http://') || content.props.href.startsWith('https://')) {
@@ -146,12 +160,4 @@ export class ContentRenderComponent implements OnInit, OnChanges {
         }
     }
 
-    render() {
-        const childElements = this.viewRef.element.nativeElement.children;
-        for (let i = childElements.length; i > 0; i--) {
-            this.renderer.removeChild(this.viewRef.element.nativeElement, childElements[i - 1]);
-        }
-
-        this.renderContent(this.viewRef.injector, this.viewRef.element.nativeElement, this.content);
-    }
 }

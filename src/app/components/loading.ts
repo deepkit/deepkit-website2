@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-loading',
     standalone: true,
     styles: [`
         div {
-            position: fixed;
-            z-index: 2147483647;
+            overflow: hidden;
+            position: absolute;
             top: 0;
             left: 0;
             width: 0;
@@ -14,6 +14,11 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
             background: #0088CC;
             border-radius: 1px;
             transition: width 1500ms ease-out, opacity 1400ms linear;
+        }
+
+        div.fixed {
+            position: fixed;
+            z-index: 2147483647;
         }
 
         div.loading {
@@ -43,13 +48,15 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
         }
     `],
     template: `
-        <div [class.loading]="loading">
+        <div [class.fixed]="fixed" [class.loading]="loading">
             <dt></dt>
             <dd></dd>
         </div>
     `
 })
 export class LoadingComponent implements OnInit {
+    @Input() fixed = true;
+
     loading = false;
 
     constructor(private cd: ChangeDetectorRef) {

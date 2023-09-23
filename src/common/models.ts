@@ -1,10 +1,12 @@
+import { AutoIncrement, entity, Index, PrimaryKey, Reference, uuid, UUID } from "@deepkit/type";
+
 export interface Content {
     tag: string;
     props?: { [name: string]: any };
     children?: (string | Content)[];
 }
 
-export const projectMap: {[name: string]: string} = {
+export const projectMap: { [name: string]: string } = {
     'framework': 'Framework',
     'runtime-types': 'Runtime Types',
     'dependency-injection': 'Dependency Injection',
@@ -93,4 +95,38 @@ export interface IndexEntry {
             value?: string
         }
     };
+}
+
+@entity.collection('community_questions')
+export class CommunityThread {
+    id: UUID & PrimaryKey = uuid();
+    created: Date = new Date;
+    title: string = '';
+    votes: number = 0;
+    discordChannelId?: string;
+    discordMessageId?: string;
+    discordThreadId?: string & Index;
+
+    constructor(
+        public userId: string,
+        public displayName: string,
+    ) {
+    }
+}
+
+@entity.collection('community_message')
+export class CommunityMessage {
+    id: UUID & PrimaryKey = uuid();
+    created: Date = new Date;
+    votes: number = 0;
+    assistant: boolean = false;
+
+    constructor(
+        public thread: CommunityThread & Reference,
+        public userId: string,
+        public displayName: string,
+        public content: string = '',
+    ) {
+    }
+
 }

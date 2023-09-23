@@ -4,7 +4,7 @@ Deepkit has its own powerful database abstraction library called Deepkit ORM. It
 
 Although you can use any database library, we recommend Deepkit ORM as it is the fastest TypeScript database abstraction library that is perfectly integrated with the Deepkit framework and has many features that will improve your workflow and efficiency.
 
-To get all the information about Deepkit ORM, see the [Database](../database.md) chapter.
+This chapter explains how to use Deepkit ORM with your Deepkit Framework application. To get all the information about Deepkit ORM, see the [Database](../database.md) chapter.
 
 ## Database Classes
 
@@ -16,9 +16,11 @@ import { SQLiteDatabaseAdapter } from '@deepkit/sqlite';
 import { User } from './models';
 
 export class SQLiteDatabase extends Database {
-    name = 'default';
     constructor() {
-        super(new SQLiteDatabaseAdapter('/tmp/myapp.sqlite'), [User]);
+        super(
+            new SQLiteDatabaseAdapter('/tmp/myapp.sqlite'), 
+            [User]
+        );
     }
 }
 ```
@@ -59,6 +61,73 @@ export class Controller {
         return await this.database.query(User).find();
     }
 }
+```
+
+## Configuration
+
+In many cases you want your connection credentials to be configurable. For example, you want to use a different database for testing than for production. You can do this by using the `config` option of the `Database` class.
+
+```typescript
+//database.ts
+import { Database } from '@deepkit/orm';
+import { PostgresDatabaseAdapter } from '@deepkit/sqlite';
+import { User } from './models';
+
+type DbConfig = Pick<AppConfig, 'databaseHost', 'databaseUser', 'databasePassword'>;
+
+export class MainDatabase extends Database {
+    constructor(config: DbConfig) {
+        super(new PostgresDatabaseAdapter({
+            host: config.databaseHost,
+            user: config.databaseUser,
+            password: config.databasePassword,
+        }), [User]);
+    }
+}
+```
+
+```typescript
+//config.ts
+export class AppConfig {
+    databaseHost: string = 'localhost';
+    databaseUser: string = 'postgres';
+    databasePassword: string = '';
+}
+```
+
+```typescript
+//app.ts
+import { App } from '@deepkit/app';
+import { FrameworkModule } from '@deepkit/framework';
+import { MainDatabase } from './database.ts';
+import { AppConfig } from './config.ts';
+
+const app = new App({
+    config: AppConfig,
+    providers: [MainDatabase],
+    imports: [
+        new FrameworkModule({
+            migrateOnStartup: true,
+            debug: true,
+        })
+    ]
+});
+app.loadConfigFromEnv({prefix: 'APP_', namingStrategy: 'upper', envFilePath: ['local.env', 'prod.env']});
+app.run();
+```
+
+
+Now, since we use loadConfigFromEnv, we can set the database credentials via environment variables.
+
+```sh
+APP_DATABASE_HOST=localhost APP_DATABASE_USER=postgres ts-node app.ts server:start
+```
+
+or in the `local.env` file and start `ts-node app.ts server:start` without any previously set environment variables.
+
+```sh
+APP_DATABASE_HOST=localhost
+APP_DATABASE_USER=postgres
 ```
 
 ## Multiple Databases
@@ -125,7 +194,7 @@ The newly created migration file contains now the up and down methods based on t
 You can now modify the up method to your needs. The down method is automatically generated based on the up method.
 You commit this file to your repository so that other developers can also execute it.
 
-## Pending Migrations
+### Pending Migrations
 
 ```sh
 ts-node app.ts migration:pending --migrationDir src/migrations
@@ -133,7 +202,7 @@ ts-node app.ts migration:pending --migrationDir src/migrations
 
 This shows all pending migrations. If you have a new migration file that is not executed yet, it will be listed here.
 
-## Executing Migrations
+### Executing Migrations
 
 ```sh
 ts-node app.ts migration:up --migrationDir src/migrations
@@ -141,7 +210,7 @@ ts-node app.ts migration:up --migrationDir src/migrations
 
 This executes the next pending migration.
 
-## Reverting Migrations
+### Reverting Migrations
 
 ```sh
 ts-node app.ts migration:down --migrationDir src/migrations
@@ -149,7 +218,7 @@ ts-node app.ts migration:down --migrationDir src/migrations
 
 This reverts the last executed migration.
 
-## Fake migrations
+### Fake migrations
 
 Let's say you wanted to execute a migration (up or down), but it failed. You fixed the issue manually, but now you can't execute the migration again, because it's already executed. You can use the `--fake` option to fake the migration, so that it's marked as executed in the database without actually executing it. This way you can execute the next pending migration.
 

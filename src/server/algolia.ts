@@ -2,11 +2,7 @@ import algoliasearch, { SearchClient } from 'algoliasearch';
 import { AppConfig } from "@app/server/config";
 import { findParentPath } from "@deepkit/app";
 import glob from 'tiny-glob';
-import { readFile } from "fs/promises";
-import { join } from "path";
-import { deserialize } from "@deepkit/type";
 import { bodyToString, IndexEntry, Page, projectMap } from "@app/common/models";
-import { markdownAsJsTree } from "@app/common/markdown";
 import { PageProcessor } from "@app/server/page-processor";
 
 function createIndexEntriesForPage(page: Page, rootPath: string = ''): IndexEntry[] {

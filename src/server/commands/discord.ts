@@ -1,8 +1,8 @@
-import { AnyThreadChannel, ChannelType, Client, GatewayIntentBits } from 'discord.js';
+import { AnyThreadChannel, ChannelType, Client, EmbedBuilder, GatewayIntentBits } from 'discord.js';
 import { Questions } from "@app/server/questions";
 import { AppConfig } from "@app/server/config";
 import { Logger } from "@deepkit/logger";
-import { CommunityMessage, CommunityThread } from "@app/common/models";
+import { CommunityMessage } from "@app/common/models";
 import { Database } from "@deepkit/orm";
 
 export async function registerBot(
@@ -28,61 +28,111 @@ export async function registerBot(
         logger.log(`Discord logged in as ${client.user!.tag} ${client.user!.id}!`);
     });
 
+    client.on('interactionCreate', async (interaction) => {
+        console.log(interaction);
+        if (interaction.isButton()) {
+            if (interaction.customId.startsWith('upvote_answer:')) {
+                const id = Number(interaction.customId.split(':')[1]);
+                const message = await questions.vote(id, interaction.user.id, 1);
+                const updatedEmbed = new EmbedBuilder().setDescription(`Votes: ${message.votes}`);
+                await interaction.message.edit({ embeds: [updatedEmbed] });
+            }
+            if (interaction.customId.startsWith('downvote_answer:')) {
+                const id = Number(interaction.customId.split(':')[1]);
+                const message = await questions.vote(id, interaction.user.id, -1);
+                const updatedEmbed = new EmbedBuilder().setDescription(`Votes: ${message.votes}`);
+                await interaction.message.edit({ embeds: [updatedEmbed] });
+            }
+            await interaction.reply({ content: 'Your vote has been counted!', ephemeral: true });
+        }
+    });
+
+    client.on('messageUpdate', async (message) => {
+        const threadMessage = await database.query(CommunityMessage)
+            .filter({ discordMessageId: message.id })
+            .findOneOrUndefined();
+        if (!threadMessage) return;
+
+        threadMessage.content = message.content || '';
+        await database.persist(threadMessage);
+    });
+
+    client.on('threadDelete', async (thread) => {
+        // this removes all answers as well if it's the root message (the thread beginning)
+        await database.query(CommunityMessage)
+            .filter({ discordThreadId: thread.id })
+            .deleteMany();
+    });
+
+    client.on('messageDelete', async (message) => {
+        // this removes all answers as well if it's the root message (the thread beginning)
+        await database.query(CommunityMessage)
+            .filter({ discordMessageId: message.id })
+            .deleteOne();
+    });
+
     client.on('messageCreate', async (message) => {
         if (!botUserId) return;
 
         const mentioned = message.mentions.users.has(botUserId);
         if (message.author.id === botUserId) return;
-        let channelName = '';
 
         let thread: AnyThreadChannel | undefined = undefined;
         if (message.channel.type === ChannelType.GuildPublicThread || message.channel.type === ChannelType.GuildPrivateThread) {
             thread = message.channel;
-        } else if (message.channel.type === ChannelType.GuildText) {
-            channelName = message.channel.name;
+        }
+
+        if (message.reference) {
+            message.reference.messageId;
         }
 
         let shouldAnswer = false;
 
-        if (thread && thread.ownerId === botUserId) {
-            shouldAnswer = true;
-        }
+        // if (thread && thread.ownerId === botUserId) {
+        //     shouldAnswer = true;
+        // }
 
         if (mentioned) {
+            //for the moment we only answer when bot is mentioned
             shouldAnswer = true;
         }
 
-        logger.log('discord message', channelName, { mentioned, shouldAnswer }, message);
+        // logger.log('discord message', channelName, { mentioned, shouldAnswer }, message);
         if (!shouldAnswer) return;
 
         const prompt = message.content.replace(`<@!${botUserId}>`, '@DeepBot').trim();
 
-        let question = new CommunityThread(message.author.id, message.author.displayName);
-        question.discordMessageId = message.id;
-
+        const communityMessage = new CommunityMessage(message.author.id, message.author.displayName, prompt);
+        communityMessage.discordUrl = message.url;
+        communityMessage.discordMessageId = message.id;
         if (message.channel.type === ChannelType.GuildText) {
-            question.discordChannelId = message.channel.id;
+            communityMessage.discordChannelId = message.channel.id;
         }
 
         if (thread) {
-            question = await database.query(CommunityThread).filter({ discordThreadId: thread.id }).findOneOrUndefined() ?? question;
-            question.discordThreadId = thread.id;
+            communityMessage.discordThreadId = thread.id;
+            const threadMessage = await database.query(CommunityMessage).filter({ discordThreadId: thread.id, order: 0 }).findOne();
+            if (!threadMessage) {
+                logger.error('Could not find parent message for thread', thread.id);
+                await message.reply('Sorry, I could not process your message. Please try again later.');
+                return;
+            }
+            communityMessage.thread = threadMessage;
+
+            // order really necessary? we have created date. not really safe, as we could have multiple messages per second
+            const lastMessage = await database.query(CommunityMessage).filter({ thread: threadMessage }).orderBy('order', 'desc').findOne();
+            communityMessage.order = lastMessage.order + 1;
         }
 
-        await questions.ask(question, new CommunityMessage(question, message.author.id, message.author.displayName, prompt));
-
-        //todo: save into database
-        //todo: add discord login and abstract everything so we can do the same stuff in Community Q&A page on the website
-        // stuff created from the website should be visible in discord too.
-
-        // if in thread:
-        //1. find CommunityQuestion
-        //2. load all answers
-        //3. add new answer
-
-        //if not in thread:
-        //1. create new CommunityQuestion
-        //2. add new answer
+        try {
+            const response = await questions.ask(communityMessage);
+            if (response.type === 'edit') {
+                await message.react('✅');
+            }
+        } catch (error) {
+            logger.error('Could not process message', error);
+            await message.reply('Sorry, I could not process your message. Please try again later. ' + String(error));
+        }
     });
 
 }

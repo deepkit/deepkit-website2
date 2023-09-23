@@ -229,6 +229,12 @@ pre.codeHighlight[title] {
     }
 }
 
+.app-box {
+    border-radius: 6px;
+    border: 1px solid rgba(48, 48, 48, 0.50);
+    background: rgba(15, 15, 15, 0.40);
+}
+
 pre.code {
     font-family: 'Source Code Pro', monospace;
     font-size: 14px;
@@ -320,50 +326,6 @@ h2 {
     line-height: normal;
 }
 
-//h1, h2, h3, h4, h5 {
-//  font-family: Montserrat, verdana, sans-serif;
-//  color: var(--color-blue-dark);
-//}
-
-//.overline {
-//  font-family: Montserrat, verdana, sans-serif;
-//  font-weight: 600;
-//  font-size: 12px;
-//  color: #0080FF;
-//  letter-spacing: 5px;
-//  text-align: left;
-//}
-
-//h1 {
-//  margin: 5px 0;
-//  font-weight: 500;
-//  font-size: 32px;
-//  letter-spacing: 10px;
-//  line-height: 50px;
-//}
-//
-//h2 {
-//  margin: 5px 0;
-//  font-weight: 500;
-//  font-size: 28px;
-//  line-height: 36px;
-//  letter-spacing: 8.6px;
-//}
-//
-//h3 {
-//  font-weight: 600;
-//  margin: 10px 0;
-//  font-size: 18px;
-//  line-height: 24px;
-//}
-//
-//h4 {
-//  margin: 10px 0;
-//  font-weight: 500;
-//  font-size: 16px;
-//  line-height: 20px;
-//}
-
 hr {
     height: 1px;
     border: 0;
@@ -414,17 +376,102 @@ pre.console {
     background: #EEEEEE;
 }
 
+.app-note {
+    padding: 15px 20px;
+    background: #171B1E;
+    font-size: 14px;
+}
+
+.app-tag {
+    border-radius: 8px;
+    background: #171B1E;
+    padding: 3px 13px;
+    font-size: 12px;
+    line-height: 16px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-pre-headline {
+    color: #888;
+}
+
+.content,
+.content-full {
+    position: relative;
+    min-height: 100vh;
+    //text-align: left;
+    padding: 30px;
+    padding-top: 120px;
+    padding-bottom: 250px;
+    margin: 0;
+    margin-left: 225px;
+    font-size: 15px;
+    color: rgb(230, 231, 232);
+    line-height: 170%;
+    max-width: 750px;
+    text-align: justify;
+    overflow: hidden;
+    flex: 1;
+
+    h1, h2, h3, h4, h5 {
+        text-align: left;
+        color: white;
+    }
+
+    highlight-code {
+        width: 100%;
+        display: block;
+    }
+
+    h1 {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 36px;
+        margin-top: 0;
+    }
+
+    h2 {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 600;
+        margin-top: 35px;
+    }
+
+    h2 {
+        font-weight: bold;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    h3, h4 {
+        font-weight: bold;
+    }
+}
+
+.content-full {
+    max-width: unset;
+}
+
 button, a.button, a.button:link {
     user-select: none;
-    border: 0;
     display: inline-block;
-    background: #2B3034;
-    border-radius: 4px;
+
+    border-radius: 26px;
+    border: 1px solid rgba(255, 102, 42, 0.48);
+    background: #171B1E;
+
+    //background: #2B3034;
+    //border-radius: 4px;
+
     padding: 8px 20px;
     text-align: center;
     color: white;
     font-size: 14px;
-    line-height: 15px;
+    line-height: 16px;
 
     &.big {
         //font-family: Montserrat, verdana, sans-serif;
@@ -475,38 +522,38 @@ a.button.primary {
         margin-right: auto;
     }
 }
-
-.page-text {
-    max-width: 750px;
-    margin: 45px auto;
-    text-align: left;
-    font-size: 15px;
-    padding: 0 10px;
-
-
-    h1, h2 {
-        margin-top: 0;
-        font-weight: 600;
-        letter-spacing: 4px;
-    }
-
-    img {
-        max-width: 100%;
-    }
-
-    h2 {
-        font-weight: bold;
-    }
-
-    > h2 {
-        margin-top: 36px;
-    }
-
-    > .line {
-        margin: 45px 0;
-    }
-}
-
+//
+//.page-text {
+//    max-width: 750px;
+//    margin: 45px auto;
+//    text-align: left;
+//    font-size: 15px;
+//    padding: 0 10px;
+//
+//
+//    h1, h2 {
+//        margin-top: 0;
+//        font-weight: 600;
+//        letter-spacing: 4px;
+//    }
+//
+//    img {
+//        max-width: 100%;
+//    }
+//
+//    h2 {
+//        font-weight: bold;
+//    }
+//
+//    > h2 {
+//        margin-top: 36px;
+//    }
+//
+//    > .line {
+//        margin: 45px 0;
+//    }
+//}
+//
 
 .buttons {
     display: flex;

@@ -35,10 +35,6 @@
     }
 }
 
-.project {
-    color: #888;
-}
-
 .search {
     position: relative;
 
@@ -117,73 +113,6 @@ nav {
 nav {
     padding-top: 25px;
 }
-
-:host ::ng-deep  .content {
-    position: relative;
-    min-height: 100vh;
-    //text-align: left;
-    padding: 30px;
-    padding-top: 120px;
-    padding-bottom: 250px;
-    margin: 0;
-    margin-left: 225px;
-    font-size: 15px;
-    color: rgb(230, 231, 232);
-    line-height: 170%;
-    max-width: 750px;
-    text-align: justify;
-    overflow: hidden;
-    flex: 1;
-    //box-shadow: -1px 0 1px 0 rgba(196, 196, 196, 0.50);
-
-    ::ng-deep {
-        h1, h2, h3, h4, h5 {
-            text-align: left;
-            color: white;
-        }
-
-        highlight-code {
-            width: 100%;
-            display: block;
-        }
-
-        //  color: #333333;
-        //}
-
-        overflow: hidden;
-
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            line-height: 36px;
-            margin-top: 0;
-        }
-
-        h2 {
-            font-size: 20px;
-            line-height: 28px;
-            font-weight: 600;
-            margin-top: 35px;
-        }
-
-        h2 {
-            font-weight: bold;
-        }
-
-        img {
-            max-width: 100%;
-        }
-
-        h3, h4 {
-            font-weight: bold;
-        }
-
-        //.subline {
-        //  color: #7c7c7c;
-        //}
-    }
-}
-
 
 nav,
 :host ::ng-deep .table-of-content {

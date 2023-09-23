@@ -3,9 +3,11 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { deserialize } from "@deepkit/type";
 import { Page } from "@app/common/models";
-import { markdownAsJsTree } from "@app/common/markdown";
+import { MarkdownParser } from "@app/common/markdown";
 
 export class PageProcessor {
+    constructor(protected parser: MarkdownParser) {
+    }
     async read(url: string): Promise<string> {
         const dir = findParentPath('src/pages', __dirname);
         if (!dir) throw new Error('Pages folder not found');
@@ -16,8 +18,6 @@ export class PageProcessor {
 
     async parse(url: string): Promise<Page> {
         const content = await this.read(url);
-        const json = await markdownAsJsTree(content);
-        const post = deserialize<Page>(json);
-        return post;
+        return this.parser.parse(content);
     }
 }

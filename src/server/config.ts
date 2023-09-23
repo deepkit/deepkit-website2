@@ -4,4 +4,6 @@ export class AppConfig {
     algoliaApiKey!: string;
     openaiApiKey: string = '';
     discordToken: string = '';
+    discordChannel: string = '1154848447116091494';
+    baseUrl: string = 'http://localhost:8080';
 }

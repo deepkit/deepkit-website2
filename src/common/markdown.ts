@@ -1,6 +1,7 @@
 import { Page } from "@app/common/models";
 
 import frontMatterParser from "gray-matter";
+import { cast } from "@deepkit/type";
 
 function renderText(node: any): any {
     if (typeof node === "string") return node;
@@ -64,40 +65,44 @@ const getOnlyChildren = (ast: any) => {
     return ast;
 };
 
-export async function markdownAsJsTree(contents: string): Promise<Page> {
-    const front = frontMatterParser(contents.toString());
+export class MarkdownParser {
+    protected proccesor?: any;
 
-    const unified = await import('unified');
-    const processor = unified.unified();
-    processor.use((await import("remark-parse")).default);
-    processor.use((await import("remark-rehype")).default);
-    //@ts-ignore
-    processor.use((await import("rehype-raw")).default);
-    //@ts-ignore
-    processor.use((await import("rehype-slug")).default);
-    //@ts-ignore
-    processor.use((await import("rehype-react")).default, {
-        createElement: (component: any, props: any, children: any) => {
+    async load() {
+        const unified = await import('unified');
+        this.proccesor = unified.unified();
+        this.proccesor.use((await import("remark-parse")).default);
+        this.proccesor.use((await import("remark-rehype")).default);
+        //@ts-ignore
+        this.proccesor.use((await import("rehype-raw")).default);
+        //@ts-ignore
+        this.proccesor.use((await import("rehype-slug")).default);
+        //@ts-ignore
+        this.proccesor.use((await import("rehype-react")).default, {
+            createElement: (component: any, props: any, children: any) => {
                 return {
                     tag: component,
                     props: props && Object.keys(props).length ? props : undefined,
                     children,
-                } ;
+                };
             },
-    } as any);
-
-    const processed = processor.processSync(front.content);
-
-    if (
-        processed != undefined &&
-        typeof processed === "object" &&
-        processed.result != undefined &&
-        typeof processed.result === "object"
-    ) {
-        const body = processed.result;
-        return Object.assign(extractMetaFromBodyNode(body), front.data, {
-            body: getOnlyChildren(body),
-        });
+        } as any);
     }
-    throw new Error("unified processSync didn't return an object.");
+
+    parse(content: string): Page {
+        if (!this.proccesor) throw new Error("MarkdownParser not loaded.");
+
+        const front = frontMatterParser(content);
+        const processed = this.proccesor.processSync(front.content);
+
+        if (
+            processed != undefined &&
+            typeof processed === "object" &&
+            processed.result != undefined &&
+            typeof processed.result === "object"
+        ) {
+            return cast<Page>(Object.assign(extractMetaFromBodyNode(processed.result), front.data, { body: getOnlyChildren(processed.result) }));
+        }
+        throw new Error("unified processSync didn't return an object.");
+    }
 }

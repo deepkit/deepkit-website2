@@ -1,7 +1,6 @@
 import { rpc } from "@deepkit/rpc";
-import { CommunityMessage, CommunityThread, Content, IndexEntry, Page } from "@app/common/models";
+import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, IndexEntry, Page } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
-import { deserialize } from "@deepkit/type";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { Logger } from "@deepkit/logger";
@@ -9,7 +8,7 @@ import { Algolia } from "@app/server/algolia";
 import { OpenAI } from "openai";
 import { Observable } from "rxjs";
 import { Questions } from "@app/server/questions";
-import { markdownAsJsTree } from "@app/common/markdown";
+import { MarkdownParser } from "@app/common/markdown";
 import { PageProcessor } from "@app/server/page-processor";
 import { Database } from "@deepkit/orm";
 import { eachValueFrom } from "rxjs-for-await";
@@ -45,7 +44,48 @@ export class MainController {
         private page: PageProcessor,
         private openAi: OpenAI,
         private database: Database,
+        private markdownParser: MarkdownParser,
     ) {
+    }
+
+    @rpc.action()
+    async getQuestion(id: number): Promise<CommunityQuestion> {
+        const question = await this.database.query(CommunityMessage).filter({ id }).findOne();
+        const messages = await this.database.query(CommunityMessage).filter({ thread: question }).find();
+
+        return {
+            id: question.id,
+            created: question.created,
+            discordUrl: question.discordUrl,
+            category: question.category,
+            votes: question.votes,
+            title: question.title,
+            user: question.displayName,
+            question: this.markdownParser.parse(question.content).body,
+            messages: messages.map(v => this.markdownParser.parse(v.content).body),
+        }
+    }
+
+    async getQuestions(): Promise<CommunityQuestionListItem[]> {
+        const questions = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('votes', 'desc').limit(15).find();
+        const answers = await this.database.query(CommunityMessage).filter({ order: 1, thread: { $in: questions } }).find();
+
+        const result: CommunityQuestionListItem[] = [];
+        for (const question of questions) {
+            const answer = answers.find(v => v.thread?.id === question.id);
+            if (!answer) continue;
+
+            result.push({
+                id: question.id,
+                created: question.created,
+                discordUrl: question.discordUrl,
+                category: question.category,
+                votes: question.votes,
+                title: question.title,
+                user: question.displayName,
+            })
+        }
+        return result;
     }
 
     @rpc.action()
@@ -67,15 +107,13 @@ export class MainController {
                 let content = '';
                 let lastBody: (string | Content)[] = [];
 
-                let question = new CommunityThread('', 'Anonymous');
-                question = await this.database.query(CommunityThread).filter({ id: threadId }).findOneOrUndefined() ?? question;
-                const message = new CommunityMessage(question, '', 'Anonymous', prompt)
+                const question = new CommunityMessage('', 'Anonymous', prompt);
+                //todo: what if next question
+                const response = await this.ml.ask(question, url);
 
-                const response = await this.ml.ask(question, message, url);
-
-                for await (const message of eachValueFrom(response)) {
-                    content += message.text;
-                    const page = await markdownAsJsTree(content);
+                for await (const t of eachValueFrom(response.text)) {
+                    content += t;
+                    const page = this.markdownParser.parse(content);
                     const nextBody = page.body.children || [];
 
                     let remove = 0;

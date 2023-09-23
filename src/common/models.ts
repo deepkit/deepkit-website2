@@ -97,36 +97,93 @@ export interface IndexEntry {
     };
 }
 
-@entity.collection('community_questions')
-export class CommunityThread {
-    id: UUID & PrimaryKey = uuid();
+// @entity.collection('community_questions')
+// export class CommunityThread {
+//     id: UUID & PrimaryKey = uuid();
+//     created: Date = new Date;
+//     title: string = '';
+//
+//     discordChannelId?: string;
+//     discordMessageId?: string;
+//     discordThreadId?: string & Index;
+//
+//     constructor(
+//         public userId: string,
+//         public displayName: string,
+//     ) {
+//     }
+// }
+
+function slugify(text: string) {
+    return text
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '');
+}
+
+@entity.collection('community_message')
+export class CommunityMessage {
+    id: number & PrimaryKey & AutoIncrement = 0;
     created: Date = new Date;
-    title: string = '';
     votes: number = 0;
+    order: number & Index = 0; //0 means first message, initial question
+    assistant: boolean = false;
+
+    type: string = 'question'; //question, answer, reject, edit
+    title: string = '';
+    slug: string = '';
+
+    category: string = '';
+    discordUrl: string = '';
     discordChannelId?: string;
-    discordMessageId?: string;
+    discordMessageId?: string & Index;
     discordThreadId?: string & Index;
 
     constructor(
         public userId: string,
         public displayName: string,
+        public content: string = '',
+        public thread?: CommunityMessage & Reference,
+    ) {
+    }
+
+    setTitle(title: string) {
+        this.title = title;
+        this.slug = slugify(title);
+    }
+}
+
+@entity.collection('community_message_vote')
+export class CommunityMessageVote {
+    id: number & PrimaryKey & AutoIncrement = 0;
+
+    vote: number = 0;
+
+    constructor(
+        public message: CommunityMessage & Reference,
+        public userId: string,
     ) {
     }
 }
 
-@entity.collection('community_message')
-export class CommunityMessage {
-    id: UUID & PrimaryKey = uuid();
-    created: Date = new Date;
-    votes: number = 0;
-    assistant: boolean = false;
+export interface CommunityQuestionListItem {
+    id: number;
+    created: Date;
+    discordUrl: string;
+    category: string;
+    votes: number;
+    title: string;
+    user: string;
+}
 
-    constructor(
-        public thread: CommunityThread & Reference,
-        public userId: string,
-        public displayName: string,
-        public content: string = '',
-    ) {
-    }
-
+export interface CommunityQuestion {
+    id: number;
+    created: Date;
+    discordUrl: string;
+    category: string;
+    votes: number;
+    title: string;
+    user: string;
+    question: Content;
+    messages: Content[];
 }

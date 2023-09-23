@@ -33,7 +33,7 @@ import { ControllerClient } from "@app/app/client";
 
                 <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
 
-                <div *ngIf="project" class="project">{{project}}</div>
+                <div *ngIf="project" class="app-pre-headline">{{project}}</div>
                 <app-render-content [content]="page.body"></app-render-content>
             </div>
 

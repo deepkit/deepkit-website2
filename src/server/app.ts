@@ -15,6 +15,8 @@ import { registerBot } from "@app/server/commands/discord";
 import { MainDatabase } from "@app/server/database";
 import { Database } from "@deepkit/orm";
 import { Client, GatewayIntentBits } from "discord.js";
+import { Url } from "@app/server/url";
+import { MarkdownParser } from "@app/common/markdown";
 
 (global as any).window = undefined;
 (global as any).document = undefined;
@@ -32,6 +34,8 @@ new App({
         PageProcessor,
         Questions,
         Algolia,
+        Url,
+        MarkdownParser,
         { provide: Database, useClass: MainDatabase },
         {
             provide: OpenAI, useFactory(openaiApiKey: AppConfig['openaiApiKey']) {
@@ -62,6 +66,7 @@ new App({
     .command('ml:gen-answers', mlGenAnswerCommand)
     .command('ml:q', testQuestions)
     .listen(onServerMainBootstrap, registerBot)
+    .listen(onServerMainBootstrap, (event, parser: MarkdownParser) => parser.load())
     .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);

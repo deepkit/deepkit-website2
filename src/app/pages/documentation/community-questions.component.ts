@@ -60,6 +60,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
 
             .button {
                 font-size: 12px;
+                line-height: 12px;
             }
         }
     `],
@@ -103,15 +104,21 @@ export class RenderQuestions {
         <div class="app-content-full">
             <h1>Questions & Answers</h1>
             <p>
-                All questions answered by our DeepBot Discord bot and in our chat bot on this documentation site are collected here.
+                All questions answered by our Deepkit Discord bot and in our chat bot on this documentation site are collected here.
             </p>
 
-            <p class="app-note">
-                How to ask a question: Join our discord and ping <code>@DeepBot</code>. Alternatively, open a documentation page and
-                enter your question in the chat box on the bottom.
-            </p>
-            <p>
+            <div class="app-note">
+                How to ask a question:
+                <ul>
+                    <li>Join our discord and ping <code>@deepkit</code>.</li>
+                    <li>Open a documentation page and enter your question in the chat box on the bottom.</li>
+                    <li>Open the Chat Bot.</li>
+                </ul>
+            </div>
+
+            <p class="buttons">
                 <a class="button big" href="https://discord.gg/PtfVf7B8UU" target="_blank">Join our Discord</a>
+                <a class="button big" routerLink="./post/ask">Open Chat Bot</a>
             </p>
 
             <h2>Top Questions</h2>
@@ -127,7 +134,7 @@ export class RenderQuestions {
 
             <p>
                 How does the bot work in Discord? First of all, you have to join our Discord server. Then, you can ping the bot
-                with <code>@DeepBot</code> and ask your question. The bot will automatically create a new thread for you and answer
+                with <code>@deepkit</code> and ask your question. The bot will automatically create a new thread for you and answer
                 your question in a new message.
             </p>
 

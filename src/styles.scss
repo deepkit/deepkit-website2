@@ -211,6 +211,31 @@ input, select, textarea {
     color: white;
     padding: 5px 8px;
     font-size: 14px;
+    line-height: 16px;
+
+    //we cant use `Muli` since it doesn't support entering multiple backticks
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-variation-settings: normal;
+    font-feature-settings: normal;
+
+    &::-webkit-scrollbar {
+        height: 11px;
+        width: 11px;
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(169, 173, 175, 0.77);
+        border-radius: 8px;
+        border: 2px solid rgba(0, 0, 0, 0.01);
+        background-clip: padding-box;
+
+        &:hover {
+            background: #727475;
+            border: 2px solid rgba(0, 0, 0, 0.01);
+            background-clip: padding-box;
+        }
+    }
 
     &:focus {
         outline: none;
@@ -414,6 +439,7 @@ pre.console {
     text-align: justify;
     overflow: hidden;
     flex: 1;
+    padding-right: 0;
 
     h1, h2, h3, h4, h5 {
         text-align: left;
@@ -468,6 +494,7 @@ button, a.button, a.button:link {
     //border-radius: 4px;
 
     padding: 5px 20px;
+    padding-bottom: 6px;
     text-align: center;
     color: white;
     font-size: 14px;

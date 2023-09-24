@@ -193,7 +193,7 @@ new App({
 | onServerMainBootstrapDone   | Called only once for application server bootstrap (in the main process) as soon as the application server has started.          |
 | onServerWorkerBootstrap     | Called only once for application server bootstrap (in the worker process).                                                      |
 | onServerWorkerBootstrapDone | Called only once for application server bootstrap (in the worker process) as soon as the application server has started.        |
-| ServerShutdownEvent         | Called when application server shuts down (in master process and each worker).                                                  |
+| onServerShutdownEvent         | Called when application server shuts down (in master process and each worker).                                                  |
 | onServerMainShutdown        | Called when application server shuts down in the main process.                                                                  |
 | onServerWorkerShutdown      | Called when application server shuts down in the worker process.                                                                |
 | onAppExecute      | When a CLI command is about to be executed.                                                                |

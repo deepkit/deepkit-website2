@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectorRef, Component, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ControllerClient } from "@app/app/client";
 import { Router } from "@angular/router";
@@ -23,23 +23,23 @@ import { AppTitle } from "@app/app/components/title";
             right: 0;
             left: 0;
             pointer-events: none;
+        }
 
-            .wrapper {
-                max-width: 690px;
-            }
+        .wrapper {
+            max-width: 690px;
+        }
 
-            .box {
-                pointer-events: all;
-                padding: 20px 30px;
-                background-color: rgba(14, 18, 23, 0.95);
-            }
+        .box {
+            pointer-events: all;
+            padding: 20px 30px;
+            background-color: rgba(14, 18, 23, 0.95);
+        }
 
-            input {
-                height: 36px;
-                width: 100%;
-                font-size: 15px;
-                padding: 8px 14px;
-            }
+        input {
+            height: 36px;
+            width: 100%;
+            font-size: 15px;
+            padding: 8px 14px;
         }
 
         .results {
@@ -50,7 +50,7 @@ import { AppTitle } from "@app/app/components/title";
         }
     `],
     template: `
-        <div class="ask-question">
+        <div [class.ask-question]="fixed">
             <div class="wrapper">
                 <div class="box">
                     <div>
@@ -74,6 +74,8 @@ export class AskComponent {
 
     content: (string | Content)[] = [];
 
+    @Input() fixed = false;
+
     constructor(
         protected client: ControllerClient,
         protected router: Router,
@@ -96,17 +98,17 @@ export class AskComponent {
         let url = this.router.url;
         //remove fragment
         url = url.replace(/#.*$/, '');
-        const response = await this.client.main.askDoc(text, url);
-
-        console.log('start');
-        response.subscribe((next) => {
-            console.log('next', next);
-
-            //remove the last next.remove items
-            if (next.remove) this.content = this.content.slice(0, -next.remove);
-            this.content = this.content.concat(next.next);
-
-            this.cd.detectChanges();
-        });
+        // const response = await this.client.main.askDoc(text, url);
+        //
+        // console.log('start');
+        // response.subscribe((next) => {
+        //     console.log('next', next);
+        //
+        //     //remove the last next.remove items
+        //     if (next.remove) this.content = this.content.slice(0, -next.remove);
+        //     this.content = this.content.concat(next.next);
+        //
+        //     this.cd.detectChanges();
+        // });
     }
 }

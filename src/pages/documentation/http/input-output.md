@@ -114,7 +114,8 @@ class HelloWorldQuery {
     page: number = 0;
 }
 
-router.get('/', (query: HttpQueries<HelloWorldQuery>) {
+router.get('/', (query: HttpQueries<HelloWorldQuery>)
+{
     return 'Hello ' + query.text + ' at page ' + query.page;
 }
 ```
@@ -227,7 +228,7 @@ router.get('/', (text: HttpQuery<string> & MinLength<3>) => {
 }
 
 interface MyQuery {
-     text: string & MinLength<3>;
+    text: string & MinLength<3>;
 }
 
 router.get('/', (query: HttpQueries<MyQuery>) => {
@@ -252,7 +253,7 @@ By default, normal JavaScript values are returned to the client as JSON with the
 ```typescript
 router.get('/', () => {
     // will be sent as application/json
-    return {hello: 'world'}
+    return { hello: 'world' }
 });
 ```
 
@@ -265,7 +266,7 @@ interface ResultType {
 
 router.get('/', (): ResultType => {
     // will be sent as application/json and additionalProperty is dropped
-    return {hello: 'world', additionalProperty: 'value'};
+    return { hello: 'world', additionalProperty: 'value' };
 });
 ```
 
@@ -285,7 +286,8 @@ router.get('/', () => {
 ```typescript
 router.get('/', () => {
     // will be sent as Content-Type: text/html
-    return <b>Hello World</b>;
+    return <b>Hello
+    World < /b>;
 });
 ```
 
@@ -311,7 +313,7 @@ By throwing various HTTP errors, it is possible to immediately interrupt the pro
 import { HttpNotFoundError } from '@deepkit/http';
 
 router.get('/user/:id', async (id: number, database: Database) => {
-    const user = await database.query(User).filter({id}).findOneOrUndefined();
+    const user = await database.query(User).filter({ id }).findOneOrUndefined();
     if (!user) throw new HttpNotFoundError('User not found');
     return user;
 });
@@ -319,21 +321,20 @@ router.get('/user/:id', async (id: number, database: Database) => {
 
 By default, all errors are returned to the client as JSON. This behavior can be customized in the event system under the event `httpWorkflow.onControllerError`. See the section [HTTP Events](./events.md).
 
-| Error class                    | Status |
-|-------------------------------|--------|
-| HttpBadRequestError           | 400    |
-| HttpUnauthorizedError         | 401    |
-| HttpAccessDeniedError         | 403    |
-| HttpNotFoundError             | 404    |
-| HttpMethodNotAllowedError     | 405    |
-| HttpNotAcceptableError        | 406    |
-| HttpTimeoutError              | 408    |
-| HttpConflictError             | 409    |
-| HttpGoneError                 | 410    |
-| HttpTooManyRequestsError      | 429    |
-| HttpInternalServerError      | 500    |
-| HttpNotImplementedError       | 501    |
-
+| Error class               | Status |
+|---------------------------|--------|
+| HttpBadRequestError       | 400    |
+| HttpUnauthorizedError     | 401    |
+| HttpAccessDeniedError     | 403    |
+| HttpNotFoundError         | 404    |
+| HttpMethodNotAllowedError | 405    |
+| HttpNotAcceptableError    | 406    |
+| HttpTimeoutError          | 408    |
+| HttpConflictError         | 409    |
+| HttpGoneError             | 410    |
+| HttpTooManyRequestsError  | 429    |
+| HttpInternalServerError   | 500    |
+| HttpNotImplementedError   | 501    |
 
 The error `HttpAccessDeniedError` is a special case. As soon as it is thrown, the HTTP workflow (see [HTTP Events](./events.md)) does not jump to `controllerError` but to `accessDenied`.
 
@@ -365,11 +366,12 @@ To return a 301 or 302 redirect as a response, `Redirect.toRoute` or `Redirect.t
 ```typescript
 import { Redirect } from '@deepkit/http';
 
-router.get({path: '/', name: 'homepage'}, () => {
-    return <b>Hello World</b>;
+router.get({ path: '/', name: 'homepage' }, () => {
+    return <b>Hello
+    World < /b>;
 });
 
-router.get({path: '/registration/complete'}, () => {
+router.get({ path: '/registration/complete' }, () => {
     return Redirect.toRoute('homepage');
 });
 ```
@@ -377,13 +379,13 @@ router.get({path: '/registration/complete'}, () => {
 The `Redirect.toRoute` method uses the route name here. How to set a route name can be seen in the section [HTTP Route Names](./getting-started.md#route-names). If this referenced route (query or path) contains parameters, they can be specified via the second argument:
 
 ```typescript
-router.get({path: '/user/:id', name: 'user_detail'}, (id: number) => {
+router.get({ path: '/user/:id', name: 'user_detail' }, (id: number) => {
 
 });
 
 router.post('/user', (user: HttpBody<User>) => {
     //... store user and redirect to its detail page
-    return Redirect.toRoute('user_detail', {id: 23});
+    return Redirect.toRoute('user_detail', { id: 23 });
 });
 ```
 
@@ -398,7 +400,6 @@ router.post('/user', (user: HttpBody<User>) => {
 
 By default, both use a 302 forwarding. This can be customized via the `statusCode` argument.
 
-
 ## Resolver
 
 Router supports a way to resolve complex parameter types. For example, given a route such as `/user/:id`, this `id` can be resolved to a `user` object outside the route using a resolver. This further decouples HTTP abstraction and route code, further simplifying testing and modularity.
@@ -409,7 +410,8 @@ import { FrameworkModule } from '@deepkit/framework';
 import { http, RouteParameterResolverContext, RouteParameterResolver } from '@deepkit/http';
 
 class UserResolver implements RouteParameterResolver {
-    constructor(protected database: Database) {}
+    constructor(protected database: Database) {
+    }
 
     async resolve(context: RouteParameterResolverContext) {
         if (!context.parameters.id) throw new Error('No :id given');

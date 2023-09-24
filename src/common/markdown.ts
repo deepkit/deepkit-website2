@@ -73,6 +73,8 @@ export class MarkdownParser {
         const unified = await import('unified');
         this.proccesor = unified.unified();
         this.proccesor.use((await import("remark-parse")).default);
+
+        this.proccesor.use((await import("remark-gfm")).default);
         this.proccesor.use((await import("remark-rehype")).default);
         //@ts-ignore
         this.proccesor.use((await import("rehype-raw")).default);
@@ -97,11 +99,12 @@ export class MarkdownParser {
 
     parse(content: string): Page {
         if (this.client.user) {
-            //replace bot id with @DeepBot
-            content = content.replace(new RegExp(`<@!?${this.client.user.id}>`, 'g'), '@DeepBot');
+            //replace bot id with @deepkit
+            content = content.replace(new RegExp(`<@!?${this.client.user.id}>`, 'g'), '@deepkit');
         }
         return this.parseRaw(content);
     }
+
     parseRaw(content: string): Page {
         if (!this.proccesor) throw new Error("MarkdownParser not loaded.");
 

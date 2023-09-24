@@ -38,12 +38,6 @@ export class ContentRenderComponent implements OnInit, OnChanges {
     }
 
     render() {
-        const childElements = this.viewRef.element.nativeElement.children;
-        for (let i = childElements.length; i > 0; i--) {
-            this.renderer.removeChild(this.viewRef.element.nativeElement, childElements[i - 1]);
-        }
-
-        //and all text nodes
         const childNodes = this.viewRef.element.nativeElement.childNodes;
         for (let i = childNodes.length; i > 0; i--) {
             this.renderer.removeChild(this.viewRef.element.nativeElement, childNodes[i - 1]);
@@ -99,7 +93,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             }
 
             // filter forbidden or dangerous tags. we use a whitelist
-            if (!['div', 'p', 'a', 'button', 'pre', 'code', 'strong', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img',].includes(content.tag)) {
+            if (!['div', 'p', 'a', 'button', 'pre', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th'].includes(content.tag)) {
                 return;
             }
 

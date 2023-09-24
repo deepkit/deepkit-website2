@@ -1,4 +1,4 @@
-import { AnyThreadChannel, ChannelType, Client, EmbedBuilder, GatewayIntentBits } from 'discord.js';
+import { AnyThreadChannel, ChannelType, Client, EmbedBuilder, GatewayIntentBits, Message } from 'discord.js';
 import { Questions } from "@app/server/questions";
 import { AppConfig } from "@app/server/config";
 import { Logger } from "@deepkit/logger";
@@ -46,13 +46,48 @@ export async function registerBot(
         }
     });
 
+    async function getPrompt(message: Message<boolean>): Promise<string> {
+        let prompt = message.content.trim();
+
+        if (message.reference && message.reference.messageId) {
+            const referencedMessage = await message.channel.messages.fetch(message.reference.messageId);
+            if (referencedMessage.author.id !== botUserId) {
+                prompt = `
+Here is a referenced message from @${message.author.displayName}:
+
+${referencedMessage.content}
+
+---
+
+${prompt}
+`;
+            }
+        }
+
+        //replace all <@number> with @username
+        prompt = prompt.replace(/<@(\d+)>/g, (match, id) => {
+            const user = message.guild?.members.cache.get(id);
+            if (user) return '@' + user.displayName;
+            return match;
+        });
+
+
+        return prompt;
+    }
+
     client.on('messageUpdate', async (message) => {
+        if (message.author?.id === botUserId) return;
+
         const threadMessage = await database.query(CommunityMessage)
             .filter({ discordMessageId: message.id })
             .findOneOrUndefined();
         if (!threadMessage) return;
 
-        threadMessage.content = message.content || '';
+        if (message.partial) {
+            message = await message.fetch();
+        }
+
+        threadMessage.content = await getPrompt(message);
         await database.persist(threadMessage);
     });
 
@@ -64,6 +99,7 @@ export async function registerBot(
             .deleteMany();
     });
 
+
     client.on('messageDelete', async (message) => {
         logger.log('messageDelete', message.id);
         // this removes all answers as well if it's the root message (the thread beginning)
@@ -74,6 +110,9 @@ export async function registerBot(
 
     client.on('messageCreate', async (message) => {
         if (!botUserId) return;
+        if (message.author?.id === botUserId) return;
+
+        logger.log('Got message from discord', message.author.displayName, message.id, message.content);
 
         if (message.partial) {
             try {
@@ -92,10 +131,6 @@ export async function registerBot(
             thread = message.channel;
         }
 
-        if (message.reference) {
-            message.reference.messageId;
-        }
-
         let shouldAnswer = false;
 
         // if (thread && thread.ownerId === botUserId) {
@@ -110,7 +145,7 @@ export async function registerBot(
         // logger.log('discord message', channelName, { mentioned, shouldAnswer }, message);
         if (!shouldAnswer) return;
 
-        const prompt = message.content.replace(`<@!${botUserId}>`, '@DeepBot').trim();
+        const prompt = await getPrompt(message);
 
         const communityMessage = new CommunityMessage(message.author.id, message.author.displayName, prompt);
         communityMessage.discordUserAvatarUrl = message.author.avatarURL() || '';
@@ -122,7 +157,7 @@ export async function registerBot(
 
         if (thread) {
             communityMessage.discordThreadId = thread.id;
-            const threadMessage = await database.query(CommunityMessage).filter({ discordThreadId: thread.id, order: 0 }).findOne();
+            const threadMessage = await database.query(CommunityMessage).filter({ discordThreadId: thread.id, thread: undefined }).findOne();
             if (!threadMessage) {
                 logger.error('Could not find parent message for thread', thread.id);
                 await message.reply('Sorry, I could not process your message. Please try again later.');
@@ -130,14 +165,23 @@ export async function registerBot(
             }
             communityMessage.thread = threadMessage;
 
-            // order really necessary? we have created date. not really safe, as we could have multiple messages per second
-            const lastMessage = await database.query(CommunityMessage).filter({ thread: threadMessage }).orderBy('order', 'desc').findOne();
-            communityMessage.order = lastMessage.order + 1;
+            //check if the author of the new message has role Contributor or is the owner of this thread
+            if (message.author.id !== thread.ownerId) {
+                const member = await thread.guild.members.fetch(message.author.id);
+                const isContributor = member.roles.cache.find(v => v.name === 'Contributor');
+                if (!isContributor) {
+                    await message.reply('Sorry, you are not allowed to post in this thread.');
+                    return;
+                }
+            }
         }
 
         let referenceMessage: CommunityMessage | undefined = undefined;
         if (message.reference) {
             referenceMessage = await database.query(CommunityMessage).filter({ discordMessageId: message.reference.messageId }).findOneOrUndefined();
+            if (referenceMessage && !referenceMessage.assistant) {
+                referenceMessage = undefined;
+            }
             logger.log('message.reference', message.reference, referenceMessage?.id)
         }
 

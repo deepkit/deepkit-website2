@@ -1,4 +1,3 @@
-<a name="runtime-types-bytecode"></a>
 # Bytecode
 
 To learn in detail how Deepkit encodes and reads the type information in JavaScript, this chapter is intended. It explains how the types are actually converted into bytecode, emitted in JavaScript, and then interpreted at runtime.

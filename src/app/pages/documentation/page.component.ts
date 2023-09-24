@@ -37,7 +37,7 @@ import { ControllerClient } from "@app/app/client";
                 <app-render-content [content]="page.body"></app-render-content>
             </div>
 
-            <app-ask></app-ask>
+<!--            <app-ask [fixed]="true"></app-ask>-->
         </div>
 
         <div class="table-of-content" *ngIf="headers.length > 1">
@@ -54,6 +54,7 @@ export class DocumentationPageComponent implements OnInit {
     page?: Page;
     project = '';
     subline?: Content;
+    currentPath = '';
 
     public headers: { label: string, indent: number, link: string }[] = [];
 
@@ -92,10 +93,15 @@ export class DocumentationPageComponent implements OnInit {
         this.project = projectMap[project] || project;
         path = path || 'index';
         if (project) path = project + '/' + path;
+
+        if (this.currentPath === path) return;
+
         this.error = undefined;
         this.loading = true;
         this.cd.detectChanges();
         this.headers = [];
+        console.log('load', path);
+        this.currentPath = path;
 
         try {
             this.page = await this.client.main.getPage('documentation/' + path);

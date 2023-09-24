@@ -21,6 +21,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^16.2.0",
+    "@angular/cdk": "^16.2.5",
     "@angular/common": "^16.2.0",
     "@angular/compiler": "^16.2.0",
     "@angular/core": "^16.2.0",
@@ -48,6 +49,7 @@
     "rehype-raw": "^4.0.0",
     "rehype-react": "^5.0.0",
     "rehype-slug": "^3.0.0",
+    "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.0.0",
     "rxjs": "~7.8.0",

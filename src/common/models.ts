@@ -1,4 +1,4 @@
-import { AutoIncrement, entity, Index, PrimaryKey, Reference, uuid, UUID } from "@deepkit/type";
+import { AutoIncrement, entity, Index, PrimaryKey, Reference, UUID, uuid } from "@deepkit/type";
 
 export interface Content {
     tag: string;
@@ -132,6 +132,8 @@ export class CommunityMessage {
     title: string = '';
     slug: string = '';
 
+    authId: UUID = uuid();
+
     category: string = '';
     discordUserAvatarUrl: string = '';
     discordUrl: string = '';
@@ -177,16 +179,27 @@ export interface CommunityQuestionListItem {
     user: string;
 }
 
+export interface CommunityQuestionMessage {
+    id: number,
+    user: string,
+    userAvatar: string,
+    content: Content
+}
+
 export interface CommunityQuestion {
     id: number;
     created: Date;
     discordUrl: string;
     answerDiscordUrl: string;
     category: string;
+
+    authId?: string; //returned on initially creating a question, which is stored on client side
+    allowEdit: boolean; //if the authId matches, the user is allowed to edit the question
+
     votes: number;
     title: string;
     user: string;
     userAvatar: string;
-    question: Content;
-    messages: {user: string, userAvatar: string, content: Content}[];
+    content: Content;
+    messages: CommunityQuestionMessage[];
 }

@@ -15,6 +15,13 @@ export const projectMap: { [name: string]: string } = {
     'rpc': 'RPC',
     'database': 'Database ORM',
     'desktop-ui': 'Desktop UI',
+    'general': 'General',
+    'performance': 'Performance',
+    'security': 'Security',
+    'testing': 'Testing',
+    'validation': 'Validation',
+    'migration': 'Migration',
+    'orm': 'ORM',
 }
 
 export function bodyToString(body?: string | Content | (string | Content)[]): string {

@@ -293,7 +293,7 @@ router.get('/', () => {
 
 The template engine variant with TSX has the advantage that used variables are automatically HTML-escaped. See also [Template](./template.md).
 
-### Custom Content
+### Custom Content Type
 
 Besides HTML and JSON it is also possible to send text or binary data with a specific content type. This is done via the object `Response`.
 
@@ -343,6 +343,25 @@ Custom HTTP errors can be created and thrown with `createHttpError`.
 ```typescript
 export class HttpMyError extends createHttpError(412, 'My Error Message') {
 }
+```
+
+Thrown errors in a controller action are handled by the HTTP workflow event `onControllerError`. The default implementation is to return a JSON response with the error messag and status code. This can be customized by listening to this event and returning a different response.
+
+```typescript
+import { httpWorkflow } from '@deepkit/http';
+
+new App()
+    .listen(httpWorkflow.onControllerError, (event) => {
+        if (event.error instanceof HttpMyError) {
+            event.send(new Response('My Error Message', 'text/plain').status(500));
+        } else {
+            //for all other errors, return a generic error message
+            event.send(new Response('Something went wrong. Sorry about that.', 'text/plain').status(500));
+        }
+    })
+    .listen(httpWorkflow.onAccessDenied, (event) => {
+        event.send(new Response('Access denied. Try to login first.', 'text/plain').status(403));
+    });
 ```
 
 ### Additional headers

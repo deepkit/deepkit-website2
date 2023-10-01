@@ -8,7 +8,7 @@ If this is done successfully, `@deepkit/app` can be installed or the Deepkit fra
 npm install @deepkit/http
 ```
 
-Note that `@deepkit/http` for the controller API is based on TypeScript decorators and this feature must be enabled accordingly with `experimentalDecorators` once the controller API is used.
+Note that `@deepkit/http` for the controller API is based on TypeScript annotations and this feature must be enabled accordingly with `experimentalDecorators` once the controller API is used.
 If you don't use classes, you don't need to enable this feature.
 
 _File: tsconfig.json_
@@ -219,3 +219,8 @@ import { HttpRouter } from '@deepkit/http';
 const router = app.get(HttpRouter);
 router.resolveUrl('userDetail', {id: 2}); //=> '/user/2'
 ```
+
+## Security
+
+## Sessions
+

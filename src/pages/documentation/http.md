@@ -17,40 +17,56 @@ http.get('/user/:id', (request, response) => {
 
 This is very well tailored for simple use cases, but quickly becomes confusing as the application grows, since all inputs and outputs must be manually serialized or deserialized and validated. Also, consideration must be given to how objects and services such as a database abstraction can be obtained from the application itself. It forces the developer to put an architecture on top of it that maps these mandatory functionalities.
 
-Deepkit's HTTP Library leverages the power of TypeScript and Dependency Injection. Serialization/Deserialization and validation of any values happen automatically based on the defined types. It also allows defining routes either via a functional API as in the example above or via controller classes to cover the different needs of an architecture.
+Deepkit's HTTP Library instead leverages the power of TypeScript and Dependency Injection. Serialization/Deserialization and validation of any values happen automatically based on the defined types. It also allows defining routes either via a functional API as in the example above or via controller classes to cover the different needs of an architecture.
 
 It can be used either with an existing HTTP server like Node's `http` module or with the Deepkit framework. Both API variants have access to the dependency injection container and can thus conveniently retrieve objects such as a database abstraction and configurations from the application.
 
-_Deepkit Example_
+## Example Functional API
 
 ```typescript
 import { Positive } from '@deepkit/type';
-import { http } from '@deepkit/http';
+import { http, HttpRouterRegistry } from '@deepkit/http';
+import { FrameworkModule } from "@deepkit/framework";
 
 //Functional API
+const app = new App({
+    imports: [new FrameworkModule()]
+});
+const router = app.get(HttpRouterRegistry);
+
 router.get('/user/:id', (id: number & Positive, database: Database) => {
     //id is guaranteed to be a number and positive.
     //database is injected by the DI Container.
-    return database.query(User).filter({id}).findOne();
+    return database.query(User).filter({ id }).findOne();
 });
+
+app.run();
+```
+
+## Class Controller API
+
+```typescript
+import { Positive } from '@deepkit/type';
+import { http, HttpRouterRegistry } from '@deepkit/http';
+import { FrameworkModule } from "@deepkit/framework";
+import { User } from "discord.js";
 
 //Controller API
 class UserController {
-    constructor(private database: Database) {}
+    constructor(private database: Database) {
+    }
 
     @http.GET('/user/:id')
     user(id: number & Positive) {
-        return this.database.query(User).filter({id}).findOne();
+        return this.database.query(User).filter({ id }).findOne();
     }
 }
+
+const app = new App({
+    controllers: [UserController],
+    imports: [new FrameworkModule()]
+});
 ```
-
-
-## Security
-
-## Sessions
-
-
 
 
 

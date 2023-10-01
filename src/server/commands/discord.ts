@@ -14,6 +14,7 @@ export async function registerBot(
     client: Client,
 ) {
     logger = logger.scoped('Discord');
+    if (!token) return;
 
     logger.log('Discord bot starting');
     await client.login(token);

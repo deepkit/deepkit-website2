@@ -11,7 +11,7 @@
     "ssr:watch": "NODE_OPTIONS=--preserve-symlinks ng run app:server:development --watch",
     "server": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node --watch -r ts-node/register -r tsconfig-paths/register src/server/app.ts server:start",
     "server:prod": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register dist/src/server/app.js server:start",
-    "server:build": "tsc -p tsconfig.server.json",
+    "server:build": "tsc -p tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "server:watch": "NODE_OPTIONS=--preserve-symlinks TS_NODE_PROJECT=tsconfig.server.json node -r ts-node/register -r tsconfig-paths/register --watch --watch-path dist/app/server --watch-path src/ src/server/app.ts server:start",
     "dev:frontend": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\"",
     "dev": "rm -rf .angular && concurrently --kill-others \"npm run app:watch\" \"npm run ssr:watch\" \"npm run server:watch\"",
@@ -67,6 +67,7 @@
     "@angular/compiler-cli": "^16.2.0",
     "@deepkit/type-compiler": "^1.0.1-alpha.97",
     "concurrently": "^8.2.1",
+    "tsc-alias": "^1.8.8",
     "typescript": "~5.1.3"
   }
 }

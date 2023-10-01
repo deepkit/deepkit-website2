@@ -9,6 +9,68 @@ import { ReplaySubject, Subject } from "rxjs";
 import { eachValueFrom } from "rxjs-for-await";
 import { AppConfig } from "@app/server/config";
 import { Url } from "@app/server/url";
+import { readFile } from "fs/promises";
+import { findParentPath } from "@deepkit/app";
+import { join } from "path";
+
+export async function getSystem(additionalText: string): Promise<string> {
+    const parentPath = findParentPath('src/pages');
+    if (!parentPath) throw new Error('Could not find parent path of src/pages');
+
+    let system = await readFile(join(parentPath, 'system.md'), 'utf8');
+    system = system.replace(/{{categories}}/g, Object.keys(projectMap).join(', '));
+    system = system.replace(/{{additionalText}}/g, additionalText);
+    return system;
+}
+
+export async function testTestFunction(prompt: string, openai: OpenAI) {
+
+    const system = `
+You are a chat bot that helps people answer questions and help people understand a TypeScript framework called Deepkit.
+You are able to search in the documentation, lookup source code, and answer questions about the framework and other related technologies.
+
+Before you answer, try to understand the question and the context. Always first ask the documentation and look into the source code.
+
+You are an assistant that always replies with multiple function calls.
+    `;
+
+    const messages: any[] = [];
+    messages.push({ role: 'system', content: system });
+    messages.push({ role: 'user', content: prompt });
+    messages.push({ role: 'function', name: 'searchDocumentation', content: `
+Deepkit’s HTTP Library leverages the power of TypeScript and Dependency Injection. SerializationDeserialization and validation of any values happen automatically based on the defined types. It also allows defining routes either via a functional API as in the example above or via controller classes to cover the different needs of an architecture.
+    ` });
+
+    const response = await openai.chat.completions.create({
+        messages,
+        model: 'gpt-4',
+        // model: 'gpt-3.5-turbo-16k',
+        functions: [
+            {
+                name: 'searchDocumentation',
+                parameters: {
+                    type: 'object',
+                    properties: {
+                        keywords: { type: 'string', description: 'The keywords to search for separated by comma' },
+                    },
+                    required: ["keywords"],
+                },
+            },
+            {
+                name: 'searchSourceCode',
+                parameters: {
+                    type: 'object',
+                    properties: {
+                        keywords: { type: 'string', description: 'The keywords to search for separated by comma' },
+                    },
+                    required: ["keywords"],
+                },
+            }
+        ]
+    });
+    console.dir(response, { depth: null })
+}
+
 
 export async function testQuestions(question: string, ml: Questions) {
     const message = new CommunityMessage('test', 'test', question);
@@ -20,35 +82,6 @@ export async function testQuestions(question: string, ml: Questions) {
         process.stdout.write(m);
     }
 }
-
-const system = `
-You are a chat bot that helps people answer questions and help people understand a TypeScript framework called Deepkit.
-You are allowed to talk also about other technology topics, but you should focus on Deepkit. Keep politics out of the conversation.
-You are an Apple fan and you love TypeScript. When someone talks about hardware, praise Apple's Macbooks. When someone talks about programming languages, praise TypeScript.
-
-You answer/output always in this format:
-
-\`\`\`
-type: <type>
-category: <category>
-title: <short title of answer>
-text: <your answer>
-\`\`\`
-
-<category> can be one of: ${Object.keys(projectMap).join(', ')}.
-
-<type> can either be "message", "edit", "refused". Per default you use "message". If you don't know the answer or if it's out of scope, you use "refused".
-
-If the user corrects you, you use "edit" as type and edit your previously send message/output. If the user asks a new question, use the type "message" and generate a new title.
-
-Some information about Deepkit:
-
-Deepkit is a very modular TypeScript framework that offers a rich set of integrated libraries, such as a dependency injection container,
- ORM, CLI framework, HTTP router, RPC framework, and an event system, all built upon the concept of retaining runtime types.
- This holistic framework is crafted to simplify the development of intricate software, positioning it at the forefront of solutions for the TypeScript ecosystem's contemporary challenges.
-
-Keep the output formatted as described. You can use markdown in the text.
-`;
 
 export type StreamAnswerResponse = { title: string, type: string, category: string, text: ReplaySubject<string> };
 
@@ -353,8 +386,10 @@ ${pre}
 ${message.content}
         `;
 
+        const additionalText = ''; //todo
+
         const messages: { role: 'system' | 'user' | 'assistant' | 'function', content: string }[] = [
-            { role: 'system', content: system },
+            { role: 'system', content: await getSystem('') },
         ];
 
         for (const m of existingMessages) {

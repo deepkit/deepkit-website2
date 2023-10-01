@@ -6,10 +6,13 @@ export class AppConfig {
     databasePassword: string = '';
 
     algoliaAppId: string = 'K2EE7TWRCB';
-    algoliaApiKey!: string;
+    algoliaApiKey: string = '';
 
     openaiApiKey: string = '';
-    openaiModel: string = 'gpt-3.5-turbo-16k';  //see https://platform.openai.com/account/rate-limits
+
+    //see https://platform.openai.com/account/rate-limits
+    // see https://tiktokenizer.vercel.app/
+    openaiModel: string = 'gpt-3.5-turbo-16k';
 
     discordToken: string = '';
     discordChannel: string = '1154848447116091494';

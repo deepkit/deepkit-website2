@@ -18,6 +18,8 @@ export class PageProcessor {
 
     async parse(url: string): Promise<Page> {
         const content = await this.read(url);
-        return this.parser.parse(content);
+        const page = this.parser.parse(content);
+        page.url = url;
+        return page;
     }
 }

@@ -1,4 +1,4 @@
-import { AutoIncrement, entity, Index, PrimaryKey, Reference, UUID, uuid } from "@deepkit/type";
+import { AutoIncrement, DatabaseField, entity, Index, PrimaryKey, Reference, UUID, uuid } from "@deepkit/type";
 
 export interface Content {
     tag: string;
@@ -84,24 +84,24 @@ export interface Page {
     body: Content;
 }
 
-export interface IndexEntry {
-    objectID: string; // Required by Algolia for unique identification
-    title: string;
-    url: string;
-    tag: string;
-    props: { [name: string]: any };
-    fragment?: string;
-    path: string[]; //e.g. framework, database, orm, http, etc
-    content: string; //the paragraph
-    _highlightResult?: {
-        [name: string]: {
-            fullyHighlighted?: boolean
-            matchLevel?: string,
-            matchedWords?: string[],
-            value?: string
-        }
-    };
-}
+// export interface IndexEntry {
+//     objectID: string; // Required by Algolia for unique identification
+//     title: string;
+//     url: string;
+//     tag: string;
+//     props: { [name: string]: any };
+//     fragment?: string;
+//     path: string[]; //e.g. framework, database, orm, http, etc
+//     content: string; //the paragraph
+//     _highlightResult?: {
+//         [name: string]: {
+//             fullyHighlighted?: boolean
+//             matchLevel?: string,
+//             matchedWords?: string[],
+//             value?: string
+//         }
+//     };
+// }
 
 // @entity.collection('community_questions')
 // export class CommunityThread {
@@ -127,6 +127,26 @@ function slugify(text: string) {
         .replace(/[^\w-]+/g, '');
 }
 
+@entity.collection('doc_page_content')
+export class DocPageContent {
+    id: number & PrimaryKey & AutoIncrement = 0;
+    created: Date = new Date;
+    score: number = 0;
+    path: string = '';
+    idx: number = 0;
+    path_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
+    content_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
+
+    title: string = '';
+    tag: string = 'p';
+
+    constructor(
+        public content: string,
+        public url: string = '',
+    ) {
+    }
+}
+
 @entity.collection('community_message')
 export class CommunityMessage {
     id: number & PrimaryKey & AutoIncrement = 0;
@@ -138,6 +158,9 @@ export class CommunityMessage {
     type: string = 'question'; //question, answer, reject, edit
     title: string = '';
     slug: string = '';
+
+    title_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
+    content_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
 
     authId: UUID = uuid();
 

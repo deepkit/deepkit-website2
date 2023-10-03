@@ -1,10 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { ControllerClient } from "@app/app/client";
-import { bodyToString, Content, IndexEntry, Page, parseBody, projectMap } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
-import { NgForOf, NgIf, ViewportScroller } from "@angular/common";
+import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { LoadingComponent } from "@app/app/components/loading";
 import { AskComponent } from "@app/app/components/ask.component";
@@ -154,6 +152,7 @@ import { AskComponent } from "@app/app/components/ask.component";
 })
 export class DocumentationComponent {
     showMenu: boolean = false;
+
     constructor(
         private activatedRoute: ActivatedRoute,
         public router: Router,

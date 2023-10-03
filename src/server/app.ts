@@ -1,11 +1,11 @@
-import { App, findParentPath } from '@deepkit/app';
+import { App, findParentPath, onAppExecute } from '@deepkit/app';
 import { FrameworkModule, onServerMainBootstrap } from '@deepkit/framework';
 import { AppConfig } from './config';
 import { MainController } from '@app/server/controller/main.controller';
 import { AngularListener } from '@app/server/angular';
 import { serveStaticListener } from '@deepkit/http';
 import { join } from 'path';
-import { Algolia } from "@app/server/algolia";
+import { Search } from "@app/server/search";
 import { OpenAI } from "openai";
 import { fineTuneTest1, fineTuneTest1Check, fineTuneTest1Model, mlGenAnswerCommand, mlGenQuestionCommand } from "@app/server/commands/ml-fine-tuning";
 import { WebController } from "@app/server/controller/web.controller";
@@ -17,7 +17,7 @@ import { Database } from "@deepkit/orm";
 import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { Url } from "@app/server/url";
 import { MarkdownParser } from "@app/common/markdown";
-import { sql } from "@deepkit/sql";
+import { migrate } from "@app/server/commands/migrate";
 
 (global as any).window = undefined;
 (global as any).document = undefined;
@@ -34,7 +34,7 @@ new App({
     providers: [
         PageProcessor,
         Questions,
-        Algolia,
+        Search,
         Url,
         MarkdownParser,
         { provide: Database, useClass: MainDatabase },
@@ -64,8 +64,10 @@ new App({
         })
     ]
 })
-    .command('search:index', (algolia: Algolia) => algolia.index())
-    .command('search:find', (query: string, algolia: Algolia) => algolia.find(query))
+    .command('search:index', async (search: Search) => await search.index())
+    .command('search:find', async (query: string, search: Search) => {
+        console.log(await search.find(query));
+    })
     .command('ml:gen-questions', mlGenQuestionCommand)
     .command('ml:gen-answers', mlGenAnswerCommand)
     .command('ml:test', testTestFunction)
@@ -73,18 +75,9 @@ new App({
     .command('ml:fine-tune', fineTuneTest1)
     .command('ml:fine-tune:check', fineTuneTest1Check)
     .command('ml:fine-tune:model', fineTuneTest1Model)
-    .command('migrate', async (database: Database) => {
-        try {
-            await database.raw(sql`CREATE EXTENSION vector`).execute();
-            console.log("vector engine created");
-        } catch (e) {
-            console.log(`vector engined loaded already: ${e}`)
-        }
-
-        await database.migrate();
-    })
+    .command('migrate', migrate)
     .listen(onServerMainBootstrap, registerBot)
-    .listen(onServerMainBootstrap, (event, parser: MarkdownParser) => parser.load())
+    .listen(onAppExecute, (event, parser: MarkdownParser) => parser.load())
     .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);

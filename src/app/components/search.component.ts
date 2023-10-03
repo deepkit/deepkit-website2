@@ -1,12 +1,48 @@
-import { ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, ViewChild } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { IndexEntry, Page } from "@app/common/models";
+import { bodyToString, CommunityQuestion, DocPageContent, parseBody } from "@app/common/models";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
 import { LoadingComponent } from "@app/app/components/loading";
 
+@Component({
+    selector: 'app-search-result-page',
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink
+    ],
+    styles: [`
+        .path {
+            color: #a2a2a2;
+            font-size: 12px;
+        }
+
+        .title {
+            margin: 5px 0;
+            color: white;
+        }
+
+        .content {
+            font-size: 14px;
+        }
+    `],
+    template: `
+        <div class="path">Question & Answer</div>
+        <h3 class="title">{{q.title}}</h3>
+        <div class="content">{{subline}}</div>
+    `
+})
+export class SearchResultQuestion implements OnChanges {
+    @Input() q!: CommunityQuestion;
+    subline: string = '';
+
+    ngOnChanges() {
+        this.subline = bodyToString(parseBody(this.q.content).subline);
+    }
+}
 
 @Component({
     selector: 'app-search',
@@ -17,7 +53,8 @@ import { LoadingComponent } from "@app/app/components/loading";
         ReactiveFormsModule,
         FormsModule,
         LoadingComponent,
-        RouterLink
+        RouterLink,
+        SearchResultQuestion
     ],
     styles: [`
         .field {
@@ -35,6 +72,7 @@ import { LoadingComponent } from "@app/app/components/loading";
 
             input {
                 width: 100%;
+                padding-right: 25px;
             }
 
             img {
@@ -106,7 +144,7 @@ import { LoadingComponent } from "@app/app/components/loading";
     template: `
         <div class="search" [class.active]="visible">
             <div class="field">
-                <input (focus)="visible = true" (keyup)="onKeyUp($event)" (click)="visible=true"
+                <input (focus)="visible = true" #input (keyup)="onKeyUp($event)" (click)="visible=true"
                        placeholder="Search the docs" [(ngModel)]="query" (ngModelChange)="find()"/>
                 <img alt="search icon" src="/assets/images/icons-search.svg" style="width: 18px; height: 18px;"/>
             </div>
@@ -118,8 +156,12 @@ import { LoadingComponent } from "@app/app/components/loading";
                 <div class="box">
                     <div class="box-container scroll-small">
                         <div class="search-results" *ngIf="results">
-                            <div [routerLink]="r.url" (click)="visible=false" class="result-item" *ngFor="let r of results">
-                                <div class="path">{{r.path.join(' / ')}}</div>
+                            <div routerLink="/documentation/questions/post/{{r.id}}" (click)="visible=false" class="result-item" *ngFor="let r of results.questions">
+                                <app-search-result-page [q]="r"></app-search-result-page>
+                            </div>
+
+                            <div [routerLink]="r.url" (click)="visible=false" class="result-item" *ngFor="let r of results.pages">
+                                <div class="path">{{r.path}}</div>
                                 <h3 class="title">{{r.title}}</h3>
                                 <div class="content">{{r.content}}</div>
                             </div>
@@ -132,11 +174,13 @@ import { LoadingComponent } from "@app/app/components/loading";
 })
 export class SearchComponent {
     query: string = '';
-    results?: IndexEntry[];
+    results?: { pages: DocPageContent[], questions: CommunityQuestion[] };
     loading = false;
 
     visible: boolean = false;
     modelChanged = new Subject<string>();
+
+    @ViewChild('input') input?: ElementRef<HTMLInputElement>;
 
     constructor(
         private client: ControllerClient,
@@ -144,6 +188,18 @@ export class SearchComponent {
         public router: Router,
     ) {
         this.modelChanged.pipe(debounceTime(500), distinctUntilChanged()).subscribe((query) => this._find(query));
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    onKeydownHandler(event: KeyboardEvent) {
+        //handle CMD+K, WIN+K, CTRL+K for search
+        if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
+            if (!this.input) return;
+            event.preventDefault();
+            this.input.nativeElement.focus();
+            this.visible = true;
+            this.cd.detectChanges();
+        }
     }
 
     onKeyUp(e: KeyboardEvent) {

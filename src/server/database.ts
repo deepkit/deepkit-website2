@@ -1,5 +1,5 @@
 import { Database } from '@deepkit/orm';
-import { CommunityMessage, CommunityMessageVote } from "@app/common/models";
+import { CommunityMessage, CommunityMessageVote, DocPageContent } from "@app/common/models";
 import { AppConfig } from "@app/server/config";
 import { PostgresDatabaseAdapter } from "@deepkit/postgres";
 
@@ -15,7 +15,7 @@ export class MainDatabase extends Database {
                 port: config.databasePort,
                 user: config.databaseUser,
             }),
-            [CommunityMessage, CommunityMessageVote]
+            [CommunityMessage, CommunityMessageVote, DocPageContent]
         );
     }
 }

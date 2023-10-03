@@ -1,3 +1,3 @@
 router.get('/user/:id', async (id: number) => {
-    return <User id={id}></User>
+    return <User user={id}></User>
 });

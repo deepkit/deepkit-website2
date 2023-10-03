@@ -12,19 +12,18 @@ Following is a list of existing type annotations. The validator and serializer o
 
 Integer and floats are defined as a base as `number` and has several sub-variants:
 
-| Type    | Description                                |
-|---------|---------------|
-| integer | An integer of arbitrary size.              |
-| int8    | An integer between -128 and 127.           |
-| uint8   | An integer between 0 and 255.              |
-| int16   | An integer between -32768 and 32767.       |
-| uint16  | An integer between 0 and 65535.            |
-| int32   | An integer between -2147483648 and 2147483647.      |
-| uint32  | An integer between 0 and 4294967295.       |
-| float   | Same as number, but might have different meaning in database context. |
+| Type    | Description                                                                                                                                                                                                           |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| integer | An integer of arbitrary size.                                                                                                                                                                                         |
+| int8    | An integer between -128 and 127.                                                                                                                                                                                      |
+| uint8   | An integer between 0 and 255.                                                                                                                                                                                         |
+| int16   | An integer between -32768 and 32767.                                                                                                                                                                                  |
+| uint16  | An integer between 0 and 65535.                                                                                                                                                                                       |
+| int32   | An integer between -2147483648 and 2147483647.                                                                                                                                                                        |
+| uint32  | An integer between 0 and 4294967295.                                                                                                                                                                                  |
+| float   | Same as number, but might have different meaning in database context.                                                                                                                                                 |
 | float32 | A float between -3.40282347e+38 and 3.40282347e+38. Note that JavaScript is not able to check correctly the range due to precision issues, but the information might be handy for the database or binary serializers. |
-| float64 | Same as number, but might have different meaning in database context. |
-
+| float64 | Same as number, but might have different meaning in database context.                                                                                                                                                 |
 
 ```typescript
 import { integer } from '@deepkit/type';
@@ -97,9 +96,9 @@ interface User {
     id: BinaryBigInt;
 }
 
-const user: User = {id: 24n};
+const user: User = { id: 24n };
 
-serialize<User>({id: 24n}); //{id: '24'}
+serialize<User>({ id: 24n }); //{id: '24'}
 
 serialize<BinaryBigInt>(24); //'24'
 serialize<BinaryBigInt>(-24); //'0'
@@ -128,8 +127,8 @@ interface User {
     firstName: string & MapName<'first_name'>;
 }
 
-serialize<User>({firstName: 'Peter'}) // {first_name: 'Peter'}
-deserialize<User>({first_name: 'Peter'}) // {firstName: 'Peter'}
+serialize<User>({ firstName: 'Peter' }) // {first_name: 'Peter'}
+deserialize<User>({ first_name: 'Peter' }) // {firstName: 'Peter'}
 ```
 
 ## Group
@@ -178,7 +177,7 @@ interface Auth {
     password: string & Excluded<'json'>
 }
 
-const item = deserialize<Auth>({title: 'Peter', password: 'secret'});
+const item = deserialize<Auth>({ title: 'Peter', password: 'secret' });
 
 item.password; //undefined, since deserialize's default serializer is called `json`
 
@@ -202,25 +201,43 @@ interface Address {
     country: string;
 }
 
-interface User  {
+interface User {
     id: number & PrimaryKey;
     address: Embedded<Address>;
 }
 
-const user: User {
+const user: User
+{
     id: 12,
-    address: {
-        street: 'abc', postalCode: '1234', city: 'Hamburg', country: 'Germany'
+        address
+:
+    {
+        street: 'abc', postalCode
+    :
+        '1234', city
+    :
+        'Hamburg', country
+    :
+        'Germany'
     }
-};
+}
+;
 
 serialize<User>(user);
 {
     id: 12,
-    address_street: 'abc',
-    address_postalCode: '1234',
-    address_city: 'Hamburg',
-    address_country: 'Germany'
+        address_street
+:
+    'abc',
+        address_postalCode
+:
+    '1234',
+        address_city
+:
+    'Hamburg',
+        address_country
+:
+    'Germany'
 }
 
 //for deserialize you have to provide the embedded structure
@@ -234,29 +251,37 @@ deserialize<User>({
 It's possible to change the prefix (which is per default the property name).
 
 ```typescript
-interface User  {
+interface User {
     id: number & PrimaryKey;
-    address: Embedded<Address, {prefix: 'addr_'}>;
+    address: Embedded<Address, { prefix: 'addr_' }>;
 }
 
 serialize<User>(user);
 {
     id: 12,
-    addr_street: 'abc',
-    addr_postalCode: '1234',
+        addr_street
+:
+    'abc',
+        addr_postalCode
+:
+    '1234',
 }
 
 //or remove it entirely
-interface User  {
+interface User {
     id: number & PrimaryKey;
-    address: Embedded<Address, {prefix: ''}>;
+    address: Embedded<Address, { prefix: '' }>;
 }
 
 serialize<User>(user);
 {
     id: 12,
-    street: 'abc',
-    postalCode: '1234',
+        street
+:
+    'abc',
+        postalCode
+:
+    '1234',
 }
 ```
 
@@ -267,23 +292,115 @@ To annotate interfaces with entity information. Only used in the database contex
 ```typescript
 import { Entity, PrimaryKey } from '@deepkit/type';
 
-interface User extends Entity<{name: 'user', collection: 'users'> {
+interface User extends Entity<{ name: 'user', collection: 'users'> {
     id: number & PrimaryKey;
     username: string;
 }
 ```
 
-## InlineRuntimeType
+## PrimaryKey
 
-TODO
+Marks the field as primary key. Only used in the database context.
 
-## Resetannotation
+```typescript
+import { PrimaryKey } from '@deepkit/type';
 
-TODO
+interface User {
+    id: number & PrimaryKey;
+}
+```
 
-## Database
+## AutoIncrement
 
-TODO: PrimaryKey, AutoIncrement, Reference, BackReference, Index, Unique, DatabaseField.
+Marks the field as auto increment. Only used in the database context.
+Usually together with `PrimaryKey`.
+
+```typescript
+import { AutoIncrement } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey & AutoIncrement;
+}
+```
+
+## Reference
+
+Marks the field as reference (foreign key). Only used in the database context.
+
+```typescript
+import { Reference } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey;
+    group: number & Reference<Group>;
+}
+
+interface Group {
+    id: number & PrimaryKey;
+}
+```
+
+In this example `User.group` is an owning reference also known as foreign key in SQL. This means that the `User` table has a column `group` that references the `Group` table. The `Group` table is the target table of the reference.
+
+## BackReference
+
+Marks the field as back reference. Only used in the database context.
+
+```typescript
+
+interface User {
+    id: number & PrimaryKey;
+    group: number & Reference<Group>;
+}
+
+interface Group {
+    id: number & PrimaryKey;
+    users: User[] & BackReference;
+}
+```
+
+In this example `Group.users` is a back reference. This means that the `User` table has a column `group` that references the `Group` table.
+The `Group` has a virtual property `users` that is automatically populated with all users that have the same `group` id as the `Group` id once a database query
+with joins is executed. The property `users` is not stored in the database.
+
+## Index
+
+Marks the field as index. Only used in the database context.
+
+```typescript
+import { Index } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey;
+    username: string & Index;
+}
+```
+
+## Unique
+
+Marks the field as unique. Only used in the database context.
+
+```typescript
+import { Unique } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey;
+    username: string & Unique;
+}
+```
+
+## DatabaseField
+
+With `DatabaseField` you can define the database specific options like the real database column type, and the default value, etc.
+
+```typescript
+import { DatabaseField } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey;
+    username: string & DatabaseField<{ type: 'varchar(255)' }>;
+}
+```
 
 ## Validation
 
@@ -291,25 +408,63 @@ TODO
 
 See [Validation Constraint Types](validation.md#validation-constraint-types).
 
-### Custom Type annotations
+## InlineRuntimeType
 
-aTypeannotationCanBeDefinedAsFollows
+To inline a runtime type. Only used in advanced cases.
 
 ```typescript
-type MyAnnotation = {__meta?: ['myAnnotation']};
+import { InlineRuntimeType, ReflectionKind, Type } from '@deepkit/type';
+
+const type: Type = { kind: ReflectionKind.string };
+
+type Query = {
+    field: InlineRuntimeType<typeof type>;
+}
+
+const resolved = typeOf<Query>(); // { field: string }
+```
+
+In TypeScript the type `Query` is `{ field: any }`, but in runtime it's `{ field: string }`.
+
+This is useful if you build a highly customizable system where you accept runtime types, and you reuse them in various other cases.
+
+## ResetAnnotation
+
+To reset all annotations of a property. Only used in advanced cases.
+
+```typescript
+import { ResetAnnotation } from '@deepkit/type';
+
+interface User {
+    id: number & PrimaryKey;
+}
+
+interface UserCreationPayload {
+    id: User['id'] & ResetAnnotation<'primaryKey'>;
+}
+```
+
+### Custom Type Annotations
+
+You can define your own type annotations.
+
+```typescript
+type MyAnnotation = { __meta?: ['myAnnotation'] };
 ```
 
 By convention, a type annotation is defined to be an object literal with a single optional property `__meta` that has a tuple as its type. The first entry in this tuple is its unique name and all subsequent tuple entries are arbitrary options. This allows a type annotation to be equipped with additional options.
 
 ```typescript
-type AnnotationOption<T extends {title: string}> = {__meta?: ['myAnnotation', T]};
+type AnnotationOption<T extends { title: string }> = { __meta?: ['myAnnotation', T] };
 ```
 
 The type annotation is used with the intersection operator `&`. Any number of type annotations can be used on one type.
 
 ```typescript
 type Username = string & MyAnnotation;
-type Title = string & & MyAnnotation & AnnotationOption<{title: 'Hello'}>;
+type Title = string &
+&
+MyAnnotation & AnnotationOption<{ title: 'Hello' }>;
 ```
 
 The type annotations can be read out via the type objects of `typeOf<T>()` and `metaAnnotation`:
@@ -326,6 +481,7 @@ Already supplied type annotations like `MapName`, `Group`, `Data`, etc have thei
 
 ```typescript
 import { typeOf, Group, groupAnnotation } from '@deepkit/type';
+
 type Username = string & Group<'a'> & Group<'b'>;
 
 const type = typeOf<Username>();

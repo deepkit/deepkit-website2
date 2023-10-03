@@ -1,16 +1,15 @@
 import { rpc } from "@deepkit/rpc";
-import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, IndexEntry, Page } from "@app/common/models";
+import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { Algolia } from "@app/server/algolia";
+import { Search } from "@app/server/search";
 import { Observable } from "rxjs";
 import { Questions } from "@app/server/questions";
 import { MarkdownParser } from "@app/common/markdown";
 import { PageProcessor } from "@app/server/page-processor";
 import { Database } from "@deepkit/orm";
 import { eachValueFrom } from "rxjs-for-await";
-import { createReference } from "@deepkit/type";
 
 function different(a?: string | Content, b?: string | Content): boolean {
     if ('string' === typeof a || 'undefined' === typeof a) {
@@ -58,7 +57,7 @@ function createCommunityQuestion(
 @rpc.controller('/main')
 export class MainController {
     constructor(
-        private algolia: Algolia,
+        private searcher: Search,
         private ml: Questions,
         private page: PageProcessor,
         private database: Database,
@@ -183,9 +182,13 @@ export class MainController {
     }
 
     @rpc.action()
-    async search(query: string): Promise<IndexEntry[]> {
-        const hits = await this.algolia.find(query);
-        return hits;
+    async search(query: string): Promise<{ pages: DocPageContent[], questions: CommunityQuestion[]}> {
+        const hits = await this.searcher.find(query);
+
+        return {
+            pages: hits.pages,
+            questions: hits.questions.map(v => createCommunityQuestion(this.markdownParser, v, []))
+        };
     }
 
     @rpc.action()

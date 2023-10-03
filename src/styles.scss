@@ -65,6 +65,7 @@ body {
             background-clip: padding-box;
         }
     }
+
     color: var(--color-text);
 }
 
@@ -441,6 +442,10 @@ pre.console {
     flex: 1;
     padding-right: 0;
 
+    ol, ul {
+        text-align: left;
+    }
+
     h1, h2, h3, h4, h5 {
         text-align: left;
         color: white;
@@ -549,6 +554,7 @@ a.button.primary {
         margin-right: auto;
     }
 }
+
 //
 //.page-text {
 //    max-width: 750px;

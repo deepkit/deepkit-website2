@@ -255,10 +255,23 @@ pre.codeHighlight[title] {
     }
 }
 
+.app-boxes {
+    display: grid;
+    grid-gap: 45px;
+    grid-auto-columns: auto;
+    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+
 .app-box {
     border-radius: 6px;
     border: 1px solid rgba(48, 48, 48, 0.50);
     background: rgba(15, 15, 15, 0.40);
+
+    &.hover:hover, &:focus {
+        cursor: pointer;
+        border-color: var(--color-orange);
+    }
 }
 
 pre.code {
@@ -428,11 +441,10 @@ pre.console {
     position: relative;
     min-height: 100vh;
     //text-align: left;
-    padding: 30px;
-    padding-top: 120px;
+    padding-top: 80px;
     padding-bottom: 250px;
-    margin: 0;
-    margin-left: 225px;
+    margin: auto;
+    //margin-left: 225px;
     font-size: 15px;
     color: rgb(230, 231, 232);
     line-height: 170%;
@@ -480,6 +492,58 @@ pre.console {
 
     h3, h4 {
         font-weight: bold;
+    }
+}
+
+.app-box {
+    border-radius: 3px;
+    border: 1px solid rgba(57, 56, 65, 0.60);
+    background: linear-gradient(180deg, #1E2124 0%, #141617 100%);
+    box-shadow: 0px 2px 20px 0px rgba(18, 18, 18, 0.50);
+    padding: 25px 28px;
+}
+
+.app-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 90px 0;
+    border-top: 1px solid #2B2B2B;
+    border-bottom: 1px solid #2B2B2B;
+    background: radial-gradient(85.21% 100% at 50% 0%, #17191C 0%, #111213 100%);
+
+    color: var(--color-text);
+    line-height: 200%;
+
+    .wrapper {
+        max-width: 810px;
+    }
+
+    img.deepkit {
+        width: 192px;
+        height: 32px;
+        margin-bottom: 24px;
+    }
+
+    h1 {
+        margin: 0;
+        color: #F9EDDF;
+        font-size: 48px;
+        font-style: normal;
+        text-align: center;
+        font-weight: 300;
+        line-height: 120%; /* 57.6px */
+    }
+
+    h2 {
+        margin: 0;
+        color: #F9EDDF;
+        text-align: center;
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 50px;
     }
 }
 

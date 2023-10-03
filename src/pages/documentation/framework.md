@@ -1,7 +1,23 @@
 # Framework
 
-Deepkit Framework is a highly modular, scalable, and fast TypeScript framework for building web applications, APIs, and microservices. 
+Deepkit Framework is a highly modular, scalable, and fast TypeScript framework for building web applications, APIs, and microservices.
 It is designed to be as flexible as necessary and as structured as required, allowing developers to maintain high development speeds, both in the short term and the long term.
+
+## Framework Module
+
+Deepkit Framework is mainly the `FrameworkModule`, which can be imported in your `App`. It brings:
+
+- Application server
+    - HTTP server
+    - RPC server
+    - Multi-process load balancing
+    - SSL
+- Debugging CLI commands
+- Database Migration configuration/commands
+- Debugging/Profiler GUI via `{debug: true}` option
+- Interactive API documentation (like Swagger)
+- Providers for Logger, Broker
+- Integration Test APIs
 
 ## Installation
 
@@ -41,19 +57,19 @@ _File: tsconfig.json_
 
 ```json
 {
-  "compilerOptions": {
-    "outDir": "./dist",
-    "experimentalDecorators": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "target": "ES2020",
-    "module": "CommonJS",
-    "moduleResolution": "node"
-  },
-  "reflection": true,
-  "files": [
-    "app.ts"
-  ]
+    "compilerOptions": {
+        "outDir": "./dist",
+        "experimentalDecorators": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "target": "ES2020",
+        "module": "CommonJS",
+        "moduleResolution": "node"
+    },
+    "reflection": true,
+    "files": [
+        "app.ts"
+    ]
 }
 ```
 
@@ -65,7 +81,7 @@ import { Logger } from '@deepkit/logger';
 import { FrameworkModule } from '@deepkit/framework';
 
 new App({
-    imports: [new FrameworkModule({debug: true})]
+    imports: [new FrameworkModule({ debug: true })]
 })
     .command('test', (logger: Logger) => {
         logger.log('Hello World!');
@@ -74,7 +90,6 @@ new App({
 ```
 
 In this code, you can see that we have defined a test command and created a new app that we run directly using `run()`. By running this script, we start the app.
-
 
 and then run it directly.
 
@@ -104,7 +119,7 @@ Hello World
 
 In Deepkit Framework everything is now done via this `app.ts`. You can rename the file as you like or create more. Custom CLI commands, HTTP/RPC server, migration commands, and so on are all started from this entry point.
 
-Since the app also imports the `FrameworkModule`, we see there are more commands available grouped into topics. 
+Since the app also imports the `FrameworkModule`, we see there are more commands available grouped into topics.
 One of them is `server:start`, which starts the HTTP server.
 
 ```sh
@@ -118,7 +133,7 @@ import { App } from '@deepkit/app';
 import { HttpRouterRegistry } from '@deepkit/http';
 
 const app = new App({
-    imports: [new FrameworkModule({debug: true})]
+    imports: [new FrameworkModule({ debug: true })]
 });
 
 app.command('test', (logger: Logger) => {
@@ -168,7 +183,9 @@ You can also register your own service.
 ```typescript
 
 class MyService {
-    constructor(private logger: Logger) {}
+    constructor(private logger: Logger) {
+    }
+
     helloWorld() {
         this.logger.log('Hello World');
     }

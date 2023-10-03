@@ -146,7 +146,9 @@ import { AskComponent } from "@app/app/components/ask.component";
                 </div>
             </nav>
 
-            <router-outlet></router-outlet>
+            <div style="margin-left: 225px; padding-top: 35px;">
+                <router-outlet></router-outlet>
+            </div>
         </div>
     `
 })

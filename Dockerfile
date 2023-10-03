@@ -24,8 +24,8 @@ RUN cd pgvector && make && make install
 RUN mkdir /app/
 WORKDIR /app
 
-RUN pip -m venv /app/venv
-RUN /app/venv/bin/pip install -r requirements.txt
+#RUN pip -m venv /app/venv
+#RUN /app/venv/bin/pip install -r requirements.txt
 
 # first package manager stuff so installing is cached by Docker.
 ADD package.json /app/package.json

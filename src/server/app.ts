@@ -78,7 +78,7 @@ new App({
     .command('migrate', migrate)
     .listen(onServerMainBootstrap, registerBot)
     .listen(onAppExecute, (event, parser: MarkdownParser) => parser.load())
-    .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
+    .loadConfigFromEnv({ namingStrategy: 'upper', prefix: 'APP_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);
         if (assets) {

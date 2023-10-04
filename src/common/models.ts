@@ -79,6 +79,7 @@ export function parseBody(body: Content): { title: string, subline?: Content, in
 
 export interface Page {
     title?: string;
+    params: { [name: string]: string };
     url?: string;
     date?: Date;
     body: Content;
@@ -134,8 +135,8 @@ export class DocPageContent {
     score: number = 0;
     path: string = '';
     idx: number = 0;
-    path_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
-    content_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
+    path_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
+    content_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
 
     title: string = '';
     tag: string = 'p';
@@ -159,8 +160,8 @@ export class CommunityMessage {
     title: string = '';
     slug: string = '';
 
-    title_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
-    content_tsvector: string & DatabaseField<{type: 'tsvector'}> = '';
+    title_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
+    content_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
 
     authId: UUID = uuid();
 
@@ -233,3 +234,16 @@ export interface CommunityQuestion {
     content: Content;
     messages: CommunityQuestionMessage[];
 }
+
+export interface QuestionAnswer {
+    title: string;
+    answer: Content;
+}
+
+export interface CodeExample {
+    title: string;
+    files: { name: string, content: Content }[];
+}
+
+
+export const magicSeparator = '##-------------------------------------------------##';

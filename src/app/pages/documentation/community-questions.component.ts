@@ -101,7 +101,7 @@ export class RenderQuestions {
     ],
     styleUrls: ['./community-questions.component.scss'],
     template: `
-        <div class="app-content-full">
+        <div class="app-content-full normalize-text">
             <h1>Questions & Answers</h1>
             <p>
                 All public questions answered by our Deepkit Discord bot are collected here.

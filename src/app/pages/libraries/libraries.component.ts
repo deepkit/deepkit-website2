@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
 
+
+
 @Component({
     standalone: true,
     styles: [`
@@ -9,7 +11,7 @@ import { RouterLink } from "@angular/router";
             grid-gap: 50px;
         }
 
-        .libraries {
+        .libraries, .app-banner .wrapper {
             max-width: 880px;
         }
 
@@ -52,10 +54,8 @@ import { RouterLink } from "@angular/router";
     ],
     template: `
         <div class="app-content-full">
-            <div class="app-banner">
+            <div class="app-banner left">
                 <div class="wrapper">
-                    <img class="deepkit" alt="deepkit logo" src="/assets/images/deepkit_white_text.svg"/>
-
                     <h1>LIBRARIES</h1>
 
                     <div>

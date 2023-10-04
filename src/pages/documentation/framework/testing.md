@@ -10,7 +10,7 @@ npm install jest ts-jest @types/jest
 
 Jest needs a few configuration options to know where to find the test suits and how to compile the TS code. Add the following configuration to your `package.json`:
 
-```json
+```json title=package.json
 {
   ...,
 
@@ -19,7 +19,6 @@ Jest needs a few configuration options to know where to find the test suits and 
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testEnvironment": "node",
-    "resolver": "@deepkit/framework/resolve",
     "testMatch": [
       "**/*.spec.ts"
     ]

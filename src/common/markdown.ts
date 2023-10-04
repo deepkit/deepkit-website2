@@ -40,7 +40,7 @@ function getHeadings(node: any): any {
         ).filter((h: any) => h);
     }
     return [];
-};
+}
 
 function extractMetaFromBodyNode(node: any): any {
     const headings = getHeadings(node);
@@ -72,14 +72,43 @@ export class MarkdownParser {
     async load() {
         const unified = await import('unified');
         this.proccesor = unified.unified();
+
+        //markdown to mdast
         this.proccesor.use((await import("remark-parse")).default);
 
+        //github flavored markdown
         this.proccesor.use((await import("remark-gfm")).default);
-        this.proccesor.use((await import("remark-rehype")).default);
+
+        //markdown to html
+        this.proccesor.use((await import("remark-rehype")).default, {
+            allowDangerousHtml: true, handlers: {
+                code: (state: any, node: any) => {
+                    // Create `<pre>`.
+                    const result = {
+                        type: 'element',
+                        tagName: 'pre',
+                        properties: {
+                            meta: node.meta,
+                            className: ['language-' + (node.lang || '')]
+                        },
+                        children: [{ type: 'text', value: node.value || '' }]
+                    }
+                    state.patch(node, result);
+                    return result;
+                }
+            }
+        });
+        // this.proccesor.use(remarkCodeTitle);
+
+        //reparse tree, so we can use html in markdown
         //@ts-ignore
         this.proccesor.use((await import("rehype-raw")).default);
+
+        //add id to headings
         //@ts-ignore
         this.proccesor.use((await import("rehype-slug")).default);
+
+        //convert to handy object structure
         //@ts-ignore
         this.proccesor.use((await import("rehype-react")).default, {
             createElement: (component: any, props: any, children: any) => {
@@ -93,14 +122,14 @@ export class MarkdownParser {
     }
 
     constructor(
-        private client: Client
+        private client?: Client
     ) {
     }
 
     parse(content: string): Page {
-        if (this.client.user) {
+        if (this.client?.user) {
             //replace bot id with @deepkit
-            content = content.replace(new RegExp(`<@!?${this.client.user.id}>`, 'g'), '@deepkit');
+            content = content.replace(new RegExp(`<@!?${this.client?.user.id}>`, 'g'), '@deepkit');
         }
         return this.parseRaw(content);
     }
@@ -117,7 +146,7 @@ export class MarkdownParser {
             processed.result != undefined &&
             typeof processed.result === "object"
         ) {
-            return cast<Page>(Object.assign(extractMetaFromBodyNode(processed.result), front.data, { body: getOnlyChildren(processed.result) }));
+            return cast<Page>(Object.assign(extractMetaFromBodyNode(processed.result), front.data, { params: front.data, body: getOnlyChildren(processed.result) }));
         }
         throw new Error("unified processSync didn't return an object.");
     }

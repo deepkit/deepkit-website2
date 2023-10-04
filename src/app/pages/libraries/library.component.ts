@@ -1,0 +1,102 @@
+import { Component, OnInit } from "@angular/core";
+import { ControllerClient } from "@app/app/client";
+import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
+import { bodyToString, Content, Page, parseBody, QuestionAnswer } from "@app/common/models";
+import { AppDescription, AppTitle } from "@app/app/components/title";
+import { ContentRenderComponent } from "@app/app/components/content-render.component";
+import { NgForOf, NgIf } from "@angular/common";
+
+@Component({
+    standalone: true,
+    imports: [
+        AppTitle,
+        AppDescription,
+        ContentRenderComponent,
+        NgIf,
+        RouterLink,
+        RouterLinkActive,
+        NgForOf
+    ],
+    styleUrls: ['./library.component.scss'],
+    template: `
+        <div class="app-content-full">
+            <div class="wrapper">
+                <div *ngIf="page">
+                    <app-title value="{{page.title}}"></app-title>
+
+                    <div class="head">
+                        <h1>{{page.title}}</h1>
+
+                        <nav>
+                            <a routerLink="/{{page.url}}" class="active">Overview</a>
+                            <a routerLink="/documentation/questions/category/{{page.params.category}}">FAQ</a>
+                            <a routerLink="/documentation/examples/category/{{page.params.category}}">Examples</a>
+                            <a routerLink="/documentation/{{page.params.doc}}">Documentation</a>
+                            <a routerLink="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
+                        </nav>
+                    </div>
+
+                    <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
+
+                    <div class="package">{{page.params.package}}</div>
+
+                    <app-render-content [content]="page.body"></app-render-content>
+
+                    <h2 id="faq" style="text-align: center">Questions & Answers</h2>
+
+                    <div class="faqs">
+                        <div class="faq" *ngFor="let faq of faqs; let i = index">
+                            <div class="question">{{i + 1}}. {{faq.title}}</div>
+                            <div class="answer">
+                                <app-render-content [content]="faq.answer"></app-render-content>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center">
+                            <p>
+                                No answer for your question? Ask a question or see all questions.
+                            </p>
+                            <a class="button big" style="margin-right: 25px;" routerLink="/documentation/questions/category/{{page.params.category}}">See all questions</a>
+                            <a class="button big" routerLink="/documentation/questions/">Ask a question</a>
+                        </div>
+                    </div>
+
+                    <h2 id="examples">Examples</h2>
+
+                    <div class="examples">
+                        <div class="example">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+})
+export class LibraryComponent implements OnInit {
+    subline?: Content;
+    page?: Page;
+    faqs: QuestionAnswer[] = [];
+
+    constructor(
+        private client: ControllerClient,
+        private activatedRoute: ActivatedRoute
+    ) {
+    }
+
+    ngOnInit() {
+        this.activatedRoute.params.subscribe((params) => {
+            this.load(params.id);
+        });
+    }
+
+    async load(slug: string) {
+        this.page = await this.client.main.getPage('library/' + slug);
+        console.log(this.page);
+        if (!this.page) return;
+        this.subline = parseBody(this.page.body).subline;
+        this.faqs = await this.client.main.getFAQ(slug);
+        console.log('faq', this.faqs);
+    }
+
+    protected readonly bodyToString = bodyToString;
+}

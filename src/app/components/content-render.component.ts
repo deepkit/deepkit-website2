@@ -1,14 +1,78 @@
-import { Component, ComponentFactoryResolver, Injector, Input, OnChanges, OnInit, Renderer2, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, Component, createComponent, EnvironmentInjector, Input, OnChanges, OnInit, reflectComponentType, Renderer2, ViewContainerRef } from '@angular/core';
 import { Content } from '@app/common/models';
 import { NgForOf, NgIf } from '@angular/common';
 import { ScreenComponent, ScreensComponent } from '@app/app/components/screens.component';
 import { HighlightCodeComponent } from "@app/app/components/highlight-code.component";
 import { Router } from "@angular/router";
 
+const whitelist = ['div', 'p', 'a', 'button', 'pre', 'span', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th', 'boxes', 'box'];
+
+
+@Component({
+    standalone: true,
+    selector: 'box',
+    host: {
+        '[class.app-box]': 'true',
+    },
+    template: `
+        <div class="title">{{title}}</div>
+        <ng-content></ng-content>
+    `
+})
+export class ContentRenderBox {
+    @Input() title: string = '';
+}
+
+
+@Component({
+    standalone: true,
+    selector: 'feature',
+    host: {
+        '[class.app-feature]': 'true',
+    },
+    styles: [`
+        :host {
+            display: flex;
+            align-items: center;
+            margin: 200px 0;
+        }
+
+        :host.right {
+            flex-direction: row-reverse;
+
+            .text {
+                margin: auto;
+                margin-left: 55px;
+            }
+        }
+
+        .text {
+            flex: 1;
+            margin-right: 55px;
+            max-width: 480px;
+        }
+
+        .code {
+            flex: 1;
+        }
+
+    `],
+    template: `
+        <div class="text">
+            <ng-content></ng-content>
+        </div>
+        <div class="code">
+            <ng-content select="highlight-code"></ng-content>
+        </div>
+    `
+})
+export class ContentRenderFeature {
+}
+
 @Component({
     selector: 'app-render-content',
     standalone: true,
-    imports: [NgForOf, NgIf, ScreensComponent, ScreenComponent, HighlightCodeComponent],
+    imports: [NgForOf, NgIf, ScreensComponent, ScreenComponent, HighlightCodeComponent, ContentRenderBox, ContentRenderFeature],
     styles: [`
         :host {
             display: inline;
@@ -24,7 +88,8 @@ export class ContentRenderComponent implements OnInit, OnChanges {
         private viewRef: ViewContainerRef,
         private renderer: Renderer2,
         private router: Router,
-        private resolver: ComponentFactoryResolver
+        private injector: EnvironmentInjector,
+        private app: ApplicationRef
     ) {
     }
 
@@ -43,58 +108,72 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             this.renderer.removeChild(this.viewRef.element.nativeElement, childNodes[i - 1]);
         }
 
-        this.renderContent(this.viewRef.injector, this.viewRef.element.nativeElement, this.content);
+        const children = this.renderContent(this.injector, this.content);
+        for (const child of children) this.renderer.appendChild(this.viewRef.element.nativeElement, child);
     }
 
-    renderContent(injector: Injector, parent: any, content: (Content | string)[] | Content | string) {
+    renderContent(injector: EnvironmentInjector, content: (Content | string)[] | Content | string): Node[] {
         const components: { [name: string]: any } = {
             'app-screens': ScreensComponent,
             'app-screen': ScreenComponent,
             'highlight-code': HighlightCodeComponent,
+            'box': ContentRenderBox,
+            'feature': ContentRenderFeature,
         };
 
         if ('string' === typeof content) {
             const element = this.renderer.createText(content);
-            this.renderer.appendChild(parent, element);
+            return [element];
         } else if (Array.isArray(content)) {
+            const children: Node[] = [];
             for (const child of content) {
-                this.renderContent(injector, parent, child);
+                children.push(...this.renderContent(injector, child));
             }
+            return children;
         } else if (components[content.tag]) {
-            const component = this.viewRef.createComponent(components[content.tag], { injector });
-            this.renderer.appendChild(parent, component.location.nativeElement);
+            // const container = this.renderer.createElement('div');
+            const children: Node[] = content.children ? this.renderContent(this.injector, content.children) : [];
 
-            if (content.props) {
-                for (const [key, value] of Object.entries(content.props)) {
-                    (component.instance as any)[key] = value;
-                }
-            }
+            const type = reflectComponentType(components[content.tag]);
+            if (!type) return [];
 
-            if (content.children) this.renderContent(component.injector, component.location.nativeElement, content.children);
-        } else {
-            if (content.tag === 'pre') {
-                const code = content.children && content.children[0];
-                if (code && 'string' !== typeof code) {
-                    if (code.tag === 'code' && code.children && code.props && typeof code.props.class === 'string' && code.props.class.startsWith('language-')) {
-                        const factory = this.resolver.resolveComponentFactory(HighlightCodeComponent);
-                        const wrapperDiv = this.renderer.createElement('div');
-                        this.renderer.appendChild(parent, wrapperDiv);
-                        //although factories are deprecated, it's the only way to define a parent selector, which is needed for ssr hydration
-                        const component = factory.create(injector, [], wrapperDiv);
-                        // const component = this.viewRef.createComponent(HighlightCodeComponent, { injector });
-                        component.instance.lang = code.props.class.substr('language-'.length);
-                        component.instance.code = code.children[0] as string;
-                        // component.hostView.detectChanges();
-                        // this.renderer.appendChild(wrapperDiv, component.location.nativeElement);
-                        component.changeDetectorRef.detectChanges();
-                        return;
+            const projectableNodes: Node[][] = [];
+            for (const ngContent of type.ngContentSelectors) {
+                const nodes: Node[] = [];
+                for (const child of children) {
+                    if (child instanceof Text && ngContent === '*') {
+                        nodes.push(child);
+                    } else if (child instanceof HTMLElement && child.matches(ngContent)) {
+                        nodes.push(child);
                     }
                 }
+                projectableNodes.push(nodes);
+            }
+            const component = createComponent(components[content.tag], { environmentInjector: this.injector, projectableNodes });
+            Object.assign(component.instance as any, content.props || {});
+            if (content.props && content.props.class) {
+                this.renderer.setAttribute(component.location.nativeElement, 'class', content.props.class);
+            }
+            this.app.attachView(component.hostView);
+            component.changeDetectorRef.detectChanges();
+            return [component.location.nativeElement];
+        } else {
+            if (content.tag === 'pre' && content.children && content.props && typeof content.props.class === 'string' && content.props.class.startsWith('language-')) {
+                const component = createComponent(HighlightCodeComponent, { environmentInjector: this.injector });
+                component.instance.lang = content.props.class.substr('language-'.length);
+                component.instance.code = content.children[0] as string;
+
+                const params = new URLSearchParams(content.props.meta || '');
+                component.instance.meta = Object.fromEntries(params.entries());
+
+                this.app.attachView(component.hostView);
+                component.changeDetectorRef.detectChanges();
+                return [component.location.nativeElement];
             }
 
             // filter forbidden or dangerous tags. we use a whitelist
-            if (!['div', 'p', 'a', 'button', 'pre', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th'].includes(content.tag)) {
-                return;
+            if (!whitelist.includes(content.tag)) {
+                return [];
             }
 
             //what else could be dangerous?
@@ -103,7 +182,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             // <a href="jav&#x09;ascript:alert('XSS')">XSS</a>
             // fix these
             if (content.tag === 'a' && content.props?.href?.toLowerCase().startsWith('javascript:')) {
-                return;
+                return [];
             }
 
             let element = this.renderer.createElement(content.tag);
@@ -145,6 +224,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 this.renderer.addClass(wrapperDiv, 'image');
                 this.renderer.appendChild(parent, wrapperDiv);
                 this.renderer.appendChild(wrapperDiv, element);
+                element = wrapperDiv;
             } else if (content.tag === 'video') {
                 this.renderer.removeAttribute(element, 'width');
                 this.renderer.removeAttribute(element, 'height');
@@ -163,10 +243,14 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 this.renderer.appendChild(videoDiv, wrapperDiv);
 
                 this.renderer.appendChild(wrapperDiv, element);
-            } else {
-                this.renderer.appendChild(parent, element);
+                element = videoDiv;
             }
-            if (content.children) this.renderContent(injector, element, content.children);
+            if (content.children) {
+                const children = this.renderContent(injector, content.children);
+                for (const child of children) this.renderer.appendChild(element, child);
+            }
+
+            return [element];
         }
     }
 

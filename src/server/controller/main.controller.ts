@@ -1,5 +1,5 @@
 import { rpc } from "@deepkit/rpc";
-import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page } from "@app/common/models";
+import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page, QuestionAnswer } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
@@ -182,7 +182,7 @@ export class MainController {
     }
 
     @rpc.action()
-    async search(query: string): Promise<{ pages: DocPageContent[], questions: CommunityQuestion[]}> {
+    async search(query: string): Promise<{ pages: DocPageContent[], questions: CommunityQuestion[] }> {
         const hits = await this.searcher.find(query);
 
         return {
@@ -200,6 +200,11 @@ export class MainController {
     @rpc.action()
     async getPage(url: string): Promise<Page | undefined> {
         return await this.page.parse(url);
+    }
+
+    @rpc.action()
+    async getFAQ(url: string): Promise<QuestionAnswer[]> {
+        return await this.page.parseQuestions('questions/' + url);
     }
 
     // @rpc.action()

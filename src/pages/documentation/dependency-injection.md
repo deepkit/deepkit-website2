@@ -76,7 +76,7 @@ The code that wants to use UserRepository must also provide (inject) all its dep
 * The code is easier to understand because all dependencies are explicitly visible.
 * The code is easier to test because all dependencies are unique and can be easily modified if needed.
 * The code is more modular, as dependencies can be easily exchanged.
-* It promotes the Separation of Concern principle, as UserRepository is no longer responsible for creating very complex dependencies itself when in doubt.
+* It promotes the Separation of Concern principle, as UserRepository is no longer responsible for creating very complex dependencies itself.
 
 But an obvious disadvantage can also be recognized directly: Do I really need to create or manage all dependencies like the HttpClient myself? Yes and No. Yes, there are many cases where it is perfectly legitimate to manage the dependencies yourself. The hallmark of a good API is that dependencies don't get out of hand, and that even then they are pleasant to use. For many applications or complex libraries, this may well be the case. To provide a very complex low-level API with many dependencies in a simplified way to the user, the facade pattern is wonderfully suitable.
 

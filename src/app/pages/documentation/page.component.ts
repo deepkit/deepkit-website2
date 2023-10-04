@@ -21,7 +21,7 @@ import { ControllerClient } from "@app/app/client";
     ],
     styleUrls: ['./page.component.scss'],
     template: `
-        <div class="app-content">
+        <div class="app-content normalize-text">
             <app-loading *ngIf="loading"></app-loading>
 
             <app-title *ngIf="project" value="{{project}}"></app-title>
@@ -40,7 +40,7 @@ import { ControllerClient } from "@app/app/client";
 <!--            <app-ask [fixed]="true"></app-ask>-->
         </div>
 
-        <div class="table-of-content" *ngIf="headers.length > 1">
+        <div class="table-of-content">
             <a [href]="router.url.split('#')[0] + '#' + h.link" class="intend-{{h.indent}}" *ngFor="let h of headers">
                 {{h.label}}
             </a>

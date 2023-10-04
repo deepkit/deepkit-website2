@@ -7,10 +7,12 @@ import { DocumentationPageComponent } from "@app/app/pages/documentation/page.co
 import { CommunityQuestionComponent } from "@app/app/pages/documentation/community-question.component";
 import { LibrariesComponent } from "@app/app/pages/libraries/libraries.component";
 import { EnterpriseComponent } from "@app/app/pages/enterprise.component";
+import { LibraryComponent } from "@app/app/pages/libraries/library.component";
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
     { path: 'library', component: LibrariesComponent },
+    { path: 'library/:id', component: LibraryComponent },
     { path: 'enterprise', component: EnterpriseComponent },
 
     {

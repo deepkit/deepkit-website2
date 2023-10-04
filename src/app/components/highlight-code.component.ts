@@ -41,16 +41,31 @@ import 'prismjs/components/prism-json';
                 }
             }
         }
+
+        pre.codeHighlight[title] {
+            padding-top: 8px;
+        }
+
+        pre.codeHighlight[title]:before {
+            display: block;
+            text-align: left;
+            content: attr(title);
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #ddd;
+            font-style: italic;
+        }
     `],
     standalone: true,
     template: `
-        <pre class="code codeHighlight" [innerHTML]="html"></pre>
+        <pre class="code codeHighlight" [attr.title]="meta.title" [innerHTML]="html"></pre>
     `,
 })
 export class HighlightCodeComponent implements OnInit, OnChanges {
     @Input() code: string = '';
     @Input() file: string = '';
     @Input() lang: string = 'typescript';
+    @Input() meta: {title?: string} = {};
 
     html: string = '';
 

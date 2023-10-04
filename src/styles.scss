@@ -28,10 +28,10 @@ body {
     //--color-dark2: #171B1E;
     //--color-blue-white: #BACFE4;
     //--color-blue-dark: #264564;
-    //--color-grey2: #979797;
+    --color-grey: #979797;
     //--color-bg: white;
     --color-header: #F9EDDF;
-    --color-text: #B4B4B4;
+    --color-text: #bbbbbb;
     //--color-text: #C5C5C5;
     //--color-black: #0F0F0F;
     //--code-background: #202020;
@@ -255,7 +255,8 @@ pre.codeHighlight[title] {
     }
 }
 
-.app-boxes {
+.app-boxes,
+.app-boxes-small {
     display: grid;
     grid-gap: 45px;
     grid-auto-columns: auto;
@@ -263,10 +264,35 @@ pre.codeHighlight[title] {
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 }
 
+.app-boxes-small {
+    grid-gap: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    color: var(--color-grey);
+
+    font-size: 14px;
+
+    .app-box {
+        padding: 15px 20px;
+        border-radius: 3px;
+        border: 1px solid rgba(57, 56, 65, 0.60);
+        background: linear-gradient(180deg, #191B1E 0%, #141617 100%);
+        box-shadow: 0px 2px 20px 0px rgba(18, 18, 18, 0.50);
+    }
+
+    .title {
+        color: #c9c9c9;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+}
+
 .app-box {
     border-radius: 6px;
     border: 1px solid rgba(48, 48, 48, 0.50);
     background: rgba(15, 15, 15, 0.40);
+
+    text-align: left;
 
     &.hover:hover, &:focus {
         cursor: pointer;
@@ -352,7 +378,6 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 h1 {
-    text-align: center;
     font-size: 48px;
     font-weight: 300;
     line-height: 120%;
@@ -446,7 +471,6 @@ pre.console {
     margin: auto;
     //margin-left: 225px;
     font-size: 15px;
-    color: rgb(230, 231, 232);
     line-height: 170%;
     max-width: 750px;
     text-align: justify;
@@ -454,44 +478,45 @@ pre.console {
     flex: 1;
     padding-right: 0;
 
-    ol, ul {
-        text-align: left;
-    }
-
-    h1, h2, h3, h4, h5 {
-        text-align: left;
-        color: white;
-    }
-
-    highlight-code {
-        width: 100%;
-        display: block;
-    }
-
-    h1 {
-        font-size: 28px;
-        font-weight: 600;
-        line-height: 36px;
-        margin-top: 0;
-    }
-
-    h2 {
-        font-size: 20px;
-        line-height: 28px;
-        font-weight: 600;
-        margin-top: 35px;
-    }
-
-    h2 {
-        font-weight: bold;
-    }
-
     img {
         max-width: 100%;
     }
 
-    h3, h4 {
-        font-weight: bold;
+    &.normalize-text {
+        ol, ul {
+            text-align: left;
+        }
+
+        h1, h2, h3, h4, h5 {
+            color: white;
+        }
+
+        highlight-code {
+            width: 100%;
+            display: block;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 36px;
+            margin-top: 0;
+        }
+
+        h2 {
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 600;
+            margin-top: 35px;
+        }
+
+        h2 {
+            font-weight: bold;
+        }
+
+        h3, h4 {
+            font-weight: bold;
+        }
     }
 }
 
@@ -513,6 +538,11 @@ pre.console {
     border-bottom: 1px solid #2B2B2B;
     background: radial-gradient(85.21% 100% at 50% 0%, #17191C 0%, #111213 100%);
 
+    &.left {
+        text-align: left;
+        align-items: start;
+    }
+
     color: var(--color-text);
     line-height: 200%;
 
@@ -531,7 +561,6 @@ pre.console {
         color: #F9EDDF;
         font-size: 48px;
         font-style: normal;
-        text-align: center;
         font-weight: 300;
         line-height: 120%; /* 57.6px */
     }
@@ -539,7 +568,6 @@ pre.console {
     h2 {
         margin: 0;
         color: #F9EDDF;
-        text-align: center;
         font-size: 32px;
         font-style: normal;
         font-weight: 300;
@@ -562,8 +590,8 @@ button, a.button, a.button:link {
     //background: #2B3034;
     //border-radius: 4px;
 
-    padding: 5px 20px;
-    padding-bottom: 6px;
+    padding: 6px 20px;
+    padding-bottom: 8px;
     text-align: center;
     color: white;
     font-size: 14px;

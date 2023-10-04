@@ -4,6 +4,7 @@ import { join } from "path";
 import { readFile, writeFile } from "fs/promises";
 import glob from "tiny-glob";
 import { getSystem } from "../questions";
+import { magicSeparator } from "@app/common/models";
 
 class Context {
     messages: { role: 'system' | 'user' | 'assistant' | 'function', content: string }[] = [];
@@ -27,7 +28,6 @@ function getPath(path: string) {
     return join(baseDir, path);
 }
 
-const magicSeparator = '##-------------------------------------------------##';
 
 class Page {
     questions: { question: string, answer: string }[] = [];

@@ -43,7 +43,7 @@ export async function importQuestions(
     const files = await readdir(dir);
 
     await database.query(CommunityMessage)
-        .filter({ source: 'markdown' })
+        .filter({ type: 'answer',  source: 'markdown' })
         .deleteMany();
 
     for (const file of files) {

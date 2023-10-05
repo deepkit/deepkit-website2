@@ -11,6 +11,7 @@ import 'prismjs/components/prism-json';
     styles: [`
         :host {
             display: block;
+            margin: 12px 0;
             max-width: 100%;
         }
 
@@ -48,11 +49,11 @@ import 'prismjs/components/prism-json';
 
         pre.codeHighlight[title]:before {
             display: block;
-            text-align: left;
+            text-align: center;
             content: attr(title);
             margin-bottom: 5px;
             font-size: 14px;
-            color: #ddd;
+            color: #b0b0b0;
             font-style: italic;
         }
     `],

@@ -3,9 +3,9 @@
 There are several ways to provide dependencies in the Dependency Injection container. The simplest variant is simply the specification of a class. This is also known as short ClassProvider.
 
 ```typescript
-InjectorContext.forProviders([
-    UserRepository
-]);
+new App({
+    providers: [UserRepository]
+});
 ```
 
 This represents a special provider, since only the class is specified. All other providers must be specified as object literals.
@@ -13,9 +13,9 @@ This represents a special provider, since only the class is specified. All other
 By default, all providers are marked as singletons, so only one instance exists at any given time. To create a new instance each time a provider is deployed, the `transient` option can be used. This will cause classes to be recreated each time or factories to be executed each time.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: UserRepository, transient: true}
-]);
+new App({
+    providers: [{ provide: UserRepository, transient: true }]
+});
 ```
 
 ## ClassProvider
@@ -23,29 +23,29 @@ InjectorContext.forProviders([
 Besides the short ClassProvider there is also the regular ClassProvider, which is an object literal instead of a class.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: UserRepository, useClass: UserRepository}
-]);
+new App({
+    providers: [{ provide: UserRepository, useClass: UserRepository }]
+});
 ```
 
 This is equivalent to these two:
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: UserRepository}
-]);
+new App({
+    providers: [{ provide: UserRepository }]
+});
 
-InjectorContext.forProviders([
-    UserRepository
-]);
+new App({
+    providers: [UserRepository]
+});
 ```
 
 It can be used to exchange a provider with another class.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: UserRepository, useClass: OtherUserRepository}
-]);
+new App({
+    providers: [{ provide: UserRepository, useClass: OtherUserRepository }]
+});
 ```
 
 In this example, the `OtherUserRepository` class is now also managed in the DI container and all its dependencies are resolved automatically.
@@ -55,17 +55,17 @@ In this example, the `OtherUserRepository` class is now also managed in the DI c
 Static values can be provided with this provider.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: OtherUserRepository, useValue: new OtherUserRepository()},
-]);
+new App({
+    providers: [{ provide: OtherUserRepository, useValue: new OtherUserRepository() }]
+});
 ```
 
 Since not only class instances can be provided as dependencies, any value can be specified as `useValue`. A symbol or a primitive (string, number, boolean) could also be used as a provider token.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: 'domain', useValue: 'localhost'},
-]);
+new App({
+    providers: [{ provide: 'domain', useValue: 'localhost' }]
+});
 ```
 
 Primitive provider tokens must be declared with the Inject type as a dependency.
@@ -86,9 +86,9 @@ import { Stripe } from 'stripe';
 
 export type StripeService = Inject<Stripe, '_stripe'>;
 
-InjectorContext.forProviders([
-    {provide: '_stripe', useValue: new Stripe},
-]);
+new App({
+    providers: [{ provide: '_stripe', useValue: new Stripe }]
+});
 ```
 
 And then declared on the user side as follows:
@@ -104,10 +104,12 @@ class PaymentService {
 A forwarding to an already defined provider can be defined.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: OtherUserRepository, useValue: new OtherUserRepository()},
-    {provide: UserRepository, useExisting: OtherUserRepository}
-]);
+new App({
+    providers: [
+        {provide: OtherUserRepository, useValue: new OtherUserRepository()},
+        {provide: UserRepository, useExisting: OtherUserRepository}
+    ]
+});
 ```
 
 ## FactoryProvider
@@ -115,30 +117,30 @@ InjectorContext.forProviders([
 A function can be used to provide a value for the provider. This function can also contain parameters, which in turn are provided by the DI container. Thus, other dependencies or configuration options are accessible.
 
 ```typescript
-InjectorContext.forProviders([
-    {provide: OtherUserRepository, useFactory: () => {
-        return new OtherUserRepository()
-    }},
-]);
+new App({
+    providers: [
+        {provide: OtherUserRepository, useFactory: () => {
+            return new OtherUserRepository()
+        }},
+    ]
+});
 
-InjectorContext.forProviders([
-    {
-        provide: OtherUserRepository,
-        useFactory: (domain: RootConfiguration['domain']) => {
+new App({
+    providers: [
+        {provide: OtherUserRepository, useFactory: (domain: RootConfiguration['domain']) => {
             return new OtherUserRepository(domain);
-        }
-    },
-]);
+        }},
+    ]
+});
 
-InjectorContext.forProviders([
-    Database,
-    {
-        provide: OtherUserRepository,
-        useFactory: (database: Database) => {
+new App({
+    providers: [
+        Database,
+        {provide: OtherUserRepository, useFactory: (database: Database) => {
             return new OtherUserRepository(database);
-        }
-    },
-]);
+        }},
+    ]
+});
 ```
 
 ## InterfaceProvider
@@ -160,10 +162,12 @@ class MyConnection {
     write(data: Uint16Array): void {}
 }
 
-InjectorContext.forProviders([
-    Server,
-    provide<Connection>(MyConnection)
-]);
+new App({
+    providers: [
+        Server,
+        provide<Connection>(MyConnection)
+    ]
+});
 ```
 
 If multiple providers have implemented the Connection interface, the last provider is used.
@@ -173,13 +177,17 @@ As argument for provide() all other providers are possible.
 ```typescript
 const myConnection = {write: (data: any) => undefined};
 
-InjectorContext.forProviders([
-    provide<Connection>({useValue: myConnection})
-]);
+new App({
+    providers: [
+        provide<Connection>({ useValue: myConnection })
+    ]
+});
 
-InjectorContext.forProviders([
-    provide<Connection>({useFactory: () => myConnection})
-]);
+new App({
+    providers: [
+        provide<Connection>({ useFactory: () => myConnection })
+    ]
+});
 ```
 
 ## Asynchronous Providers

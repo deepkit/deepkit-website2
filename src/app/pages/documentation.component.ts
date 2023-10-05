@@ -29,7 +29,8 @@ import { AskComponent } from "@app/app/components/ask.component";
                 <div style="margin-bottom: 25px;">
                     <a routerLinkActive="active" routerLink="/documentation/introduction">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/questions">Questions & Answers</a>
-                    <a routerLinkActive="active" routerLink="/documentation/community-qanda">Join Discord</a>
+                    <a routerLinkActive="active" routerLink="/documentation/examples">Examples</a>
+                    <a href="https://discord.com/invite/PtfVf7B8UU" target="_blank">Join Discord</a>
                     <a routerLinkActive="active" routerLink="/documentation/learn-typescript">Learn TypeScript</a>
                 </div>
 

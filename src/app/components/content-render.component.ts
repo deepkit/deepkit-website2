@@ -35,6 +35,7 @@ export class ContentRenderBox {
             display: flex;
             align-items: center;
             margin: 200px 0;
+            text-align: justify;
         }
 
         :host.right {
@@ -82,7 +83,7 @@ export class ContentRenderFeature {
 })
 export class ContentRenderComponent implements OnInit, OnChanges {
     @Input() content!: (Content | string)[] | Content | string;
-    @Input() linkRelativeTo: string = '/';
+    @Input() linkRelativeTo: string = '';
 
     constructor(
         private viewRef: ViewContainerRef,
@@ -201,8 +202,8 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                     if (content.props.href.startsWith('http://') || content.props.href.startsWith('https://')) {
                         this.renderer.setAttribute(element, 'target', '_blank');
                     } else {
-                        const base = new URL('http://none/' + this.router.url);
-                        const url = new URL(content.props.href, new URL(this.router.url, base));
+                        const base = new URL('http://none/' + (this.linkRelativeTo || this.router.url));
+                        const url = new URL(content.props.href, new URL(this.linkRelativeTo || this.router.url, base));
                         let href = url.pathname.replace('.md', '');
                         if (url.hash) href += url.hash;
                         this.renderer.setAttribute(element, 'href', href);

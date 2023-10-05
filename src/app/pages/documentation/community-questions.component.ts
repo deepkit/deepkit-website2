@@ -1,6 +1,6 @@
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { Component, Input, OnInit } from "@angular/core";
-import { DatePipe, NgForOf, NgIf } from "@angular/common";
+import { DatePipe, KeyValuePipe, NgForOf, NgIf } from "@angular/common";
 import { ControllerClient } from "@app/app/client";
 import { CommunityQuestionListItem, projectMap } from "@app/common/models";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
@@ -65,7 +65,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
         }
     `],
     template: `
-        <div class="questions app-box">
+        <div class="questions app-box-transparent">
             <div class="question" *ngFor="let question of questions">
                 <div class="title">
                     <div class="votes">
@@ -77,7 +77,7 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
                 <div class="actions">
                     <div class="row">
                         <div class="app-tag">{{projectMap[question.category] || 'General'}}</div>
-                        <a class="button" [href]="question.answerDiscordUrl" target="_blank">Discord</a>
+                        <a class="button" *ngIf="question.discordUrl" [href]="question.discordUrl" target="_blank">Discord</a>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,8 @@ export class RenderQuestions {
         ContentRenderComponent,
         RouterLink,
         DatePipe,
-        RenderQuestions
+        RenderQuestions,
+        KeyValuePipe
     ],
     styleUrls: ['./community-questions.component.scss'],
     template: `
@@ -107,28 +108,35 @@ export class RenderQuestions {
                 All public questions answered by our Deepkit Discord bot are collected here.
             </p>
 
-<!--            <div class="app-note">-->
-<!--                How to ask a question:-->
-<!--                <ul>-->
-<!--                    <li>Join our discord and ping <code>@deepkit</code>.</li>-->
-<!--                    <li>Open a documentation page and enter your question in the chat box on the bottom.</li>-->
-<!--                    <li>Open the Chat Bot.</li>-->
-<!--                </ul>-->
-<!--            </div>-->
+            <!--            <div class="app-note">-->
+            <!--                How to ask a question:-->
+            <!--                <ul>-->
+            <!--                    <li>Join our discord and ping <code>@deepkit</code>.</li>-->
+            <!--                    <li>Open a documentation page and enter your question in the chat box on the bottom.</li>-->
+            <!--                    <li>Open the Chat Bot.</li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
 
             <p class="buttons">
                 <a class="button big" href="https://discord.gg/PtfVf7B8UU" target="_blank">Join our Discord</a>
-<!--                <a class="button big" routerLink="./post/ask">Open Chat Bot</a>-->
+                <!--                <a class="button big" routerLink="./post/ask">Open Chat Bot</a>-->
             </p>
 
-            <h2>Top Questions</h2>
+            <div *ngFor="let kv of groups|keyvalue">
+                <h2>{{projectMap[kv.key] || kv.key}}</h2>
 
-            <render-questions [questions]="questions.top"></render-questions>
+                <ul>
+                    <li *ngFor="let m of kv.value">
+                        <a routerLink="/documentation/questions/post/{{m.id}}">
+                            {{m.title}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-            <h2>New Questions</h2>
+<!--            <h2>New Questions</h2>-->
 
-            <render-questions [questions]="questions.newest"></render-questions>
-
+<!--            <render-questions [questions]="questions.newest"></render-questions>-->
 
             <h2>How to Chat</h2>
 
@@ -145,7 +153,8 @@ export class RenderQuestions {
             </p>
 
             <p>
-                By carefully asking questions and asking the bot to edit its message, you can create a nice and clean documentation page not only for your, but other users as well since
+                By carefully asking questions and asking the bot to edit its message, you can create a nice and clean documentation page not only for your, but other users as well
+                since
                 all questions and answers are public on this page.
             </p>
 
@@ -156,7 +165,9 @@ export class RenderQuestions {
 export class CommunityQuestionsComponent implements OnInit {
     id: string = '';
 
-    questions: {top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[]} = {top: [], newest: []};
+    groups: { [group: string]: CommunityQuestionListItem[] } = {};
+
+    questions: { top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[] } = { top: [], newest: [] };
 
     constructor(
         protected activatedRoute: ActivatedRoute,
@@ -172,5 +183,13 @@ export class CommunityQuestionsComponent implements OnInit {
 
     async load() {
         this.questions = await this.client.main.getQuestions();
+
+        this.groups = {};
+        for (const m of this.questions.top) {
+            if (!this.groups[m.category]) this.groups[m.category] = [];
+            this.groups[m.category].push(m);
+        }
     }
+
+    protected readonly projectMap = projectMap;
 }

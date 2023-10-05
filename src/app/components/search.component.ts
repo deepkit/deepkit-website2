@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, ViewChild } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { bodyToString, CommunityQuestion, DocPageContent, DocPageResult, parseBody } from "@app/common/models";
+import { bodyToString, CommunityQuestion, DocPageResult, link, parseBody } from "@app/common/models";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
@@ -13,7 +13,8 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
     standalone: true,
     imports: [
         NgIf,
-        RouterLink
+        RouterLink,
+        ContentRenderComponent
     ],
     styles: [`
         .path {
@@ -28,12 +29,16 @@ import { ContentRenderComponent } from "@app/app/components/content-render.compo
 
         .content {
             font-size: 14px;
+            max-height: 300px;
+            overflow: hidden;
         }
     `],
     template: `
-        <div class="path">Question & Answer</div>
+        <div class="path">{{q.type === 'answer' ? 'Question & Answer' : 'Example'}}</div>
         <h3 class="title">{{q.title}}</h3>
-        <div class="content">{{subline}}</div>
+        <div class="content">
+            <app-render-content linkRelativeTo="/" [content]="q.content"></app-render-content>
+        </div>
     `
 })
 export class SearchResultQuestion implements OnChanges {
@@ -59,31 +64,6 @@ export class SearchResultQuestion implements OnChanges {
         ContentRenderComponent
     ],
     styles: [`
-        .field {
-            position: relative;
-            //display: flex;
-            flex-direction: row;
-            height: 28px;
-            justify-content: center;
-            align-items: center;
-            margin: auto;
-            width: 150px;
-            z-index: 2001;
-            max-width: 100%;
-            transition: width 0.2s ease-in-out;
-
-            input {
-                width: 100%;
-                padding-right: 25px;
-            }
-
-            img {
-                position: absolute;
-                right: 4px;
-                top: 5px;
-            }
-        }
-
         .search.active {
             .field {
                 width: 350px;
@@ -118,35 +98,10 @@ export class SearchResultQuestion implements OnChanges {
             }
         }
 
-        .result-item {
-            text-align: left;
-            border-bottom: 1px solid #282828;
-            padding: 15px 10px;
-            overflow: hidden;
-
-            &:hover {
-                background-color: rgba(26, 26, 26, 0.87);
-                cursor: pointer;
-            }
-
-            .path {
-                color: #a2a2a2;
-                font-size: 12px;
-            }
-
-            .title {
-                margin: 5px 0;
-                color: white;
-            }
-
-            .content {
-                font-size: 14px;
-            }
-        }
     `],
     template: `
         <div class="search" [class.active]="visible">
-            <div class="field">
+            <div class="app-search-field">
                 <input (focus)="visible = true" #input (keyup)="onKeyUp($event)" (click)="visible=true"
                        placeholder="Search the docs" [(ngModel)]="query" (ngModelChange)="find()"/>
                 <img alt="search icon" src="/assets/images/icons-search.svg" style="width: 18px; height: 18px;"/>
@@ -159,11 +114,12 @@ export class SearchResultQuestion implements OnChanges {
                 <div class="box">
                     <div class="box-container scroll-small">
                         <div class="search-results" *ngIf="results">
-                            <div routerLink="/documentation/questions/post/{{r.id}}" (click)="visible=false" class="result-item" *ngFor="let r of results.questions">
+                            <div [routerLink]="link(r)"
+                                 (click)="visible=false" class="app-search-result-item" *ngFor="let r of results.community">
                                 <app-search-result-page [q]="r"></app-search-result-page>
                             </div>
 
-                            <div [routerLink]="r.url" (click)="visible=false" class="result-item" *ngFor="let r of results.pages">
+                            <div [routerLink]="'/' + r.url" (click)="visible=false" class="app-search-result-item" *ngFor="let r of results.pages">
                                 <div class="path">{{r.path}}</div>
                                 <h3 class="title">{{r.title}}</h3>
                                 <div class="content">
@@ -179,11 +135,12 @@ export class SearchResultQuestion implements OnChanges {
 })
 export class SearchComponent {
     query: string = '';
-    results?: { pages: DocPageResult[], questions: CommunityQuestion[] };
+    results?: { pages: DocPageResult[], community: CommunityQuestion[] };
     loading = false;
 
     visible: boolean = false;
     modelChanged = new Subject<string>();
+    link = link;
 
     @ViewChild('input') input?: ElementRef<HTMLInputElement>;
 

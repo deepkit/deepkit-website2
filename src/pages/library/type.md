@@ -3,7 +3,7 @@ title: Deepkit Runtime Types
 package: "@deepkit/type"
 doc: runtime-types/getting-started
 api: type
-category: type
+category: runtime-types
 ---
 
 <p class="introduction">

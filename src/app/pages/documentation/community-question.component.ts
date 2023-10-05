@@ -47,7 +47,7 @@ import { LoadingComponent } from "@app/app/components/loading";
 
     `],
     template: `
-        <div class="app-content-full">
+        <div class="app-content-full normalize-text">
             <div class="app-pre-headline">Questions & Answers</div>
 
             <app-loading *ngIf="loading"></app-loading>
@@ -63,7 +63,7 @@ import { LoadingComponent } from "@app/app/components/loading";
             </ng-container>
 
             <div class="actions" *ngIf="question">
-                <a class="button" [href]="question.answerDiscordUrl" target="_blank">Open in Discord</a>
+                <a class="button" *ngIf="question.discordUrl" [href]="question.discordUrl" target="_blank">Open in Discord</a>
                 <div class="app-tag">{{projectMap[question.category] || 'General'}}</div>
                 <div class="votes">
                     {{question.votes}} up-votes

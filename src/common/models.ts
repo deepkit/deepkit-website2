@@ -20,8 +20,16 @@ export const projectMap: { [name: string]: string } = {
     'security': 'Security',
     'testing': 'Testing',
     'validation': 'Validation',
+    'template': 'Template',
+    'introduction': 'Introduction',
     'migration': 'Migration',
     'orm': 'ORM',
+}
+
+export function link(q: CommunityQuestion) {
+    if (q.type === 'example') return `/documentation/${q.category}/examples/${q.slug}`;
+
+    return `/documentation/questions/post/${q.id}`;
 }
 
 export function bodyToString(body?: string | Content | (string | Content)[]): string {
@@ -161,24 +169,29 @@ export class CommunityMessage {
     id: number & PrimaryKey & AutoIncrement = 0;
     created: Date = new Date;
     votes: number = 0;
-    order: number & Index = 0; //0 means first message, initial question
+    order: number & Index = 0; //0 means first message, initial question, 1 means the first question
     assistant: boolean = false;
 
-    type: string = 'question'; //question, answer, reject, edit
+    source: ('markdown' | 'community') & DatabaseField<{type: 'text'}> = 'community';
+
+    type: string & Index = 'question'; //question, answer, reject, edit, example
     title: string = '';
-    slug: string = '';
+
+    category: string & Index = '';
+    slug: string & Index = '';
 
     title_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
     content_tsvector: string & DatabaseField<{ type: 'tsvector' }> = '';
 
     authId: UUID = uuid();
 
-    category: string = '';
     discordUserAvatarUrl: string = '';
     discordUrl: string = '';
     discordChannelId?: string;
     discordMessageId?: string & Index;
     discordThreadId?: string & Index;
+
+    meta: {[name: string]: any} = {};
 
     constructor(
         public userId: string,
@@ -211,7 +224,6 @@ export interface CommunityQuestionListItem {
     id: number;
     created: Date;
     discordUrl: string;
-    answerDiscordUrl: string;
     category: string;
     votes: number;
     title: string;
@@ -231,6 +243,9 @@ export interface CommunityQuestion {
     discordUrl: string;
     answerDiscordUrl: string;
     category: string;
+    type: string; //answer|example
+
+    slug: string;
 
     authId?: string; //returned on initially creating a question, which is stored on client side
     allowEdit: boolean; //if the authId matches, the user is allowed to edit the question
@@ -248,8 +263,30 @@ export interface QuestionAnswer {
     answer: Content;
 }
 
-export interface CodeExample {
+// @entity.collection('code_example')
+// export class CodeExample {
+//     id: number & PrimaryKey & AutoIncrement = 0;
+//     created: Date = new Date;
+//
+//     source: ('markdown' | 'community') & DatabaseField<{type: 'text'}> = 'community';
+//     votes: number = 0;
+//     category: string & Index = '';
+//     slug: string & Index = '';
+//
+//     //external URL, e.g. github gist or github repo
+//     url: string = '';
+//
+//     constructor(
+//         public title: string,
+//         public content: string
+//     ) {
+//     }
+// }
+
+export interface UiCodeExample {
     title: string;
+    category: string;
+    slug: string;
     url: string;
     content?: Content;
 }

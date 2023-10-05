@@ -47,21 +47,21 @@ import { NgForOf, NgIf } from "@angular/common";
     ],
     template: `
         <div class="message">
-            <div class="image">
-                <img *ngIf="question.userAvatar" [src]="question.userAvatar" class="avatar" alt="User Avatar"/>
+            <div class="image" *ngIf="question.userAvatar">
+                <img [src]="question.userAvatar" class="avatar" alt="User Avatar"/>
             </div>
             <div class="content">
-                <div class="user">@{{question.user}}</div>
+                <div class="user" *ngIf="question.user">@{{question.user}}</div>
                 <app-render-content [content]="question.content"></app-render-content>
             </div>
         </div>
 
         <div class="message" *ngFor="let m of question.messages">
-            <div class="image">
-                <img *ngIf="m.userAvatar" [src]="m.userAvatar" class="avatar" alt="User Avatar"/>
+            <div class="image" *ngIf="m.userAvatar">
+                <img [src]="m.userAvatar" class="avatar" alt="User Avatar"/>
             </div>
             <div class="content" id="answer-{{m.id}}">
-                <div class="user">@{{m.user}}</div>
+                <div class="user" *ngIf="m.user">@{{m.user}}</div>
                 <app-render-content [content]="m.content"></app-render-content>
             </div>
         </div>

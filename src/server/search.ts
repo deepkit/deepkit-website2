@@ -45,16 +45,6 @@ function createIndexEntriesForPage(page: Page, rootPath: string = ''): DocPageCo
             if (section.tag) content.tag = section.tag;
             entries.push(content);
         }
-
-        // entries.push({
-        //     // objectID: page.url + '_' + id++,
-        //     // tag: section.tag,
-        //     // props: section.props || {},
-        //     title: page.title || '',
-        //     url: page.url,
-        //     path: p.map(v => projectMap[v] || v).join(', '),
-        //     content: bodyToString(section.children)
-        // })
     }
 
     return entries;
@@ -72,7 +62,7 @@ export class Search {
         // this.client = algoliasearch(algoliaAppId, algoliaApiKey);
     }
 
-    async find(query: string): Promise<{ pages: DocPageContent[], questions: CommunityMessage[] }> {
+    async find(query: string): Promise<{ pages: DocPageContent[], community: CommunityMessage[] }> {
         //replace user query to fulltext search query in postgres format
         const search = query.trim().replace(/ +/g, ' & ');
 
@@ -92,23 +82,23 @@ ORDER BY rank DESC;
             doc.content = doc.content.replace(new RegExp(`(${query.split(' ').join('|')})`, 'gi'), '<span class="highlight">$1</span>');
         }
 
-        const questionResult = await this.database.raw<CommunityMessage>(sql`
+        const communityResult = await this.database.raw<CommunityMessage>(sql`
 SELECT *,
        ts_rank(title_tsvector, to_tsquery('english', ${search})) AS title_rank,
        ts_rank(content_tsvector, to_tsquery('english', ${search})) AS content_rank,
        ((ts_rank(title_tsvector, to_tsquery('english', ${search})) * 4.5) +
                 ts_rank(content_tsvector, to_tsquery('english', ${search}))) as rank
 FROM community_message
-WHERE assistant = true AND (content_tsvector || title_tsvector @@ to_tsquery('english', ${search}))
+WHERE (type = 'example' OR type = 'answer') AND (content_tsvector || title_tsvector @@ to_tsquery('english', ${search}))
 ORDER BY rank DESC;
 `).find();
 
         //highlight keywords in the content
-        for (const doc of questionResult) {
+        for (const doc of communityResult) {
             doc.content = doc.content.replace(new RegExp(`(${query.split(' ').join('|')})`, 'gi'), '<span class="highlight">$1</span>');
         }
 
-        return { pages: docResult, questions: questionResult };
+        return { pages: docResult, community: communityResult };
     }
 
     async index() {

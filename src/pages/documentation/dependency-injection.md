@@ -49,7 +49,7 @@ class UserRepository {
 }
 ```
 
-The function `locator.getHttpClient` can have any name. Alternatives would be function calls like `useContext(HttpClient)`, `getHttpClient()`, `await import("client"),` or a container call like `container.get(HttpClient)`. An import of a global is a slightly different variant of a service locator, using the module system itself as the locator:
+The function `locator.getHttpClient` can have any name. Alternatives would be function calls like `useContext(HttpClient)`, `getHttpClient()`, `await import("client"),` or a container queries like `container.get(HttpClient)` or `container.http`. An import of a global is a slightly different variant of a service locator, using the module system itself as the locator:
 
 ```typescript
 import { httpClient } from 'clients'
@@ -61,11 +61,17 @@ class UserRepository {
 }
 ```
 
-All these variants have in common that they explicitly request the HttpClient dependency. This request can happen not only to properties as a default value, but also somewhere in the middle of the code. Since in the middle of the code means that it is not part of a type interface, the use of the HttpClient is hidden. Depending on the variant of how the HttpClient is requested, it can sometimes be very difficult or completely impossible to replace it with another implementation. Especially in the area of unit tests and for the sake of clarity, difficulties can arise here, so that the service locator is now classified as an anti-pattern in certain situations.
+All these variants have in common that they explicitly request the HttpClient dependency and the code is aware that there is a service container. It tightly couples your code to the framework and is something you want to avoid to keep the code clean. 
+
+The service request can happen not only to properties as a default value, but also somewhere in the middle of the code. Since in the middle of the code means that it is not part of a type interface, the use of the HttpClient is hidden. Depending on the variant of how the HttpClient is requested, it can sometimes be very difficult or completely impossible to replace it with another implementation. Especially in the area of unit tests and for the sake of clarity, difficulties can arise here, so that the service locator is now classified as an anti-pattern in certain situations.
 
 ## Dependency Injection
 
-With Dependency Injection, nothing is requested, but it is explicitly provided by the user or received by the code. As can be seen in the example earlier, the dependency injection pattern has already been applied there. Specifically, constructor injection can be seen there, since the dependency is declared in the constructor. So UserRepository must now be used as follows.
+With Dependency Injection, nothing is requested, but it is explicitly provided by the user or received by the code. The consumer does not have access to any service container, does not know how `HttpClient` is created or retrieved. In its core it allows your code to be decoupled from the IoC framework making it cleaner. 
+
+It just declares that it needs an `HttpClient` as a type. One key differentiator and advantage of Dependency Injection over Service Locator is that the code using Dependency Injection works perfectly fine without any kind of service container and service identification system (you don't have to give your service a name). It is just a type declaration that works out of the IoC framework context as well.
+
+As can be seen in the example earlier, the dependency injection pattern has already been applied there. Specifically, constructor injection can be seen there, since the dependency is declared in the constructor. So UserRepository must now be instantiated as follows.
 
 ```typescript
 const users = new UserRepository(new HttpClient());
@@ -78,11 +84,11 @@ The code that wants to use UserRepository must also provide (inject) all its dep
 * The code is more modular, as dependencies can be easily exchanged.
 * It promotes the Separation of Concern principle, as UserRepository is no longer responsible for creating very complex dependencies itself.
 
-But an obvious disadvantage can also be recognized directly: Do I really need to create or manage all dependencies like the HttpClient myself? Yes and No. Yes, there are many cases where it is perfectly legitimate to manage the dependencies yourself. The hallmark of a good API is that dependencies don't get out of hand, and that even then they are pleasant to use. For many applications or complex libraries, this may well be the case. To provide a very complex low-level API with many dependencies in a simplified way to the user, the facade pattern is wonderfully suitable.
+But an obvious disadvantage can also be seen directly: Do I really need to create or manage all dependencies like the HttpClient myself? Yes and No. Yes, there are many cases where it is perfectly legitimate to manage the dependencies yourself. The hallmark of a good API is that dependencies don't get out of hand, and that even then they are pleasant to use. For many applications or complex libraries, this may well be the case. To provide a very complex low-level API with many dependencies in a simplified way to the user, the facade pattern is wonderfully suitable.
 
 ## Dependency Injection Container
 
-For more complex applications, however, it is not necessary to manage all dependencies yourself, because that is exactly what a so-called dependency injection container is for. This not only creates all objects automatically, but also "injects" the dependencies automatically, so that a manual "new" call is no longer necessary. There are various types of injection, such as constructor injection, method injection, or property injection. This makes it easy to manage even complicated constructions with many dependencies.
+For more complex applications, however, it is not necessary to manage all dependencies yourself, because that is exactly what a so-called dependency injection container is for. This not only creates all objects automatically, but also "injects" the dependencies automatically, so that a manual "new" call is no longer necessary. There are various types of injection, such as constructor injection, method injection, or property injection. This makes it easy to manage even complicated architectures with many dependencies.
 
 A dependency injection container (also called DI container or IoC container) brings Deepkit in `@deepkit/injector` or already ready integrated via App modules in the Deepkit Framework. The above code would look like this using a low-level API from the `@deepkit/injector` package.
 
@@ -99,7 +105,9 @@ const users = await userRepo.getUsers();
 ```
 
 The `injector` object in this case is the dependency injection container. Instead of using "new UserRepository", the container returns an instance of UserRepository using `get(UserRepository)`. To statically initialize the container, a list of providers is passed to the `InjectorContext.forProviders` function (in this case, simply the classes).
-Since DI is all about providing dependencies, the container is provided with the dependencies, hence the technical term "provider". There are several types of providers: ClassProvider, ValueProvider, ExistingProvider, FactoryProvider. All together, they allow very flexible architectures to be mapped with a DI container.
+Since DI is all about providing dependencies, the container is provided with the dependencies, hence the technical term "provider". 
+
+There are several types of providers: ClassProvider, ValueProvider, ExistingProvider, FactoryProvider. All together, they allow very flexible architectures to be mapped with a DI container.
 
 All dependencies between providers are automatically resolved and as soon as an `injector.get()` call occurs, the objects and dependencies are created, cached, and correctly passed either as a constructor argument (which is known as constructor injection), set as a property (which is known as property injection), or passed to a method call (which is known as method injection).
 
@@ -155,6 +163,7 @@ This is called the dependency inversion principle. UserRepository no longer has 
 Merging the two implementations (UserRepository with an HTTP library) can now be done via the DI container.
 
 ```typescript
+import { InjectorContext } from '@deepkit/injector';
 import { HttpClient } from './http-client';
 import { UserRepository } from './user-repository';
 
@@ -168,9 +177,21 @@ Since Deepkit's DI container is capable of resolving abstract dependencies (inte
 
 This is done either by HttpClient specifically implementing HttpClientInterface (`class HttpClient implements HttpClientInterface`), or by HttpClient's API simply being compatible with HttpClientInterface.
 
-As soon as HttpClient modifies its API (for example, removes the `get` method) and is thus no longer compatible with HttpClientInterface, the DI container throws an error ("the HttpClientInterface dependency was not provided").
 
-Here the user, who wants to bring both implementations together, is in the obligation to find a solution. As an example, an adapter class could be registered here that implements HttpClientInterface and correctly forwards the method calls to HttpClient.
+As soon as HttpClient modifies its API (for example, removes the `get` method) and is thus no longer compatible with HttpClientInterface, the DI container throws an error ("the HttpClientInterface dependency was not provided"). Here the user, who wants to bring both implementations together, is in the obligation to find a solution. As an example, an adapter class could be registered here that implements HttpClientInterface and correctly forwards the method calls to HttpClient.
+
+As an alternative, the HttpClientInterface can be provided directly with a concrete implementation.
+
+```typescript
+import { InjectorContext, provide } from '@deepkit/injector';
+import { HttpClient } from './http-client';
+import { UserRepository, HttpClientInterface } from './user-repository';
+
+const injector = InjectorContext.forProviders([
+    UserRepository,
+    provide<HttpClientInterface>({useClass: HttpClient}),
+]);
+```
 
 It should be noted here that although in theory the dependency inversion principle has its advantages, in practice it also has significant disadvantages. It not only leads to more code (since more interfaces have to be written), but also to more complexity (since each implementation now has an interface for each dependency). This price to pay is only worth it when the application reaches a certain size and this flexibility is needed. Like any design pattern and principle, this one has its cost-use factor, which should be thought through before it is applied.
 

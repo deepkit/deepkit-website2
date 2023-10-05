@@ -18,6 +18,7 @@ import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { Url } from "@app/server/url";
 import { MarkdownParser } from "@app/common/markdown";
 import { migrate } from "@app/server/commands/migrate";
+import { importExamples, importQuestions } from "@app/server/commands/import";
 
 (global as any).window = undefined;
 (global as any).document = undefined;
@@ -75,10 +76,12 @@ new App({
     .command('ml:fine-tune', fineTuneTest1)
     .command('ml:fine-tune:check', fineTuneTest1Check)
     .command('ml:fine-tune:model', fineTuneTest1Model)
+    .command('import:questions', importQuestions)
+    .command('import:examples', importExamples)
     .command('migrate', migrate)
     .listen(onServerMainBootstrap, registerBot)
     .listen(onAppExecute, (event, parser: MarkdownParser) => parser.load())
-    .loadConfigFromEnv({ namingStrategy: 'upper', prefix: 'APP_', envFilePath: ['local.env'] })
+    .loadConfigFromEnv({ namingStrategy: 'same', prefix: 'app_', envFilePath: ['local.env'] })
     .setup((module) => {
         const assets = findParentPath('dist/', __dirname);
         if (assets) {

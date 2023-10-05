@@ -3,9 +3,19 @@
 Deepkit Framework is a highly modular, scalable, and fast TypeScript framework for building web applications, APIs, and microservices.
 It is designed to be as flexible as necessary and as structured as required, allowing developers to maintain high development speeds, both in the short term and the long term.
 
-## Framework Module
+## App and Framework Module
 
-Deepkit Framework is mainly the `FrameworkModule`, which can be imported in your `App`. It brings:
+Deepkit Framework is based on the `App` abstraction in `@deepkit/app` and  the `FrameworkModule` module from `@deepkit/framework`, which can be imported in your `App`.
+
+The `App` abstraction brings:
+
+- CLI commands
+- Configuration loading (environment, dotfiles, custom)
+- Module system
+- Powerful Service Container
+- Registry and hooks for controllers, providers, listeners, and more
+
+The `FrameworkModule` module brings:
 
 - Application server
     - HTTP server
@@ -18,6 +28,8 @@ Deepkit Framework is mainly the `FrameworkModule`, which can be imported in your
 - Interactive API documentation (like Swagger)
 - Providers for Logger, Broker
 - Integration Test APIs
+
+You can write applications with or without the `FrameworkModule`.
 
 ## Installation
 

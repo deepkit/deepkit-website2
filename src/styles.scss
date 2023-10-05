@@ -473,11 +473,11 @@ pre.console {
     padding-top: 80px;
     padding-bottom: 250px;
     margin: auto;
+    text-align: left;
     //margin-left: 225px;
     font-size: 15px;
     line-height: 170%;
     max-width: 750px;
-    text-align: justify;
     overflow: hidden;
     flex: 1;
     padding-right: 0;
@@ -521,6 +521,10 @@ pre.console {
         h3, h4 {
             font-weight: bold;
         }
+
+        .text, p {
+            text-align: justify;
+        }
     }
 }
 
@@ -530,6 +534,11 @@ pre.console {
     background: linear-gradient(180deg, #1E2124 0%, #141617 100%);
     box-shadow: 0px 2px 20px 0px rgba(18, 18, 18, 0.50);
     padding: 25px 28px;
+}
+
+.app-box-transparent {
+    border-radius: 3px;
+    border: 1px solid rgba(57, 56, 65, 0.60);
 }
 
 .app-banner {
@@ -799,4 +808,96 @@ a.button.primary {
 .benchmark-link {
     text-align: right;
     font-size: 13px;
+}
+
+.app-examples {
+    display: grid;
+    grid-gap: 25px;
+    grid-auto-columns: auto;
+    grid-auto-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    &.small {
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 15px;
+
+        .app-example-item {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+    }
+
+    .app-example-item {
+        display: block;
+        border-radius: 3px;
+        border: 1px solid rgba(52, 52, 52, 0.69);
+        background: rgba(34, 34, 34, 0.19);
+        padding: 12px 15px;
+        color: var(--color-text);
+        font-size: 14px;
+        text-align: left;
+
+        &:hover {
+            background: rgba(34, 34, 34, 0.29);
+            border: 1px solid rgba(108, 108, 108, 0.69);
+            text-decoration: none;
+            color: var(--color-link);
+        }
+
+        &:active {
+            background: rgb(17, 17, 17);
+        }
+    }
+}
+
+.app-search-field {
+    position: relative;
+    //display: flex;
+    flex-direction: row;
+    height: 28px;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    width: 150px;
+    z-index: 2001;
+    max-width: 100%;
+    transition: width 0.2s ease-in-out;
+
+    input {
+        width: 100%;
+        padding-right: 25px;
+        height: 100%;
+    }
+
+    img {
+        position: absolute;
+        right: 4px;
+        top: calc(50% - 9px);
+    }
+}
+
+.app-search-result-item {
+    text-align: left;
+    border-bottom: 1px solid #282828;
+    padding: 15px 10px;
+    overflow: hidden;
+
+    &:hover {
+        background-color: rgba(26, 26, 26, 0.87);
+        cursor: pointer;
+    }
+
+    .path {
+        color: #a2a2a2;
+        font-size: 12px;
+    }
+
+    .title {
+        margin: 5px 0;
+        color: white;
+    }
+
+    .content {
+        font-size: 14px;
+    }
 }

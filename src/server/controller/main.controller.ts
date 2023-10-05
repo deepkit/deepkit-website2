@@ -1,5 +1,5 @@
 import { rpc } from "@deepkit/rpc";
-import { CodeExample, CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, DocPageResult, Page, QuestionAnswer } from "@app/common/models";
+import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, DocPageResult, Page, UiCodeExample } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
@@ -46,6 +46,19 @@ function createDocPageResult(
     }
 }
 
+function createUiExample(
+    markdownParser: MarkdownParser,
+    example: CommunityMessage,
+): UiCodeExample {
+    return {
+        title: example.title,
+        category: example.category,
+        url: example.meta.url || '',
+        slug: example.slug,
+        content: markdownParser.parse(example.content).body,
+    }
+}
+
 function createCommunityQuestion(
     markdownParser: MarkdownParser,
     question: CommunityMessage,
@@ -59,11 +72,27 @@ function createCommunityQuestion(
         category: question.category,
         votes: question.votes,
         title: question.title,
+        type: question.type,
+        slug: question.slug,
         allowEdit: false,
         user: question.userDisplayName,
         userAvatar: question.discordUserAvatarUrl,
         content: markdownParser.parse(question.content).body,
         messages: messages.map(v => ({ id: v.id, user: v.userDisplayName, userAvatar: v.discordUserAvatarUrl, content: markdownParser.parse(v.content).body })),
+    }
+}
+
+function createCommunityQuestionListItem(
+    question: CommunityMessage,
+): CommunityQuestionListItem {
+    return {
+        id: question.id,
+        created: question.created,
+        discordUrl: question.discordUrl,
+        category: question.category,
+        votes: question.votes,
+        title: question.title,
+        user: question.userDisplayName,
     }
 }
 
@@ -80,7 +109,7 @@ export class MainController {
 
     @rpc.action()
     async getQuestion(id: number, authId?: string): Promise<CommunityQuestion> {
-        const message = await this.database.query(CommunityMessage).filter({ id }).findOne();
+        const message = await this.database.query(CommunityMessage).filter({ id, type: {$ne: 'example'} }).findOne();
         const messages = await this.database.query(CommunityMessage).filter({ thread: message, type: { $ne: 'edit' } }).orderBy('created', 'asc').find();
         const question = createCommunityQuestion(this.markdownParser, message, messages);
         question.allowEdit = message.authId === authId;
@@ -89,37 +118,22 @@ export class MainController {
 
     @rpc.action()
     async getQuestions(): Promise<{ top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[] }> {
-        const top = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('votes', 'desc').limit(15).find();
-        const newest = await this.database.query(CommunityMessage).filter({ order: 0 }).orderBy('created', 'desc').limit(15).find();
+        const top = await this.database.query(CommunityMessage)
+            .filter({ order: 1, type: {$ne: 'example'} })
+            .orderBy('votes', 'desc')
+            .limit(100)
+            .find();
 
-        const answers = await this.database.query(CommunityMessage).filter({ order: 1, thread: { $in: [...top, ...newest] } }).find();
+        const newest = await this.database.query(CommunityMessage)
+            .filter({ order: 1, type: {$ne: 'example'} })
+            .orderBy('created', 'desc')
+            .limit(15)
+            .find();
 
-        const result: { top: CommunityQuestionListItem[], newest: CommunityQuestionListItem[] } = { top: [], newest: [] };
-
-        // we could also joins and what not, but we keep it simple since we only fetch 15*2 questions, so should always be fast enough.
-        function add(items: CommunityMessage[], to: CommunityQuestionListItem[]) {
-            for (const question of items) {
-                const answer = answers.find(v => v.thread?.id === question.id);
-                if (!answer) continue;
-                const entry = {
-                    id: question.id,
-                    created: question.created,
-                    discordUrl: question.discordUrl,
-                    answerDiscordUrl: answer.discordUrl,
-                    category: question.category,
-                    votes: question.votes,
-                    title: question.title,
-                    user: question.userDisplayName,
-                };
-
-                to.push(entry);
-            }
+        return {
+            top: top.map(v => createCommunityQuestionListItem(v)),
+            newest: newest.map(v => createCommunityQuestionListItem(v)),
         }
-
-        add(top, result.top);
-        add(newest, result.newest);
-
-        return result;
     }
 
     @rpc.action()
@@ -195,12 +209,12 @@ export class MainController {
     }
 
     @rpc.action()
-    async search(query: string): Promise<{ pages: DocPageResult[], questions: CommunityQuestion[] }> {
+    async search(query: string): Promise<{ pages: DocPageResult[], community: CommunityQuestion[] }> {
         const hits = await this.searcher.find(query);
 
         return {
             pages: hits.pages.map(v => createDocPageResult(this.markdownParser, v)),
-            questions: hits.questions.map(v => createCommunityQuestion(this.markdownParser, v, []))
+            community: hits.community.map(v => createCommunityQuestion(this.markdownParser, v, []))
         };
     }
 
@@ -216,22 +230,37 @@ export class MainController {
     }
 
     @rpc.action()
-    async getFAQ(url: string): Promise<QuestionAnswer[]> {
-        return await this.page.parseQuestions('questions/' + url);
+    async getFAQ(category: string): Promise<CommunityQuestion[]> {
+        const questions = await this.database.query(CommunityMessage)
+            .filter({ type: 'answer', category, order: 1, assistant: true })
+            .limit(5)
+            .orderBy('votes', 'desc')
+            .orderBy('id', 'asc')
+            .find();
+
+        return questions.map(v => createCommunityQuestion(this.markdownParser, v, []));
     }
 
     @rpc.action()
-    async getExamples(url: string): Promise<CodeExample[]> {
-        return await this.page.parseExamples(url);
+    async getExamples(category: string = '', withContent: boolean = false, top: number = 5): Promise<UiCodeExample[]> {
+        let query = this.database.query(CommunityMessage);
+        if (category) {
+            query = query.filter({ category });
+        }
+
+        const examples = await query
+            .filter({ type: 'example' })
+            .limit(top)
+            .orderBy('votes', 'desc')
+            .orderBy('id', 'asc')
+            .find();
+
+        return examples.map(v => createUiExample(this.markdownParser, v));
     }
 
-    // @rpc.action()
-    // async getCompanies(): Promise<string[]> {
-    //     const result: string[] = [];
-    //     const dir = await findParentPath('src/assets/companies', __dirname);
-    //     if (!dir) return [];
-    //
-    //     const files = await readdir(dir);
-    //     return files;
-    // }
+    @rpc.action()
+    async getExample(category: string, slug: string): Promise<UiCodeExample> {
+        const example = await this.database.query(CommunityMessage).filter({ type: 'example', category, slug }).findOne();
+        return createUiExample(this.markdownParser, example);
+    }
 }

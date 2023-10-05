@@ -1,31 +1,49 @@
 # Modules
 
-Deepkit framework is highly modular and allows you to split your application into several handy modules. Each module has its own dependency injection sub-container, configuration, commands and much more. In the chapter "First application" you have already created one module - the root module. `new App` takes almost the same arguments as a module, because it creates the root module for you automatically in the background.
+Deepkit framework is highly modular and allows you to split your application into several handy modules. Each module has its own dependency injection sub-container (inheriting all parent providers), configuration, commands and much more.
+In the chapter [Getting Started](../framework.md) you have already created one module - the root module. `new App` takes almost the same arguments as a module, because it creates the root module for you automatically in the background.
 
 You can skip this chapter if you do not plan to split your application into submodules, or if you do not plan to make a module available as a package to others.
 
-A module is a simple class:
+A module can either be defined as class module or as functional module.
 
-```typescript
+```typescript title=Class Module
 import { createModule } from '@deepkit/app';
 
-export class MyModule extends createModule({}) {
+export class MyModule extends createModule({
+    //same options as new App({})
+    providers: [MyService]
+}) {
 }
 ```
 
-It basically has no functionality at this point because its module definition is an empty object and it has no methods, but this demonstrates the relationship between modules and your application (your root module). This MyModule module can then be imported into your application or other modules.
+```typescript title=Functional Module
+import { AppModule } from '@deepkit/app';
+
+export function myModule(options: {} = {}) {
+    return (module: AppModule) => {
+        module.addProvider(MyService);
+    };
+}
+```
+
+This module can then be imported into your application or other modules.
 
 ```typescript
-import { MyModule } from './module.ts'
+import { MyModule, myModule } from './module.ts'
 
 new App({
     imports: [
-        new MyModule(),
+        new MyModule(), //import class module
+        myModule(), //import functional module
     ]
 }).run();
 ```
 
-You can now add features to this module as you would with `App`. The arguments are the same, except that imports are not available in a module definition. Add HTTPRPCCLI controllers, services, a configuration, event listeners, and various module hooks to make modules more dynamic.
+You can now add features to this module as you would with `App`. The arguments of `createModule` are the same, except that imports are not available in a module definition.
+For functional routes you can use the methods of `AppModule` to configure it dynamically based on your own options.
+
+Add HTTP/RPC/CLI controllers, services, a configuration, event listeners, and various module hooks to make modules more dynamic.
 
 ## Controllers
 
@@ -48,6 +66,8 @@ class MyHttpController {
 export class MyModule extends createModule({
     controllers: [MyHttpController]
 }) {}
+
+
 
 //same is possible for App
 new App({
@@ -86,6 +106,13 @@ export class MyModule extends createModule({
     providers: [HelloWorldService],
 }) {}
 
+export function myModule(options: {} = {}) {
+    return (module: AppModule) => {
+        module.addController(MyHttpController);
+        module.addProvider(HelloWorldService);
+    };
+}
+
 //same is possible for App
 new App({
     controllers: [MyHttpController],
@@ -103,10 +130,14 @@ To make providers available in the importer's module, you can include the provid
 import { createModule } from '@deepkit/app';
 
 export class MyModule extends createModule({
-    controllers: [MyHttpController],
-    providers: [HelloWorldService],
     exports: [HelloWorldService],
 }) {}
+
+export function myModule(options: {} = {}) {
+    return (module: AppModule) => {
+        module.addExport(HelloWorldService);
+    };
+}
 ```
 
 If you have other providers like `FactoryProvider`, `UseClassProvider` etc., you should still use only the class type in the exports.
@@ -171,6 +202,12 @@ import { Config } from './module.config.ts';
 export class MyModule extends createModule({
    config: Config
 }) {}
+
+export function myModule(options: Partial<Config> = {}) {
+    return (module: AppModule) => {
+        module.setConfigDefinition(Config).configure(options);
+    };
+}
 ```
 
 Configuration option values can be provided either by the constructor of your module, with the `.configure()` method, or via configuration loaders (e.g. environment variables loaders).
@@ -179,7 +216,10 @@ Configuration option values can be provided either by the constructor of your mo
 import { MyModule } from './module.ts';
 
 new App({
-   imports: [new MyModule({title: 'Hello World'})],
+   imports: [
+       new MyModule({title: 'Hello World'}),
+       myModule({title: 'Hello World'}),
+   ],
 }).run();
 ```
 
@@ -194,6 +234,12 @@ export class MainModule extends createModule({
     process() {
         this.getImportedModuleByClass(MyModule).configure({title: 'Changed'});
     }
+}
+
+export function myModule(options: Partial<Config> = {}) {
+    return (module: AppModule) => {
+        module.getImportedModuleByClass(MyModule).configure({title: 'Changed'});
+    };
 }
 ```
 
@@ -230,6 +276,12 @@ All configuration options can also be changed via environment variables. This wo
 export class MyModule extends createModule({
 }, 'my') { //<-- 'my' is the name
 }
+
+export function myModule(options: Partial<Config> = {}) {
+    return (module: AppModule) => {
+        module.name = 'my';
+    };
+}
 ```
 
 ```typescript
@@ -264,6 +316,12 @@ export class MyModule extends createModule({
 }) {
     imports = [new OtherModule()];
 }
+
+export function myModule() {
+    return (module: AppModule) => {
+        module.addImport(new OtherModule());
+    };
+}
 ```
 
 You can also import modules dynamically based on the configuration using the `process` hook.
@@ -278,6 +336,14 @@ export class MyModule extends createModule({
             this.addImport(new OtherModule({option: 'value'});
         }
     }
+}
+
+export function myModule(option: {xEnabled?: boolean} = {}) {
+    return (module: AppModule) => {
+        if (option.xEnabled) {
+            module.addImport(new OtherModule());
+        }
+    };
 }
 ```
 

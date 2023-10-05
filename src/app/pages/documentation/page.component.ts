@@ -64,7 +64,7 @@ export class DocumentationPageComponent implements OnInit {
         private viewportScroller: ViewportScroller,
         public router: Router,
     ) {
-        console.log('new DocumentationComponent');
+        console.log('new DocumentationPageComponent');
     }
 
     ngOnInit() {

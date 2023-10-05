@@ -2,12 +2,13 @@ import { Database } from "@deepkit/orm";
 import { sql } from "@deepkit/sql";
 
 export async function migrate(database: Database) {
-    try {
-        await database.raw(sql`CREATE EXTENSION vector`).execute();
-        console.log("vector engine created");
-    } catch (e) {
-        console.log(`vector engined loaded already: ${e}`)
-    }
+
+    // try {
+    //     await database.raw(sql`CREATE EXTENSION vector`).execute();
+    //     console.log("vector engine created");
+    // } catch (e) {
+    //     console.log(`vector engined loaded already: ${e}`)
+    // }
 
     await database.migrate();
 

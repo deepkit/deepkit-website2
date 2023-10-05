@@ -9,6 +9,8 @@ import { LibrariesComponent } from "@app/app/pages/libraries/libraries.component
 import { EnterpriseComponent } from "@app/app/pages/enterprise.component";
 import { LibraryComponent } from "@app/app/pages/libraries/library.component";
 import { ExamplesComponent } from "@app/app/pages/documentation/examples.component";
+import { ExampleComponent } from "@app/app/pages/documentation/example.component";
+import { DocuSearchComponent } from "@app/app/pages/documentation/search.component";
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
@@ -24,7 +26,10 @@ export const routes: Routes = [
                     { path: '**', component: CommunityQuestionsComponent },
                 ]
             },
-            { path: ':id/examples', component: ExamplesComponent },
+            { path: 'search', component: DocuSearchComponent },
+            { path: 'examples', component: ExamplesComponent },
+            { path: ':category/examples/:slug', component: ExampleComponent },
+            { path: ':category/examples', component: ExamplesComponent },
             { path: '**', component: DocumentationPageComponent },
         ]
     },

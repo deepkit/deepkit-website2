@@ -1,4 +1,6 @@
 export class AppConfig {
+    environment: 'prod' | 'dev' = 'dev';
+
     databaseHost: string = 'localhost';
     databasePort: number = 5432;
     databaseName: string = 'postgres';

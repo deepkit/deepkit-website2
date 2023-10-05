@@ -77,32 +77,3 @@ h1 {
         }
     }
 }
-
-
-.examples {
-    display: grid;
-    grid-gap: 25px;
-    grid-auto-columns: auto;
-    grid-auto-rows: 1fr;
-    grid-template-columns: 1fr 1fr;
-
-    .example {
-        display: block;
-        border-radius: 3px;
-        border: 1px solid rgba(52, 52, 52, 0.69);
-        background: rgba(34, 34, 34, 0.19);
-        padding: 17px 20px;
-        color: var(--color-text);
-
-        &:hover {
-            background: rgba(34, 34, 34, 0.29);
-            border: 1px solid rgba(108, 108, 108, 0.69);
-            text-decoration: none;
-            color: var(--color-link);
-        }
-
-        &:active {
-            background: rgb(17, 17, 17);
-        }
-    }
-}

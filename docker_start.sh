@@ -5,5 +5,7 @@ sleep 2
 
 node dist/src/server/app.js migrate
 node dist/src/server/app.js search:index
+node dist/src/server/app.js import:examples
+node dist/src/server/app.js import:questions
 
-APP_ENVIRONMENT=prod APP_FRAMEWORK_PORT=$PORT node dist/src/server/app.js server:start
+app_environment=prod app_framework_port=$PORT node dist/src/server/app.js server:start

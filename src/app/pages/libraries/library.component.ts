@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ControllerClient } from "@app/app/client";
 import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
-import { bodyToString, Content, Page, parseBody, QuestionAnswer } from "@app/common/models";
+import { bodyToString, CodeExample, Content, Page, parseBody, QuestionAnswer } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
 import { NgForOf, NgIf } from "@angular/common";
@@ -64,8 +64,9 @@ import { NgForOf, NgIf } from "@angular/common";
                     <h2 id="examples">Examples</h2>
 
                     <div class="examples">
-                        <div class="example">
-                        </div>
+                        <a class="example" routerLink="/documentation/examples/{{example.url}}" *ngFor="let example of examples">
+                            {{example.title}}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -76,6 +77,7 @@ export class LibraryComponent implements OnInit {
     subline?: Content;
     page?: Page;
     faqs: QuestionAnswer[] = [];
+    examples: CodeExample[] = [];
 
     constructor(
         private client: ControllerClient,
@@ -91,11 +93,13 @@ export class LibraryComponent implements OnInit {
 
     async load(slug: string) {
         this.page = await this.client.main.getPage('library/' + slug);
-        console.log(this.page);
         if (!this.page) return;
         this.subline = parseBody(this.page.body).subline;
         this.faqs = await this.client.main.getFAQ(slug);
-        console.log('faq', this.faqs);
+        this.examples = await this.client.main.getExamples(slug);
+        console.log('page', this.page);
+        console.log('faqs', this.faqs);
+        console.log('examples', this.examples);
     }
 
     protected readonly bodyToString = bodyToString;

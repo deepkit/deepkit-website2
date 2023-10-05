@@ -15,7 +15,7 @@ import { RouterLink } from "@angular/router";
             max-width: 880px;
         }
 
-        .library {
+        .library, .library:link {
             text-align: left;
             display: block;
 

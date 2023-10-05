@@ -79,3 +79,32 @@ const lowLevelModule = new InjectorModule([HttpClient])
 Once the Deepkit framework is used, modules are defined with the `@deepkit/app` API. This is based on the Module API, so the capabilities from there are also available. In addition, it is possible to work with powerful hooks and define configuration loaders to map even more dynamic architectures.
 
 The [Framework Modules](../framework/modules.md) chapter describes this in more detail.
+
+```typescript
+import { App } from '@deepkit/app';
+import { FrameworkModule } from '@deepkit/framework';
+import { HttpRouterRegistry, HttpBody } from '@deepkit/http';
+
+interface User {
+    username: string;
+}
+
+class Service {
+    users: User[] = [];
+}
+
+const app = new App({
+    providers: [Service],
+    imports: [new FrameworkModule()],
+});
+
+const router = app.get(HttpRouterRegistry);
+
+router.post('/users', (body: HttpBody<User>, service: Service) => {
+    service.users.push(body);
+});
+
+router.get('/users', (service: Service): Users => {
+    return service.users;
+});
+```

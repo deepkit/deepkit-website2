@@ -242,7 +242,8 @@ export interface QuestionAnswer {
 
 export interface CodeExample {
     title: string;
-    files: { name: string, content: Content }[];
+    url: string;
+    content?: Content;
 }
 
 

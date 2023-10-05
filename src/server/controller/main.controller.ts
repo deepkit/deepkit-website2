@@ -1,5 +1,5 @@
 import { rpc } from "@deepkit/rpc";
-import { CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page, QuestionAnswer } from "@app/common/models";
+import { CodeExample, CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page, QuestionAnswer } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
@@ -205,6 +205,11 @@ export class MainController {
     @rpc.action()
     async getFAQ(url: string): Promise<QuestionAnswer[]> {
         return await this.page.parseQuestions('questions/' + url);
+    }
+
+    @rpc.action()
+    async getExamples(url: string): Promise<CodeExample[]> {
+        return await this.page.parseExamples(url);
     }
 
     // @rpc.action()

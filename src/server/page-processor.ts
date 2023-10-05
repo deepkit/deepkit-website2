@@ -39,45 +39,21 @@ export class PageProcessor {
         return questions;
     }
 
-    async parseExamples(url: string, top: number = 5): Promise<CodeExample[]> {
-        const content = await this.read(url);
+    async parseExamples(url: string, withContent: boolean = false, top: number = 5): Promise<CodeExample[]> {
+        const content = await this.read('examples/' + url);
         const texts = content.split(magicSeparator);
-        /*
-Example structure:
-
-```
-Title: <title>
-
-Code here
-```
-
-Or example with several files
-
-```
-Title: <title>
-
-File: <file1>
-
-Code here
-
-File: <file2>
-
-Code here
-```
-         */
         const examples: CodeExample[] = [];
         for (const text of texts) {
-            const userStart = text.indexOf('Title:') + 'Title:'.length;
-            const title = text.substr(userStart, text.indexOf('\n', userStart)).trim();
+            const titleStart = text.indexOf('Title:') + 'Title:'.length;
+            const titleEnd = text.indexOf('\n', titleStart);
+            const title = text.slice(titleStart, titleEnd).trim();
             if (!title) continue;
 
-
-            // const assistantStart = text.indexOf('\nCode:');
-            // const title = text.substr(userStart, assistantStart - userStart).trim();
-            // if (!title) continue;
-            // const code = text.substr(assistantStart + '\nCode:'.length).trim();
-            // const files = code.split('\nFile:').map(v => v.trim()).filter(v => v);
-            // examples.push({ title, files });
+            examples.push({
+                title,
+                url: url + '/' + title.replace(/[^a-zA-Z0-9\-_]/g, '-').toLowerCase(),
+                content: withContent ? this.parser.parse(text.slice(titleEnd + 1)).body : undefined
+            });
             if (examples.length >= top) break;
         }
         return examples;

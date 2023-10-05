@@ -1,6 +1,6 @@
 Title: Iterate over class properties
 
-```typescript title="app.ts"
+```typescript
 import { ReflectionClass } from '@deepkit/type';
 
 class User {
@@ -9,7 +9,7 @@ class User {
     password: string = '';
 }
 
-const properties = ReflectionClass.getProperties(User);
+const properties = ReflectionClass.from(User).getProperties();
 for (const property of properties) {
     console.log(property.name, property.type);
 }

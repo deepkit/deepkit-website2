@@ -222,7 +222,6 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             if (content.tag === 'img') {
                 const wrapperDiv = this.renderer.createElement('div');
                 this.renderer.addClass(wrapperDiv, 'image');
-                this.renderer.appendChild(parent, wrapperDiv);
                 this.renderer.appendChild(wrapperDiv, element);
                 element = wrapperDiv;
             } else if (content.tag === 'video') {
@@ -236,7 +235,6 @@ export class ContentRenderComponent implements OnInit, OnChanges {
 
                 const videoDiv = this.renderer.createElement('div');
                 this.renderer.addClass(videoDiv, 'video');
-                this.renderer.appendChild(parent, videoDiv);
 
                 const wrapperDiv = this.renderer.createElement('div');
                 this.renderer.addClass(wrapperDiv, 'wrapper');

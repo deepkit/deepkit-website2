@@ -68,6 +68,12 @@ import { NgForOf, NgIf } from "@angular/common";
                             {{example.title}}
                         </a>
                     </div>
+
+                    <div style="text-align: center; margin-top: 50px;">
+                        <p>
+                            <a class="button big" style="margin-right: 25px;" routerLink="/documentation/examples/{{page.params.category}}">See all examples</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

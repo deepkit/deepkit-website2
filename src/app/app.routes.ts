@@ -8,6 +8,7 @@ import { CommunityQuestionComponent } from "@app/app/pages/documentation/communi
 import { LibrariesComponent } from "@app/app/pages/libraries/libraries.component";
 import { EnterpriseComponent } from "@app/app/pages/enterprise.component";
 import { LibraryComponent } from "@app/app/pages/libraries/library.component";
+import { ExamplesComponent } from "@app/app/pages/documentation/examples.component";
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
@@ -23,6 +24,7 @@ export const routes: Routes = [
                     { path: '**', component: CommunityQuestionsComponent },
                 ]
             },
+            { path: ':id/examples', component: ExamplesComponent },
             { path: '**', component: DocumentationPageComponent },
         ]
     },

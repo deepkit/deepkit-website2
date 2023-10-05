@@ -36,6 +36,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                 <div class="category">
                     <div class="category-title">Framework</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/framework">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/modules">Modules</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/services">Services</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/events">Events</a>
@@ -51,6 +52,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">Runtime Types</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/runtime-types">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/types">Type Annotations</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/reflection">Reflection</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/serialization">Serialization</a>
@@ -64,6 +66,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">Dependency Injection</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/dependency-injection">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/dependency-injection/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/providers">Providers</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/injection">Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/configuration">Configuration</a>
@@ -74,6 +77,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">CLI</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/cli">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/cli/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/cli/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/cli/arguments">Arguments & Flags</a>
                     <a routerLinkActive="active" routerLink="/documentation/cli/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/cli/events">Events</a>
@@ -83,6 +87,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">HTTP</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/http">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/input-output">Input & Output</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/template">Template</a>
@@ -95,6 +100,7 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">RPC</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/rpc">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/security">Security</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/errors">Errors</a>
@@ -106,6 +112,7 @@ import { AskComponent } from "@app/app/components/ask.component";
 
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/database">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/database/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/entity">Entity</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/session">Session</a>
                     <a routerLinkActive="active" routerLink="/documentation/database/query">Query</a>

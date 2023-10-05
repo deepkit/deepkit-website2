@@ -87,6 +87,11 @@ WHERE (content_tsvector || path_tsvector @@ to_tsquery('english', ${search}))
 ORDER BY rank DESC;
 `).find();
 
+        //highlight keywords in the content
+        for (const doc of docResult) {
+            doc.content = doc.content.replace(new RegExp(`(${query.split(' ').join('|')})`, 'gi'), '<span class="highlight">$1</span>');
+        }
+
         const questionResult = await this.database.raw<CommunityMessage>(sql`
 SELECT *,
        ts_rank(title_tsvector, to_tsquery('english', ${search})) AS title_rank,
@@ -97,6 +102,11 @@ FROM community_message
 WHERE assistant = true AND (content_tsvector || title_tsvector @@ to_tsquery('english', ${search}))
 ORDER BY rank DESC;
 `).find();
+
+        //highlight keywords in the content
+        for (const doc of questionResult) {
+            doc.content = doc.content.replace(new RegExp(`(${query.split(' ').join('|')})`, 'gi'), '<span class="highlight">$1</span>');
+        }
 
         return { pages: docResult, questions: questionResult };
     }

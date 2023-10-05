@@ -1,5 +1,5 @@
 import { rpc } from "@deepkit/rpc";
-import { CodeExample, CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, Page, QuestionAnswer } from "@app/common/models";
+import { CodeExample, CommunityMessage, CommunityQuestion, CommunityQuestionListItem, Content, DocPageContent, DocPageResult, Page, QuestionAnswer } from "@app/common/models";
 import { findParentPath } from "@deepkit/app";
 import { readFile } from "fs/promises";
 import { join } from "path";
@@ -31,6 +31,19 @@ function different(a?: string | Content, b?: string | Content): boolean {
     }
 
     return false;
+}
+
+function createDocPageResult(
+    markdownParser: MarkdownParser,
+    content: DocPageContent,
+): DocPageResult {
+    return {
+        url: content.url,
+        title: content.title,
+        path: content.path,
+        tag: content.tag,
+        content: markdownParser.parse(content.content).body,
+    }
 }
 
 function createCommunityQuestion(
@@ -182,11 +195,11 @@ export class MainController {
     }
 
     @rpc.action()
-    async search(query: string): Promise<{ pages: DocPageContent[], questions: CommunityQuestion[] }> {
+    async search(query: string): Promise<{ pages: DocPageResult[], questions: CommunityQuestion[] }> {
         const hits = await this.searcher.find(query);
 
         return {
-            pages: hits.pages,
+            pages: hits.pages.map(v => createDocPageResult(this.markdownParser, v)),
             questions: hits.questions.map(v => createCommunityQuestion(this.markdownParser, v, []))
         };
     }

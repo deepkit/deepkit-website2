@@ -36,7 +36,6 @@ import { ControllerClient } from "@app/app/client";
                 <div *ngIf="project" class="app-pre-headline">{{project}}</div>
                 <app-render-content [content]="page.body"></app-render-content>
             </div>
-
 <!--            <app-ask [fixed]="true"></app-ask>-->
         </div>
 

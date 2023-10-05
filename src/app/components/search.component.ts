@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, ViewChild } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { bodyToString, CommunityQuestion, DocPageContent, parseBody } from "@app/common/models";
+import { bodyToString, CommunityQuestion, DocPageContent, DocPageResult, parseBody } from "@app/common/models";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
 import { LoadingComponent } from "@app/app/components/loading";
+import { ContentRenderComponent } from "@app/app/components/content-render.component";
 
 @Component({
     selector: 'app-search-result-page',
@@ -54,7 +55,8 @@ export class SearchResultQuestion implements OnChanges {
         FormsModule,
         LoadingComponent,
         RouterLink,
-        SearchResultQuestion
+        SearchResultQuestion,
+        ContentRenderComponent
     ],
     styles: [`
         .field {
@@ -120,6 +122,7 @@ export class SearchResultQuestion implements OnChanges {
             text-align: left;
             border-bottom: 1px solid #282828;
             padding: 15px 10px;
+            overflow: hidden;
 
             &:hover {
                 background-color: rgba(26, 26, 26, 0.87);
@@ -163,7 +166,9 @@ export class SearchResultQuestion implements OnChanges {
                             <div [routerLink]="r.url" (click)="visible=false" class="result-item" *ngFor="let r of results.pages">
                                 <div class="path">{{r.path}}</div>
                                 <h3 class="title">{{r.title}}</h3>
-                                <div class="content">{{r.content}}</div>
+                                <div class="content">
+                                    <app-render-content [content]="r.content"></app-render-content>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,7 +179,7 @@ export class SearchResultQuestion implements OnChanges {
 })
 export class SearchComponent {
     query: string = '';
-    results?: { pages: DocPageContent[], questions: CommunityQuestion[] };
+    results?: { pages: DocPageResult[], questions: CommunityQuestion[] };
     loading = false;
 
     visible: boolean = false;

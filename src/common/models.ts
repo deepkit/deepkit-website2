@@ -148,6 +148,14 @@ export class DocPageContent {
     }
 }
 
+export interface DocPageResult {
+    path: string;
+    url: string;
+    title: string;
+    tag: string;
+    content: Content;
+}
+
 @entity.collection('community_message')
 export class CommunityMessage {
     id: number & PrimaryKey & AutoIncrement = 0;

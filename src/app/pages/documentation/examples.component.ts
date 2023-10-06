@@ -33,7 +33,7 @@ import { LoadingComponent } from "@app/app/components/loading";
             </p>
 
             <div *ngFor="let kv of groups|keyvalue">
-                <h3>{{projectMap[kv.key] || kv.key}}</h3>
+                <h3 id="{{kv.key}}">{{projectMap[kv.key] || kv.key}}</h3>
 
 <!--                <div class="app-examples small">-->
 <!--                    <a class="app-example-item" routerLink="/documentation/{{example.category}}/examples/{{example.slug}}" *ngFor="let example of kv.value">-->

@@ -65,7 +65,14 @@ const MyEvent = new EventToken('my-event');
 app.listen(MyEvent, (event) => {
     console.log('MyEvent triggered!');
 });
+
+//trigger via app reference
 await app.dispatch(MyEvent);
+
+//or use the EventDispatcher, App's DI container injects it automatically
+app.command('test', async (dispatcher: EventDispatcher) => {
+    await dispatcher.dispatch(MyEvent);
+});
 ```
 
 ### Creating Custom Event Data:
@@ -175,10 +182,14 @@ _Functional Listener_
 
 ```typescript
 import { onServerMainBootstrap } from '@deepkit/framework';
+import { onAppExecute } from '@deepkit/app';
 
 new App({
     imports: [new FrameworkModule]
 })
+    .listen(onAppExecute, (event) => {
+        console.log('Command about to execute');
+    })
     .listen(onServerMainBootstrap, (event) => {
         console.log('Server started');
     })

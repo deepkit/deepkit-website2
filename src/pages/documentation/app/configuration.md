@@ -10,8 +10,6 @@ A configuration can be defined by defining a class with properties. This is a ty
 ```typescript
 import { MinLength } from '@deepkit/type';
 import { App } from '@deepkit/app';
-import { FrameworkModule } from '@deepkit/framework';
-import { http, HttpRouterRegistry } from '@deepkit/http';
 
 class Config {
     pageTitle: string & MinLength<2> = 'Cool site';
@@ -20,15 +18,13 @@ class Config {
 }
 
 const app = new App({
-    config: Config,
-    imports: [new FrameworkModule]
+    config: Config
 });
 
-const router = app.get(HttpRouterRegistry);
 
-router.get('/', (config: Config) => {
-    return config.pageTitle + ' via ' + config.domain;
-});
+app.command('print-config', (config: Config) => {
+    console.log('config', config);
+})
 
 app.run();
 ```

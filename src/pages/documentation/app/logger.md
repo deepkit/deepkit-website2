@@ -21,15 +21,14 @@ To use the logger in your Deepkit framework application, you can simply inject `
 
 ```typescript
 import { Logger } from '@deepkit/logger';
+import { App } from '@deepkit/app';
 
-class MyService {
-    constructor(protected logger: Logger) {}
+const app = new App();
+app.command('test', (logger: Logger) => {
+    logger.log('This is a <yellow>log message</yellow>');
+});
 
-    doSomething() {
-        const value = 'yes';
-        this.logger.log('This is wild', value);
-    }
-}
+app.run();
 ```
 
 ## Colors

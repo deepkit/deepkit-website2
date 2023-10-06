@@ -79,19 +79,20 @@ import { RouterLink } from "@angular/router";
                             Runtime TypeScript types with reflection, high-performance serialization and validation, and much more.
                         </p>
                     </a>
+                    <a routerLink="/documentation/app" class="app-box hover library">
+                        <h3>Deepkit App</h3>
+                        <div class="subline">@deepkit/app</div>
+                        <p>
+                            A command line interface (CLI) framework for TypeScript with service container, module system,
+                            hooks, and easy to define commands.
+                        </p>
+                    </a>
                     <a routerLink="/documentation/framework" class="app-box hover library">
                         <h3>Deepkit Framework</h3>
                         <div class="subline">@deepkit/framework</div>
                         <p>
                             A framework that brings together all Deepkit libraries with application server,
                             debugging and profiler tools, and much more.
-                        </p>
-                    </a>
-                    <a routerLink="/documentation/cli" class="app-box hover library">
-                        <h3>Deepkit CLI</h3>
-                        <div class="subline">@deepkit/app</div>
-                        <p>
-                            A command line interface (CLI) framework for TypeScript with dependency injection and easy to define commands.
                         </p>
                     </a>
                     <a routerLink="/library/orm" class="app-box hover library">

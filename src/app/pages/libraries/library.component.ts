@@ -29,8 +29,8 @@ import { NgForOf, NgIf } from "@angular/common";
 
                         <nav>
                             <a routerLink="/{{page.url}}" class="active">Overview</a>
-                            <a routerLink="/documentation/questions/category/{{page.params.category}}">FAQ</a>
-                            <a routerLink="/documentation/examples/category/{{page.params.category}}">Examples</a>
+                            <a routerLink="/documentation/questions" [fragment]="page.params.category">FAQ</a>
+                            <a routerLink="/documentation/{{page.params.category}}/examples">Examples</a>
                             <a routerLink="/documentation/{{page.params.doc}}">Documentation</a>
                             <a routerLink="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
                         </nav>

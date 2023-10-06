@@ -23,6 +23,7 @@ import { FooterComponent } from "@app/app/components/footer.component";
 export class AppComponent {
     constructor(public activeRoute: ActivatedRoute, private viewportScroller: ViewportScroller) {
         viewportScroller.setOffset([0, 84]);
+        viewportScroller.setHistoryScrollRestoration('auto');
     }
 
     get withFooter(): boolean {

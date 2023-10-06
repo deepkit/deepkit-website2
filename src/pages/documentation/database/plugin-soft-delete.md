@@ -13,7 +13,8 @@ class User {
     id: number & PrimaryKey & AutoIncrement = 0;
     created: Date = new Date;
 
-    // this field is used as indicator whether the record is deleted.
+    // this field is used as indicator whether the record is soft deleted.
+    // if it is set, the record is soft deleted.
     deletedAt?: Date;
 
     // this field is optional and can be used to track who/what deleted the record.
@@ -38,7 +39,7 @@ To soft-delete records, use the usual methods: `deleteOne` or `deleteMany` in a 
 
 ## Restore
 
-Deleted records can be restored using a cancelled query via `SoftDeleteQuery`. It has `restoreOne` and `restoreMany`.
+Deleted records can be restored using a lifted query via `SoftDeleteQuery`. It has `restoreOne` and `restoreMany`.
 
 ```typescript
 import { SoftDeleteQuery } from '@deepkit/orm';
@@ -61,15 +62,16 @@ await session.commit();
 
 ## Hard Delete
 
-To hard delete records, use a lifted query via SoftDeleteQuery. This essentially restores the old behavior without the single query plugin.
+To hard delete records, use a lifted query via SoftDeleteQuery. This essentially restores the normal behavior where no soft-delete plugin is used.
 
 ```typescript
 import { SoftDeleteQuery } from '@deepkit/orm';
 
+// really delete the record from the database
 await database.query(User).lift(SoftDeleteQuery).hardDeleteOne();
 await database.query(User).lift(SoftDeleteQuery).hardDeleteMany();
 
-//those are equal
+//those are equal to the one above
 await database.query(User).lift(SoftDeleteQuery).withSoftDeleted().deleteOne();
 await database.query(User).lift(SoftDeleteQuery).withSoftDeleted().deleteMany();
 ```

@@ -35,18 +35,24 @@ import { AskComponent } from "@app/app/components/ask.component";
                 </div>
 
                 <div class="category">
+                    <div class="category-title">App</div>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/app">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/examples">Examples</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/modules">Modules</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/services">Services</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/events">Events</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/logger">Logger</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/configuration">Configuration</a>
+                </div>
+
+                <div class="category">
                     <div class="category-title">Framework</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/framework">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/examples">Examples</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/modules">Modules</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/services">Services</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/events">Events</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/configuration">Configuration</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/database">Database</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/testing">Testing</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/deployment">Deployment</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/logger">Logger</a>
-                    <a routerLinkActive="active" routerLink="/documentation/framework/public-dir">Public directory</a>
+                    <a routerLinkActive="active" routerLink="/documentation/framework/public">Public Assets</a>
                 </div>
 
                 <div class="category">
@@ -128,30 +134,30 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <a routerLinkActive="active" routerLink="/documentation/database/composite-primary-key">Composite primary key</a>
                     <div class="section-title">Plugins</div>
                     <section>
-                        <a routerLinkActive="active" routerLink="/documentation/database/plugin/soft-delete">Soft-Delete</a>
+                        <a routerLinkActive="active" routerLink="/documentation/database/plugin-soft-delete">Soft-Delete</a>
                     </section>
                 </div>
 
-                <div class="category">
-                    <div class="category-title">Desktop UI</div>
+<!--                <div class="category">-->
+<!--                    <div class="category-title">Desktop UI</div>-->
 
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/desktop-ui">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/button">Button</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/button-group">Button group</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dropdown">Dropdown</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/icons">Icons</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/input">Input</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/slider">Slider</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/radiobox">Radiobox</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/selectbox">Selectbox</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/checkbox">Checkbox</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/list">List</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/table">Table</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window">Window</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window-menu">Window menu</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window-toolbar">Window toolbar</a>
-                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dialog">Dialog</a>
-                </div>
+<!--                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/desktop-ui">Getting started</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/button">Button</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/button-group">Button group</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dropdown">Dropdown</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/icons">Icons</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/input">Input</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/slider">Slider</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/radiobox">Radiobox</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/selectbox">Selectbox</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/checkbox">Checkbox</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/list">List</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/table">Table</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window">Window</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window-menu">Window menu</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/window-toolbar">Window toolbar</a>-->
+<!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dialog">Dialog</a>-->
+<!--                </div>-->
             </nav>
 
             <div style="margin-left: 225px; padding-top: 35px;">

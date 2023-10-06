@@ -33,4 +33,6 @@ Then start the application with the environment variable `app_framework_port` se
 app_framework_port=3000 ts-node app.ts server:start
 ```
 
+If you use the default namingStrategy of `upper` and prefix of `APP_`, the environment variable is `APP_FRAMEWORK_PORT`.
+
 ##-------------------------------------------------##

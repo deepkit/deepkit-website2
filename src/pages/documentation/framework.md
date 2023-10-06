@@ -26,119 +26,38 @@ The `FrameworkModule` module brings:
 - Database Migration configuration/commands
 - Debugging/Profiler GUI via `{debug: true}` option
 - Interactive API documentation (like Swagger)
-- Providers for Logger, Broker
+- Providers for DatabaseRegistry, ProcessLocking, Broker, Sessions
 - Integration Test APIs
 
 You can write applications with or without the `FrameworkModule`.
 
 ## Installation
 
-Deepkit Framework is based on TypeScript and runtime types in Deepkit Type. Let's start by installing the required packages.
+Deepkit Framework is based on [Deepkit App](./app.md). Make sure you followed its installation instructions.
+If so you can install Deepkit framework and import the `FrameworkModule` in your `App`. 
 
 ```sh
-npm install typescript ts-node @deepkit/framework @deepkit/type @deepkit/http @deepkit/type-compiler
+npm install @deepkit/framework
 ```
-
-Next, we make sure Deepkit's type compiler is installed into the installed TypeScript package at `node_modules/typescript`:
-
-```sh
-./node_modules/.bin/deepkit-type-install
-```
-
-Make sure that all peer dependencies are installed. By default, NPM 7+ installs them automatically.
-
-To compile your application, we need the TypeScript compiler and recommend `ts-node` to easily run the app.
-
-An alternative to using `ts-node` is to compile the source code with the TypeScript compiler and execute the JavaScript source code directly. This has the advantage of dramatically increasing execution speed for short commands. However, it also creates additional workflow overhead by either manually running the compiler or setting up a watcher. For this reason, `ts-node` is used in all examples in this documentation.
-
-## First application
-
-Since the Deepkit framework does not use configuration files or a special folder structure, you can structure your project however you want. The only two files you need to get started are the TypeScript app.ts file and the TypeScript configuration tsconfig.json.
-
-Our goal is to have the following files in our project folder:
-
-```
-.
-├── app.ts
-├── node_modules
-├── package-lock.json
-└── tsconfig.json
-```
-
-_File: tsconfig.json_
-
-```json
-{
-    "compilerOptions": {
-        "outDir": "./dist",
-        "experimentalDecorators": true,
-        "strict": true,
-        "esModuleInterop": true,
-        "target": "ES2020",
-        "module": "CommonJS",
-        "moduleResolution": "node"
-    },
-    "reflection": true,
-    "files": [
-        "app.ts"
-    ]
-}
-```
-
-_File: app.ts_
 
 ```typescript
 import { App } from '@deepkit/app';
-import { Logger } from '@deepkit/logger';
 import { FrameworkModule } from '@deepkit/framework';
 
-new App({
+const app = new App({
     imports: [new FrameworkModule({ debug: true })]
-})
-    .command('test', (logger: Logger) => {
-        logger.log('Hello World!');
-    })
-    .run();
+});
+
+app.command('test', (logger: Logger) => {
+    logger.log('Hello World!');
+});
+
+app.run();
 ```
 
-In this code, you can see that we have defined a test command and created a new app that we run directly using `run()`. By running this script, we start the app.
+Since the app niw imports the `FrameworkModule`, we see there are more commands available grouped into topics.
 
-and then run it directly.
-
-```sh
-$ ts-node app.ts
-VERSION
-  Node
-
-USAGE
-  $ ts-node-script app.ts [COMMAND]
-
-TOPICS
-  debug
-  migration  Executes pending migration files. Use migration:pending to see which are pending.
-  server     Starts the HTTP server
-
-COMMANDS
-  test
-```
-
-Now, to execute our test command, we run the following command.
-
-```sh
-$ ts-node app.ts test
-Hello World
-```
-
-In Deepkit Framework everything is now done via this `app.ts`. You can rename the file as you like or create more. Custom CLI commands, HTTP/RPC server, migration commands, and so on are all started from this entry point.
-
-Since the app also imports the `FrameworkModule`, we see there are more commands available grouped into topics.
-One of them is `server:start`, which starts the HTTP server.
-
-```sh
-$ ./app.ts server:start
-```
-
-This currently does nothing since we have not defined any HTTP controllers yet. Let's do that now.
+One of them is `server:start`, which starts the HTTP server. To use it, we have to register at least one HTTP route.
 
 ```typescript
 import { App } from '@deepkit/app';
@@ -165,11 +84,15 @@ app.run();
 When you execute the `server:start` command again, you will see that the HTTP server is now started and the route `/` is available.
 
 ```sh
+$ ./node_modules/.bin/ts-node ./app.ts server:start
+```
+
+```sh
 $ curl http://localhost:8080/
 Hello World
 ```
 
-To serve requests please read chapter [HTTP](http.md) or [RPC](rpc.md). In chapter [CLI](cli.md) you can learn more about CLI commands.
+To serve requests please read chapter [HTTP](http.md) or [RPC](rpc.md). In chapter [App](app.md) you can learn more about CLI commands.
 
 ## App
 

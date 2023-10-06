@@ -123,7 +123,7 @@ export class RenderQuestions {
             </p>
 
             <div *ngFor="let kv of groups|keyvalue">
-                <h2>{{projectMap[kv.key] || kv.key}}</h2>
+                <h2 id="{{kv.key}}">{{projectMap[kv.key] || kv.key}}</h2>
 
                 <ul>
                     <li *ngFor="let m of kv.value">
@@ -176,9 +176,9 @@ export class CommunityQuestionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
+        // this.activatedRoute.params.subscribe(params => {
             this.load();
-        });
+        // });
     }
 
     async load() {

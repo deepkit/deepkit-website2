@@ -1,23 +1,3 @@
-title: Simple CLI command using Deepkit App
-
-```typescript title=app.ts
-import { App } from '@deepkit/app';
-
-const app = new App();
-app.command('hello', () => {
-    console.log('Hello World!');
-});
-
-app.run();
-```
-
-```bash
-ts-node app.ts hello
-```
-
-
-##-------------------------------------------------##
-
 title: First Application using Deepkit Framework
 
 The framework package of Deepkit at `@deepkit/framework` is a module you can import that provides features like application server (http/rpc),
@@ -43,3 +23,6 @@ Then you see all available commands from the framework module:
 ```bash
 ts-node app.ts
 ```
+
+
+##-------------------------------------------------##

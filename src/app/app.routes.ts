@@ -11,12 +11,14 @@ import { LibraryComponent } from "@app/app/pages/libraries/library.component";
 import { ExamplesComponent } from "@app/app/pages/documentation/examples.component";
 import { ExampleComponent } from "@app/app/pages/documentation/example.component";
 import { DocuSearchComponent } from "@app/app/pages/documentation/search.component";
+import {CommunityComponent} from "@app/app/pages/community.component";
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
     { path: 'library', component: LibrariesComponent },
     { path: 'library/:id', component: LibraryComponent },
     { path: 'enterprise', component: EnterpriseComponent },
+    { path: 'community', component: CommunityComponent },
 
     {
         path: 'documentation', component: DocumentationComponent, data: { stickyHeader: true, search: true, footer: false }, children: [

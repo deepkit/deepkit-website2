@@ -65,7 +65,7 @@ export class SearchResultQuestion implements OnChanges {
     ],
     styles: [`
         .search.active {
-            .field {
+            .app-search-field {
                 width: 350px;
             }
         }

@@ -1,6 +1,6 @@
 # Logger
 
-Deepkit Logger is a standalone library with a primary Logger class that you can use to log information. This class is automatically available in the Dependency Injection container of your Deepkit Framework application.
+Deepkit Logger is a standalone library with a primary Logger class that you can use to log information. This class is automatically available in the Dependency Injection container of your Deepkit application.
 
 The `Logger` class has several methods, each of which behaves like `console.log`.
 
@@ -17,7 +17,7 @@ By default, a logger has `info` level, i.e. it processes only info messages and 
 
 ## Use in the application
 
-To use the logger in your Deepkit framework application, you can simply inject `Logger` into your services or controllers.
+To use the logger in your Deepkit application, you can simply inject `Logger` into your services or controllers.
 
 ```typescript
 import { Logger } from '@deepkit/logger';
@@ -44,7 +44,7 @@ For transporters that do not support colors, the color information is automatica
 
 ## Transporter
 
-You can configure a single transporter or multiple transporters. In a Deepkit Framework application, the `ConsoleTransport` transporter is configured automatically. To configure additional transporters, you can use [Setup Calls](dependency-injection.md#di-setup-calls):
+You can configure a single transporter or multiple transporters. In a Deepkit application, the `ConsoleTransport` transporter is configured automatically. To configure additional transporters, you can use [Setup Calls](dependency-injection.md#di-setup-calls):
 
 ```typescript
 import { Logger, LoggerTransport } from '@deepkit/logger';

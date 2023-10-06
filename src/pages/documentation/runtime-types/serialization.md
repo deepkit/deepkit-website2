@@ -18,7 +18,7 @@ const value = JSON.parse('"2022-05-13T20:48:51.025Z"');
 //"2022-05-13T20:48:51.025Z"
 ```
 
-Although there are various workarounds to teach JSON.parse to deserialize Date objects, they are error-prone and poorly performing. To enable type-safe serialization and deserialization for this case and many other types, a serialization process is necessary.
+Although there are various workarounds to teach JSON.parse to deserialize Date objects, they are error-prone and poorly performing. To enable typesafe serialization and deserialization for this case and many other types, a serialization process is necessary.
 
 There are four main functions available: `serialize`, `cast`, `deserialize` and `validatedDeserialize`. Under the hood of these functions, the globally available JSON serializer from `@deepkit/type` is used by default, but a custom serialization target can also be used.
 

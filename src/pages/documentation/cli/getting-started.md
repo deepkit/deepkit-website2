@@ -101,20 +101,6 @@ Hello World
 
 In this way, any number of commands can be created and registered. The unique name should be well-chosen and allows grouping of commands with the `:` character (e.g. `user:create`, `user:remove`, etc).
 
-## Exit code
-
-The exit code is 0 by default, which means that the command was executed successfully. To change the exit code, a number other than 0 should be returned in the exucute method.
-
-```typescript
-@cli.controller('test')
-export class TestCommand {
-    async execute() {
-        console.error('Error :(');
-        return 12;
-    }
-}
-```
-
 ```sh
 $ ts-node app.ts
 Error :(

@@ -157,6 +157,17 @@ Deepkit's event system boasts a powerful dependency injection mechanism. When us
 
 For example, in the case of a functional listener, if you add an argument like `logger: Logger`, the correct Logger instance gets automatically provided when the function gets called.
 
+```typescript
+import { App } from '@deepkit/app';
+import { Logger } from '@deepkit/logger';
+
+new App()
+    .listen(MyEvent, (event, logger: Logger) => {
+        console.log('MyEvent triggered!');
+    })
+    .run();
+```
+
 ## Event Propagation
 
 Every event object comes equipped with a stop() function, allowing you to control the propagation of the event. If an event is halted, no subsequent listeners (in the order they were added) will be executed. This provides granular control over the execution and handling of events, especially useful in scenarios where certain conditions may require the halting of event processing.
@@ -204,17 +215,17 @@ new App({
 | onServerMainBootstrapDone   | Called only once for application server bootstrap (in the main process) as soon as the application server has started.          |
 | onServerWorkerBootstrap     | Called only once for application server bootstrap (in the worker process).                                                      |
 | onServerWorkerBootstrapDone | Called only once for application server bootstrap (in the worker process) as soon as the application server has started.        |
-| onServerShutdownEvent         | Called when application server shuts down (in master process and each worker).                                                  |
+| onServerShutdownEvent       | Called when application server shuts down (in master process and each worker).                                                  |
 | onServerMainShutdown        | Called when application server shuts down in the main process.                                                                  |
 | onServerWorkerShutdown      | Called when application server shuts down in the worker process.                                                                |
-| onAppExecute      | When a CLI command is about to be executed.                                                                |
-| onAppExecuted      | When a CLI command is successfully executed.                                                                |
-| onAppError      | When a CLI command failed to execute                                                                |
-| onAppShutdown      | When the application is about to shut down.                                                                |
+| onAppExecute                | When a command is about to be executed.                                                                                         |
+| onAppExecuted               | When a command is successfully executed.                                                                                        |
+| onAppError                  | When a command failed to execute                                                                                                |
+| onAppShutdown               | When the application is about to shut down.                                                                                     |
 
 ## Low Level API
 
-Below is an example of the low-level API from @deepkit/event. When using the Deepkit Framework, event listeners are not registered directly via the EventDispatcher, but rather through modules. But you can still use the low-level API if you want to.
+Below is an example of the low-level API from @deepkit/event. When using the Deepkit App, event listeners are not registered directly via the EventDispatcher, but rather through modules. But you can still use the low-level API if you want to.
 
 ```typescript
 import { EventDispatcher, EventToken } from '@deepkit/event';
@@ -231,7 +242,7 @@ dispatcher.dispatch(MyEvent);
 
 ### Installation
 
-Since Deepkit's event system is based on runtime types, it's essential to have @deepkit/type installed correctly. For further details, refer to [Runtime Type Installation](runtime-types.md#runtime-types-installation).
+Since Deepkit's event system is based on Deepkit Runtime Types, it's essential to have @deepkit/type installed correctly. For further details, refer to [Runtime Type Installation](runtime-types.md#runtime-types-installation).
 
 Once this is successfully accomplished, you can install @deepkit/event or the entire Deepkit Framework, which already includes the library under the hood.
 

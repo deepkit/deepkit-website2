@@ -18,10 +18,10 @@ Use plain TypeScript — no code-generation, schema, or config files required.
 <div class="app-boxes-small">
     <box title="Runtime Types">Use just regular TypeScript for entity definition.</box>
     <box title="Validation">Built-In validation for even the most complex types.</box>
-    <box title="Type-Safe Query">Easy to use query API.</box>
+    <box title="Typesafe Query">Easy to use query API.</box>
     <box title="Relation">Relation support with real joins, even for MongoDB.</box>
-    <box title="Unit Of Work">Session handling of working objects for batch updates/inserts.</box>
-    <box title="Type-Safe Raw SQL">Deserializes and validates even raw SQL queries.</box>
+    <box title="Unit Of Work">Unit Of Work with Identity Map for fast and efficient transactions and batching.</box>
+    <box title="Typesafe Raw SQL">Deserializes and validates even raw SQL queries.</box>
     <box title="ActiveRecord">Optional ActiveRecord support for fast prototyping.</box>
     <box title="Event System">Event system for powerful plugins and customizations.</box>
     <box title="Migrations">Migration system to automatically create up/down migrations.</box>
@@ -112,7 +112,7 @@ user.id; //is now set
 
 ## Query API
 
-The query API allows you to fetch and manipulate data in a type-safe manner.
+The query API allows you to fetch and manipulate data in a typesafe manner.
 
 Filtering uses a Mongo-Like query interface, that works for every database (even SQL) the same.
 
@@ -162,7 +162,7 @@ result.primaryKeys;
 
 ## Raw SQL Query
 
-You want to use the full power of SQL? No problem. Deepkit ORM supports type-safe raw SQL queries.
+You want to use the full power of SQL? No problem. Deepkit ORM supports typesafe raw SQL queries.
 
 All parameters are automatically serialized and returned records are deserialized and validated to the correct type.
 
@@ -306,15 +306,15 @@ export class SchemaMigration implements Migration {
 
 <feature>
 
-## Migrations
+## ActiveRecord
 
 For prototyping purposes Deepkit ORM also supports the ActiveRecord pattern.
 
 It allows you to directly work with the entity class, without accessing a Database object.
 
 ```typescript
-import {PrimaryKey} from '@deepkit/type';
-import {ActiveRecord} from '@deepkit/orm';
+import { PrimaryKey } from '@deepkit/type';
+import { ActiveRecord } from '@deepkit/orm';
 
 class User extends ActiveRecord {
     id: number & PrimaryKey = 0;
@@ -326,7 +326,7 @@ const user = new User('Marie');
 await user.save();
 
 const users = await User.query()
-    .filter({logins: {$gt: 10}})
+    .filter({ logins: { $gt: 10 } })
     .find();
 
 for (const user of users) {

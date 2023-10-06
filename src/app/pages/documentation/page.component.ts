@@ -29,9 +29,9 @@ import { ControllerClient } from "@app/app/client";
                 {{error}}
             </div>
             <div *ngIf="page">
-                <app-title value="{{page.title}}"></app-title>
+                <app-title value="{{page.title}} Documentation"></app-title>
 
-                <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
+                <app-description [value]="page.title + ' Documentation - ' + bodyToString(subline)"></app-description>
 
                 <div *ngIf="project" class="app-pre-headline">{{project}}</div>
                 <app-render-content [content]="page.body"></app-render-content>

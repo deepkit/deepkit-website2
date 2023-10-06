@@ -4,7 +4,7 @@ The input and output of an HTTP route is the data that is sent to the server and
 
 ## Input
 
-All the following input variations function in the same way for both the functional and the controller API. They allow data to be read from an HTTP request in a type-safe and decoupled manner. This not only leads to significantly increased security, but also simplifies unit testing, since strictly speaking, not even an HTTP request object needs to exist to test the route.
+All the following input variations function in the same way for both the functional and the controller API. They allow data to be read from an HTTP request in a typesafe and decoupled manner. This not only leads to significantly increased security, but also simplifies unit testing, since strictly speaking, not even an HTTP request object needs to exist to test the route.
 
 All parameters are automatically converted (deserialized) to the defined TypeScript type and validated. This is done via Deepkit Runtime Types and its [Serialization](../runtime-types/serialization.md) and [Validation](../runtime-types/validation) features.
 

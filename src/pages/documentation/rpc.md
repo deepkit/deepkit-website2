@@ -5,9 +5,9 @@ RPC, which stands for Remote Procedure Call, allows functions on a remote server
 The advantage of RPC is that the client-server abstraction is lightweight because it does not work with headers, URLs, query strings, or similar. The disadvantage is that functions on a server via RPC cannot be easily called by a browser and often require a specific client.
 
 
-One key feature of RPC is that the data between the client and server is automatically serialized and deserialized. Therefore, type-safe RPC clients are usually possible. Some RPC frameworks force users to provide types (parameter types and return types) in a specific format. This can be in the form of a DSL such as Protocol Buffers for gRPC and GraphQL or a JavaScript schema builder. Additional data validation can also be provided by the RPC framework but is not supported by all.
+One key feature of RPC is that the data between the client and server is automatically serialized and deserialized. Therefore, typesafe RPC clients are usually possible. Some RPC frameworks force users to provide types (parameter types and return types) in a specific format. This can be in the form of a DSL such as Protocol Buffers for gRPC and GraphQL or a JavaScript schema builder. Additional data validation can also be provided by the RPC framework but is not supported by all.
 
-Deepkit RPC extracts types from the TypeScript code itself, so it is not necessary to use a code generator or define them manually. Deepkit supports automatic serialization and deserialization of parameters and results. Once additional restrictions are defined in Validation, they are automatically validated. This makes communication via RPC extremely type-safe and efficient. The support for streaming via `rxjs` in Deepkit RPC makes this RPC framework a suitable tool for real-time communication.
+Deepkit RPC extracts types from the TypeScript code itself, so it is not necessary to use a code generator or define them manually. Deepkit supports automatic serialization and deserialization of parameters and results. Once additional restrictions are defined in Validation, they are automatically validated. This makes communication via RPC extremely typesafe and efficient. The support for streaming via `rxjs` in Deepkit RPC makes this RPC framework a suitable tool for real-time communication.
 
 To illustrate the concept behind RPC, consider the following code:
 
@@ -34,7 +34,7 @@ Because RPC is fundamentally based on asynchronous communication, communication 
 
 ## Isomorphic TypeScript
 
-When a project uses TypeScript on both the client (usually frontend) and server (backend), it is called Isomorphic TypeScript. A type-safe RPC framework based on TypeScript's types is particularly beneficial for such a project because types can be shared between the client and server.
+When a project uses TypeScript on both the client (usually frontend) and server (backend), it is called Isomorphic TypeScript. A typesafe RPC framework based on TypeScript's types is particularly beneficial for such a project because types can be shared between the client and server.
 
 To take advantage of this, types that are used on both sides should be outsourced to their own file or package. Importing on the respective side then puts them back together.
 

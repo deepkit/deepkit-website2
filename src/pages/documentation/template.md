@@ -1,6 +1,6 @@
 # Template
 
-The template engine allows to write type-safe, fast and secure HTML templates. It is based on TSX and is ready to use as soon as you use the `.tsx` file extension and adjust the `tsconfig.json` accordingly.
+The template engine allows to write typesafe, fast and secure HTML templates. It is based on TSX and is ready to use as soon as you use the `.tsx` file extension and adjust the `tsconfig.json` accordingly.
 
 The important thing is: it is not compatible with React. As soon as React is to be used, `@deepkit/template` is incompatible. Deepkit's template engine is only intended for SSR (server-side rendering).
 

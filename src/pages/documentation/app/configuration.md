@@ -1,9 +1,9 @@
 # Configuration
 
-In Deepkit framework, modules and your application can have configuration options. 
+In Deepkit applications, modules and your application can have configuration options. 
 For example, a configuration can consist of database URLs, passwords, IPs, and so on. Services, HTTP/RPC/CLI controllers, and template functions can read these configuration options via dependency injection.
 
-A configuration can be defined by defining a class with properties. This is a type-safe way to define a configuration for your entire application, and its values are automatically serialized and validated.
+A configuration can be defined by defining a class with properties. This is a typesafe way to define a configuration for your entire application, and its values are automatically serialized and validated.
 
 ## Example
 

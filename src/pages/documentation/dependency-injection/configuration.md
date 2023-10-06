@@ -15,7 +15,7 @@ const rootModule = new InjectorModule([UserRepository])
      .addImport(lowLevelModule);
 ```
 
-The configuration options `domain` and `debug` can now be used quite conveniently type-safe in providers.
+The configuration options `domain` and `debug` can now be used quite conveniently typesafe in providers.
 
 ```typescript
 class UserRepository {

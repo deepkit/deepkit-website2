@@ -30,7 +30,7 @@ Finally, Deepkit places a strong emphasis on developer experience. The framework
 
 ### Runtime Types
 
-One of Deepkit's standout features is its ability to retain type information at runtime. Traditional TypeScript frameworks often discard this crucial data during the compilation process, making runtime operations like data validation, serialization, or dependency injection much more cumbersome. Deepkit's type compiler uniquely enables dynamic type computation and reading of existing type information at runtime. This not only offers greater flexibility but also results in more robust and type-safe applications, streamlining the development of complex systems.
+One of Deepkit's standout features is its ability to retain type information at runtime. Traditional TypeScript frameworks often discard this crucial data during the compilation process, making runtime operations like data validation, serialization, or dependency injection much more cumbersome. Deepkit's type compiler uniquely enables dynamic type computation and reading of existing type information at runtime. This not only offers greater flexibility but also results in more robust and typesafe applications, streamlining the development of complex systems.
 
 
 ### Comprehensive Library Suite

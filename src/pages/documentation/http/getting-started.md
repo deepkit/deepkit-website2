@@ -87,7 +87,7 @@ const app = new App({
 });
 ```
 
-See [Framework Modules](../framework/modules), to learn more about App Modules.
+See [Framework Modules](../app/modules), to learn more about App Modules.
 
 ## Controller API
 
@@ -159,7 +159,7 @@ class MyModule extends createModule({
 }
 ```
 
-See [Framework Modules](../framework/modules), to learn more about App Modules.
+See [Framework Modules](../app/modules), to learn more about App Modules.
 
 ## HTTP Server
 

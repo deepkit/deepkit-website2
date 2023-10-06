@@ -609,7 +609,6 @@ user: What are the available options for routing?
 assistant: The available options for routing in Deepkit are:
 - Functional API: You can define routes using the `HttpRouterRegistry` with functions that handle the requests.
 - Class Controller API: You can define routes using classes and decorators (`@http.*`) to define the HTTP methods and paths.
-- Express-like API: You can use the `express()` function to create an HTTP server and define routes using the same syntax as Express.
 
 Here is an example of using the Class Controller API:
 
@@ -787,7 +786,7 @@ assistant: When using Deepkit, performance considerations include optimizing the
 user: Is it possible to use Deepkit for server-side rendering of HTML templates?
 assistant: Yes, you can use Deepkit for server-side rendering of HTML templates. Deepkit supports rendering templates using JSX/TSX with full type safety. You can use the `@deepkit/template` package to define and render HTML templates. Here is an example:
 
-```typescript
+```typescript title=controller.tsx
 import { http, HtmlResponse, jsx } from '@deepkit/http';
 
 class MyController {
@@ -795,7 +794,7 @@ class MyController {
     renderHomePage() {
         const name = 'John Doe';
 
-        return new HtmlResponse(jsx(`<h1>Hello, {name}!</h1>`));
+        return <h1>Hello, {name}!</h1>;
     }
 }
 ```
@@ -1087,11 +1086,6 @@ assistant:
 ##-------------------------------------------------##
 
 user: Can Deepkit handle WebSocket connections for real-time communication between server and client?
-assistant: 
-
-##-------------------------------------------------##
-
-user: How does Deepkit support server-side rendering of HTML templates for improved performance and SEO?
 assistant: 
 
 ##-------------------------------------------------##

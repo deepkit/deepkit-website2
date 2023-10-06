@@ -18,7 +18,24 @@ A CLI application in Deepkit has full access to the DI container and can thus ac
 
 [Deepkit Framework](./framework.md) with `@deepkit/framework` extends this further with an application server for HTTP/RPC, a debugger/profiler, and much more.
 
-## Installation
+## Installation Easy
+
+The easiest way to get started is to use NPM init to create a new Deepkit project.
+
+```shell
+npm init @deepkit/app my-deepkit-app
+````
+
+This will create a new folder `my-deepkit-app` with all the dependencies and a basic `app.ts` file.
+
+```sh
+cd my-deepkit-app
+npm run app
+````
+
+This will run the `app.ts` file with `ts-node` and show you the available commands. You can start from here and add your own commands, controllers, and so on.
+
+## Installation Manually
 
 Deepkit App is based on [Deepkit Runtime Types](./runtime-types.md), so let's install all dependencies:
 
@@ -57,7 +74,7 @@ Our goal is to have the following files in our project folder:
 └── tsconfig.json
 ```
 
-We setup a basic tsconfig file and enable Deepkit's type compiler by setting `reflection` to `true`. 
+We set up a basic tsconfig file and enable Deepkit's type compiler by setting `reflection` to `true`. 
 This is required to use the dependency injection container and other features.
 
 ```json title=tsconfig.json
@@ -136,9 +153,13 @@ In Deepkit Framework everything is now done via this `app.ts`. You can rename th
 
 
 
+## Arguments & Flags
 
+Deepkit App automatically converts function parameters into CLI arguments and flags. The order of the parameters dictates the order of the CLI arguments
 
+Parameters can be any TypeScript type and are automatically validated and deserialized. 
 
+See the chapter [Arguments & Flags](./app/arguments.md) for more information.
 
 
 ## Dependency Injection
@@ -153,3 +174,18 @@ It brings out of the box following providers you can automatically inject into y
 - `InjectorContext` for the current injector context
 
 As soon as you import Deepkit Framework you get additional providers. See [Deepkit Framework](./framework.md) for more details.
+
+
+## Exit code
+
+The exit code is 0 by default, which means that the command was executed successfully. To change the exit code, a number other than 0 should be returned in the exucute method.
+
+```typescript
+@cli.controller('test')
+export class TestCommand {
+    async execute() {
+        console.error('Error :(');
+        return 12;
+    }
+}
+```

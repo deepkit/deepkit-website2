@@ -38,6 +38,16 @@ export class ContentRenderBox {
             text-align: justify;
         }
 
+        .text {
+            flex: 1;
+            margin-right: 55px;
+            max-width: 480px;
+        }
+
+        .code {
+            flex: 1;
+        }
+
         :host.right {
             flex-direction: row-reverse;
 
@@ -47,14 +57,22 @@ export class ContentRenderBox {
             }
         }
 
-        .text {
-            flex: 1;
-            margin-right: 55px;
-            max-width: 480px;
-        }
+        :host.center {
+            display: block;
+            text-align: center;
 
-        .code {
-            flex: 1;
+            .text {
+                margin: auto;
+                max-width: 680px;
+            }
+
+            .code {
+                display: grid;
+                grid-gap: 45px;
+                grid-auto-columns: auto;
+                grid-auto-rows: 1fr;
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            }
         }
 
     `],

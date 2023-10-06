@@ -15,6 +15,10 @@ import { RouterLink } from "@angular/router";
             max-width: 880px;
         }
 
+        .libraries {
+            max-width: 950px;
+        }
+
         .library, .library:link {
             text-align: left;
             display: block;
@@ -79,7 +83,7 @@ import { RouterLink } from "@angular/router";
                             Runtime TypeScript types with reflection, high-performance serialization and validation, and much more.
                         </p>
                     </a>
-                    <a routerLink="/documentation/app" class="app-box hover library">
+                    <a routerLink="/library/app" class="app-box hover library">
                         <h3>Deepkit App</h3>
                         <div class="subline">@deepkit/app</div>
                         <p>
@@ -87,7 +91,7 @@ import { RouterLink } from "@angular/router";
                             hooks, and easy to define commands.
                         </p>
                     </a>
-                    <a routerLink="/documentation/framework" class="app-box hover library">
+                    <a routerLink="/library/framework" class="app-box hover library">
                         <h3>Deepkit Framework</h3>
                         <div class="subline">@deepkit/framework</div>
                         <p>
@@ -99,7 +103,7 @@ import { RouterLink } from "@angular/router";
                         <h3>Deepkit ORM</h3>
                         <div class="subline">@deepkit/orm</div>
                         <p>
-                            High performance TypeScript ORM with Unit Of Work, migrations, and much more.<br/>
+                            High performance TypeScript ORM with Unit Of Work, migrations, and much more.
                             MySQL, PostgreSQL, SQLite, MongoDB.
                         </p>
                     </a>
@@ -121,15 +125,14 @@ import { RouterLink } from "@angular/router";
                         <h3>Dependency Injection</h3>
                         <div class="subline">@deepkit/injector</div>
                         <p>
-                            A compiling high performance dependency injection container, with constructor/property/method injection, type-safe configuration system,
-                            scopes, and tags.
+                            The most advanced dependency injection container for TypeScript.
                         </p>
                     </a>
-                    <a routerLink="/library/template" class="app-box hover library">
+                    <a routerLink="/documentation/http/views" class="app-box hover library">
                         <h3>Template</h3>
                         <div class="subline">@deepkit/template</div>
                         <p>
-                            Fully type-safe and fast template engine based on TSX, with support for dependency injection and async templates.
+                            Fully typesafe and fast template engine based on TSX, with support for dependency injection and async templates.
                         </p>
                     </a>
                     <a routerLink="/library/broker" class="app-box hover library">
@@ -139,20 +142,23 @@ import { RouterLink } from "@angular/router";
                             Typesafe message bus server for pub/sub pattern, key-value storage, and central atomic app locks.
                         </p>
                     </a>
-                    <a routerLink="/library/logger" class="app-box hover library">
+                    <a routerLink="/documentation/app/logger" class="app-box hover library">
                         <h3>Logger</h3>
                         <div class="subline">@deepkit/logger</div>
                         <p>
                             Logger library with support for colors, scopes, various transporter and formatter.
                         </p>
                     </a>
-                    <a routerLink="/library/event" class="app-box hover library">
+                    <a routerLink="/documentation/app/events" class="app-box hover library">
                         <h3>Event</h3>
                         <div class="subline">@deepkit/event</div>
                         <p>
                             Async typesafe event dispatcher.
                         </p>
                     </a>
+
+
+
                     <a routerLink="/library/orm-browser" class="app-box hover library">
                         <h3>ORM Browser</h3>
                         <div class="subline">@deepkit/orm-browser</div>
@@ -175,6 +181,11 @@ import { RouterLink } from "@angular/router";
                         </p>
                     </a>
                 </div>
+            </div>
+
+            <div class="wrapper products">
+                <h2>Products</h2>
+
             </div>
         </div>
     `

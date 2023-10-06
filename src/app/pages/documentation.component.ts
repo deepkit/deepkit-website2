@@ -38,6 +38,8 @@ import { AskComponent } from "@app/app/components/ask.component";
                     <div class="category-title">App</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/app">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/examples">Examples</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/arguments">Arguments & Flags</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/modules">Modules</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/services">Services</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/events">Events</a>
@@ -81,23 +83,13 @@ import { AskComponent } from "@app/app/components/ask.component";
                 </div>
 
                 <div class="category">
-                    <div class="category-title">CLI</div>
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/cli">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/cli/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/cli/examples">Examples</a>
-                    <a routerLinkActive="active" routerLink="/documentation/cli/arguments">Arguments & Flags</a>
-                    <a routerLinkActive="active" routerLink="/documentation/cli/dependency-injection">Dependency Injection</a>
-                    <a routerLinkActive="active" routerLink="/documentation/cli/events">Events</a>
-                </div>
-
-                <div class="category">
                     <div class="category-title">HTTP</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/http">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/getting-started">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/input-output">Input & Output</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/views">Views</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/dependency-injection">Dependency Injection</a>
-                    <a routerLinkActive="active" routerLink="/documentation/http/template">Template</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/events">Events</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/middleware">Middleware</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/security">Security</a>

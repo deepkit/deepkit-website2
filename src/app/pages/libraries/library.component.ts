@@ -5,6 +5,7 @@ import { bodyToString, UiCodeExample, Content, Page, parseBody, CommunityQuestio
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
 import { NgForOf, NgIf } from "@angular/common";
+import {LoadingComponent} from "@app/app/components/loading";
 
 @Component({
     standalone: true,
@@ -15,12 +16,15 @@ import { NgForOf, NgIf } from "@angular/common";
         NgIf,
         RouterLink,
         RouterLinkActive,
-        NgForOf
+        NgForOf,
+        LoadingComponent
     ],
     styleUrls: ['./library.component.scss'],
     template: `
         <div class="app-content-full">
             <div class="wrapper">
+                <app-loading *ngIf="!page"></app-loading>
+
                 <div *ngIf="page">
                     <app-title value="{{page.title}}"></app-title>
 

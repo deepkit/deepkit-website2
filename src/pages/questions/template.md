@@ -1,5 +1,5 @@
 user: How does the Deepkit template engine differ from other template engines?
-assistant: The Deepkit template engine allows you to write type-safe, fast, and secure HTML templates. It is based on TSX and is specifically designed for server-side rendering (SSR). Unlike other template engines, Deepkit's template engine is not compatible with React.
+assistant: The Deepkit template engine allows you to write typesafe, fast, and secure HTML templates. It is based on TSX and is specifically designed for server-side rendering (SSR). Unlike other template engines, Deepkit's template engine is not compatible with React.
 
 ##-------------------------------------------------##
 

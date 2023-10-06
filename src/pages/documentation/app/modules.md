@@ -1,6 +1,6 @@
 # Modules
 
-Deepkit framework is highly modular and allows you to split your application into several handy modules. Each module has its own dependency injection sub-container (inheriting all parent providers), configuration, commands and much more.
+Deepkit is highly modular and allows you to split your application into several handy modules. Each module has its own dependency injection sub-container (inheriting all parent providers), configuration, commands and much more.
 In the chapter [Getting Started](../framework.md) you have already created one module - the root module. `new App` takes almost the same arguments as a module, because it creates the root module for you automatically in the background.
 
 You can skip this chapter if you do not plan to split your application into submodules, or if you do not plan to make a module available as a package to others.
@@ -184,7 +184,7 @@ Read the [Dependency Injection](../dependency-injection.md) chapter to learn mor
 
 ### Configuration schema
 
-A module can have type-safe configuration options. The values of those options can be partially or completely injected to services from that module using simply the class reference or type functions like `Partial<Config, 'url'>`. To define a configuration schema write a class with properties.
+A module can have typesafe configuration options. The values of those options can be partially or completely injected to services from that module using simply the class reference or type functions like `Partial<Config, 'url'>`. To define a configuration schema write a class with properties.
 
 ```typescript
 export class Config {

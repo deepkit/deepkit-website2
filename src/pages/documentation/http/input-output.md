@@ -272,7 +272,7 @@ router.get('/', (): ResultType => {
 
 ### HTML
 
-To send HTML there are two possibilities. Either the object `HtmlResponse` or Template Engine with TSX is used.
+To send HTML there are two possibilities. Either the object `HtmlResponse` or Template Engine with JSX is used.
 
 ```typescript
 import { HtmlResponse } from '@deepkit/http';
@@ -291,7 +291,7 @@ router.get('/', () => {
 });
 ```
 
-The template engine variant with TSX has the advantage that used variables are automatically HTML-escaped. See also [Template](./template.md).
+The template engine variant with JSX has the advantage that used variables are automatically HTML-escaped. See also [Template](./template.md).
 
 ### Custom Content Type
 

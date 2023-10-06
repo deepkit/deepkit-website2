@@ -29,3 +29,29 @@ Write HTTP routes with class methods or simple async functions.
 ```
 
 </feature>
+
+
+
+<div class="wrapper app-product">
+<h2>Deepkit Debugger</h2>
+
+<p>
+    Deepkit Framework Debugger is a web application giving you insights into your application.
+</p>
+
+<p>
+    Module hiarchy, configuration, APIs, database, profiler, and much more.
+</p>
+
+<p>
+    <a class="button big" routerLink="/library/debugger">Learn more</a>
+</p>
+
+<app-images>
+    <app-image src="/assets/screenshots/debugger-http.png"></app-image>
+    <app-image src="/assets/screenshots/debugger-modules.png"></app-image>
+    <app-image src="/assets/screenshots-profiler/overview.png"></app-image>
+    <app-image src="/assets/screenshots/debugger-configuration.png"></app-image>
+    <app-image src="/assets/screenshots/debugger-api-http.png"></app-image>
+</app-images>
+</div>

@@ -19,7 +19,7 @@ category: http
     <box title="Dependency Injection">Full fledged dependency injection for classes and even functions.</box>
     <box title="Event System">Powerful event system to hook into the HTTP request handling.</box>
     <box title="Middleware">Register global middleware for all routes or specific routes.</box>
-    <box title="JSX Views">Use JSX/TSX to render views in a performant way.</box>
+    <box title="JSX Views">Use JSX to render views in a performant way.</box>
     
 </div>
 

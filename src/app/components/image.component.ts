@@ -4,21 +4,30 @@ import { Component, Input } from '@angular/core';
     selector: 'app-image',
     standalone: true,
     template: `
-        <div class="image">
-            <a target="_blank" href="{{src}}">
-                <img alt="{{alt || altFromSrc}}" src="{{src}}"/>
-            </a>
-        </div>`,
+        <a target="_blank" href="{{src}}">
+            <img alt="{{alt || altFromSrc}}" src="{{src}}"/>
+        </a>
+    `,
     styles: [`
         :host {
-            display: inline-block;
+            display: flex;
             max-width: 100%;
+            text-align: center;
+        }
+
+        img {
+            height: 100%;
+            object-fit: contain;
         }
     `]
 })
 export class ImageComponent {
     @Input() src!: string;
     @Input() alt?: string;
+
+    constructor() {
+        console.log('ImageComponent');
+    }
 
     get altFromSrc(): string {
         let name = this.src.substr(this.src.lastIndexOf('.'));

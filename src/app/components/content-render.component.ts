@@ -1,9 +1,22 @@
-import { ApplicationRef, Component, createComponent, EnvironmentInjector, Input, OnChanges, OnInit, reflectComponentType, Renderer2, ViewContainerRef } from '@angular/core';
+import {
+    ApplicationRef,
+    Component,
+    createComponent,
+    EnvironmentInjector,
+    Input,
+    OnChanges,
+    OnInit,
+    reflectComponentType,
+    Renderer2,
+    ViewContainerRef,
+} from '@angular/core';
 import { Content } from '@app/common/models';
 import { NgForOf, NgIf } from '@angular/common';
 import { ScreenComponent, ScreensComponent } from '@app/app/components/screens.component';
 import { HighlightCodeComponent } from "@app/app/components/highlight-code.component";
 import { Router } from "@angular/router";
+import { AppImagesComponent } from "@app/app/components/images.component";
+import { ImageComponent } from "@app/app/components/image.component";
 
 const whitelist = ['div', 'p', 'a', 'button', 'pre', 'span', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th', 'boxes', 'box'];
 
@@ -74,7 +87,6 @@ export class ContentRenderBox {
                 grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             }
         }
-
     `],
     template: `
         <div class="text">
@@ -87,6 +99,8 @@ export class ContentRenderBox {
 })
 export class ContentRenderFeature {
 }
+
+type ContentCreated = { hostView?: any, type?: any, node: Node };
 
 @Component({
     selector: 'app-render-content',
@@ -128,30 +142,32 @@ export class ContentRenderComponent implements OnInit, OnChanges {
         }
 
         const children = this.renderContent(this.injector, this.content);
-        for (const child of children) this.renderer.appendChild(this.viewRef.element.nativeElement, child);
+        for (const child of children) this.renderer.appendChild(this.viewRef.element.nativeElement, child.node);
     }
 
-    renderContent(injector: EnvironmentInjector, content: (Content | string)[] | Content | string): Node[] {
+    renderContent(injector: EnvironmentInjector, content: (Content | string)[] | Content | string): ContentCreated[] {
         const components: { [name: string]: any } = {
             'app-screens': ScreensComponent,
             'app-screen': ScreenComponent,
             'highlight-code': HighlightCodeComponent,
             'box': ContentRenderBox,
+            'app-images': AppImagesComponent,
+            'app-image': ImageComponent,
             'feature': ContentRenderFeature,
         };
 
         if ('string' === typeof content) {
             const element = this.renderer.createText(content);
-            return [element];
+            return [{ node: element }];
         } else if (Array.isArray(content)) {
-            const children: Node[] = [];
+            const children: ContentCreated[] = [];
             for (const child of content) {
                 children.push(...this.renderContent(injector, child));
             }
             return children;
         } else if (components[content.tag]) {
             // const container = this.renderer.createElement('div');
-            const children: Node[] = content.children ? this.renderContent(this.injector, content.children) : [];
+            const children: ContentCreated[] = content.children ? this.renderContent(this.injector, content.children) : [];
 
             const type = reflectComponentType(components[content.tag]);
             if (!type) return [];
@@ -160,22 +176,57 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             for (const ngContent of type.ngContentSelectors) {
                 const nodes: Node[] = [];
                 for (const child of children) {
-                    if (child instanceof Text && ngContent === '*') {
-                        nodes.push(child);
-                    } else if (child instanceof HTMLElement && child.matches(ngContent)) {
-                        nodes.push(child);
+                    if (child.node instanceof Text && ngContent === '*') {
+                        nodes.push(child.node);
+                    } else if (child.node instanceof HTMLElement && child.node.matches(ngContent)) {
+                        nodes.push(child.node);
                     }
                 }
                 projectableNodes.push(nodes);
             }
-            const component = createComponent(components[content.tag], { environmentInjector: this.injector, projectableNodes });
+
+            const component = createComponent(components[content.tag], {
+                environmentInjector: this.injector,
+                projectableNodes
+            });
+
             Object.assign(component.instance as any, content.props || {});
+
             if (content.props && content.props.class) {
                 this.renderer.setAttribute(component.location.nativeElement, 'class', content.props.class);
             }
+
+            if (type.ngContentSelectors.length === 0) {
+                const lView = (component.hostView as any)._lView;
+                const tView = lView[1];
+                let tNode = lView[12][6];
+                const queries = tView.queries;
+                // console.log('lView', lView);
+                for (const child of children) {
+                    if (child.hostView) {
+                        const clView = (child.hostView as any)._lView;
+                        lView[1].data.push(child.type);
+
+                        // query.element check uses directiveStart and directiveEnd
+                        // and iterates over all lView[i] where directiveStart <= i < directiveEnd.
+                        // so we need to update these values every time we add a new directive
+                        lView[1].firstChild.directiveEnd++;
+                        lView[1].firstChild.providerIndexes = lView.length;
+                        lView.push(clView[8]);
+
+                        if (queries) {
+                            for (const query of queries.queries) {
+                                query.elementStart(tView, tNode);
+                            }
+                        }
+                    }
+                }
+            }
+
             this.app.attachView(component.hostView);
             component.changeDetectorRef.detectChanges();
-            return [component.location.nativeElement];
+
+            return [{ hostView: component.hostView, type, node: component.location.nativeElement }];
         } else {
             if (content.tag === 'pre' && content.children && content.props && typeof content.props.class === 'string' && content.props.class.startsWith('language-')) {
                 const component = createComponent(HighlightCodeComponent, { environmentInjector: this.injector });
@@ -187,7 +238,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
 
                 this.app.attachView(component.hostView);
                 component.changeDetectorRef.detectChanges();
-                return [component.location.nativeElement];
+                return [{ node: component.location.nativeElement }];
             }
 
             // filter forbidden or dangerous tags. we use a whitelist
@@ -204,7 +255,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
                 return [];
             }
 
-            let element = this.renderer.createElement(content.tag);
+            let element: Node = this.renderer.createElement(content.tag);
             if (content.props) {
                 const whitelist = ['href', 'target', 'class', 'id', 'src', 'width', 'height', 'name'];
                 for (const [key, value] of Object.entries(content.props)) {
@@ -264,10 +315,12 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             }
             if (content.children) {
                 const children = this.renderContent(injector, content.children);
-                for (const child of children) this.renderer.appendChild(element, child);
+                for (const child of children) {
+                    this.renderer.appendChild(element, child.node);
+                }
             }
 
-            return [element];
+            return [{ node: element }];
         }
     }
 

@@ -1,6 +1,6 @@
 # Template
 
-The template engine allows to write typesafe, fast and secure HTML templates. It is based on TSX and is ready to use as soon as you use the `.tsx` file extension and adjust the `tsconfig.json` accordingly.
+The template engine allows to write typesafe, fast and secure HTML templates. It is based on JSX and is ready to use as soon as you use the `.tsx` file extension and adjust the `tsconfig.json` accordingly.
 
 The important thing is: it is not compatible with React. As soon as React is to be used, `@deepkit/template` is incompatible. Deepkit's template engine is only intended for SSR (server-side rendering).
 
@@ -22,7 +22,7 @@ In your tsconfig you have to adjust following settings: `jsx` and `jsxImportSour
 }
 ```
 
-Now you can use TSX directly in your controller.
+Now you can use JSX directly in your controller.
 
 ```typescript
 import { App } from '@deepkit/app';
@@ -47,7 +47,7 @@ new App({
 }).run();
 ```
 
-When you return such a TSX in your route method, the HTTP content type is automatically set to `texthtml; charset=utf-8`.
+When you return such a JSX in your route method, the HTTP content type is automatically set to `texthtml; charset=utf-8`.
 
 ## Components
 
@@ -55,7 +55,7 @@ You can structure your templates the way you are used to in React. Either modula
 
 ### Function Components
 
-The easiest way is to use a function that returns TSX.
+The easiest way is to use a function that returns JSX.
 
 ```typescript
 async function Website(props: {title: string, children?: any}) {

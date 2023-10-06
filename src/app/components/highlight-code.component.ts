@@ -53,7 +53,7 @@ import 'prismjs/components/prism-json';
             display: block;
             text-align: center;
             content: attr(title);
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             font-size: 14px;
             color: #b0b0b0;
             font-style: italic;

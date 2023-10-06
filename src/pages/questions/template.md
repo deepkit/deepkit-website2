@@ -1,10 +1,11 @@
 user: How does the Deepkit template engine differ from other template engines?
-assistant: The Deepkit template engine allows you to write typesafe, fast, and secure HTML templates. It is based on TSX and is specifically designed for server-side rendering (SSR). Unlike other template engines, Deepkit's template engine is not compatible with React.
+assistant: The Deepkit template engine allows you to write typesafe, fast, and secure HTML templates. It is based on JSX and is specifically designed for server-side rendering (SSR). Unlike other template engines, Deepkit's template engine is not compatible with React.
 
 ##-------------------------------------------------##
 
 user: Can I use the Deepkit template engine with React?
-assistant: No, the Deepkit template engine is not compatible with React. If you want to use React, you cannot use `@deepkit/template`.
+assistant: No, the Deepkit template engine is not compatible with React, Preact, or any other JSX based engine. If you want to use React, you cannot use `@deepkit/template`.
+Deepkit Template is designed to be used in the backend only.
 
 ##-------------------------------------------------##
 
@@ -14,17 +15,17 @@ assistant: Server-side rendering (SSR) is the process of rendering HTML on the s
 ##-------------------------------------------------##
 
 user: How do I install and configure the Deepkit template engine in my TypeScript project?
-assistant: To install and configure the Deepkit template engine in your TypeScript project, you need to adjust the `tsconfig.json` file. In the `compilerOptions`, set the `jsx` value to `"react-jsx"` and the `jsxImportSource` value to `"@deepkit/template"`. You also need to make sure you have `"experimentalDecorators": true` and `"emitDecoratorMetadata": true` enabled. Then you can use TSX directly in your controller.
+assistant: To install and configure the Deepkit template engine in your TypeScript project, you need to adjust the `tsconfig.json` file. In the `compilerOptions`, set the `jsx` value to `"react-jsx"` and the `jsxImportSource` value to `"@deepkit/template"`. You also need to make sure you have `"experimentalDecorators": true` and `"emitDecoratorMetadata": true` enabled. Then you can use JSX directly in your controller.
 
 ##-------------------------------------------------##
 
-user: Can I use TSX directly in my Deepkit controller?
-assistant: Yes, after installing and configuring the Deepkit template engine, you can use TSX directly in your Deepkit controller. You can write TSX code that represents your HTML templates and return them from your route methods. The template engine will automatically set the HTTP content type to `text/html; charset=utf-8` when you return a TSX template.
+user: Can I use JSX directly in my Deepkit controller?
+assistant: Yes, after installing and configuring the Deepkit template engine, you can use JSX directly in your Deepkit controller. You can write JSX code that represents your HTML templates and return them from your route methods. The template engine will automatically set the HTTP content type to `text/html; charset=utf-8` when you return a JSX template.
 
 ##-------------------------------------------------##
 
-user: How does Deepkit handle the HTTP content type when returning a TSX template?
-assistant: Deepkit automatically sets the HTTP content type to `text/html; charset=utf-8` when a TSX template is returned in a route method.
+user: How does Deepkit handle the HTTP content type when returning a JSX template?
+assistant: Deepkit automatically sets the HTTP content type to `text/html; charset=utf-8` when a JSX template is returned in a route method.
 
 ##-------------------------------------------------##
 

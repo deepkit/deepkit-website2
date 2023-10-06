@@ -901,3 +901,15 @@ a.button.primary {
         font-size: 14px;
     }
 }
+
+.app-product {
+    text-align: center;
+    margin-top: 150px;
+
+    p {
+        max-width: 800px;
+        margin: 15px auto;
+        font-size: 15px;
+        line-height: 200%;
+    }
+}

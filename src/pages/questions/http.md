@@ -784,7 +784,7 @@ assistant: When using Deepkit, performance considerations include optimizing the
 ##-------------------------------------------------##
 
 user: Is it possible to use Deepkit for server-side rendering of HTML templates?
-assistant: Yes, you can use Deepkit for server-side rendering of HTML templates. Deepkit supports rendering templates using JSX/TSX with full type safety. You can use the `@deepkit/template` package to define and render HTML templates. Here is an example:
+assistant: Yes, you can use Deepkit for server-side rendering of HTML templates. Deepkit supports rendering templates using JSX with full type safety. You can use the `@deepkit/template` package to define and render HTML templates. Here is an example:
 
 ```typescript title=controller.tsx
 import { http, HtmlResponse, jsx } from '@deepkit/http';

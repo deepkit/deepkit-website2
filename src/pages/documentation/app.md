@@ -98,11 +98,8 @@ This is required to use the dependency injection container and other features.
 ```typescript title=app.ts
 import {App} from '@deepkit/app';
 import {Logger} from '@deepkit/logger';
-import {FrameworkModule} from '@deepkit/framework';
 
-const app = new App({
-    imports: [new FrameworkModule({debug: true})]
-});
+const app = new App();
 
 app.command('test', (logger: Logger) => {
     logger.log('Hello World!');
@@ -139,7 +136,7 @@ $ ./node_modules/.bin/ts-node app.ts test
 Hello World
 ```
 
-In Deepkit Framework everything is now done via this `app.ts`. You can rename the file as you like or create more. Custom CLI commands, HTTP/RPC server, migration commands, and so on are all started from this entry point.
+In Deepkit everything is now done via this `app.ts`. You can rename the file as you like or create more. Custom CLI commands, HTTP/RPC server, migration commands, and so on are all started from this entry point.
 
 
 

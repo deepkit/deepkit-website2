@@ -111,7 +111,7 @@ Deepkit consists of multiple packages. The most important ones are:
 @deepkit/http (HTTP router, part of `FrameworkModule`, but `HttpModule` can also be manually imported to a @deepkit/app `new App`)
 @deepkit/bson (BSON serialization)
 @deepkit/event (event system)
-@deepkit/template (template engine based on TSX)
+@deepkit/template (template engine based on JSX)
 @deepkit/orm-browser (browser based database administration tool)
 
 

@@ -114,13 +114,13 @@ nav {
 
     nav.main {
         display: none;
-        background: white;
+        background: black;
         padding-top: 25px;
     }
 
     .showMenu {
         nav.main {
-            position: absolute;
+            position: fixed;
             top: 70px;
             left: 0;
             bottom: 0;

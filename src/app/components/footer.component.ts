@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: 'dw-footer',
@@ -6,14 +7,14 @@ import {Component} from '@angular/core';
     template: `
         <div class="wrapper">
             <div class="copyright">
-                <img src="../../assets/images/deepkit_white_text.svg"/>
+                <img alt="logo text" src="../../assets/images/deepkit_white_text.svg"/>
                 <div class="text">
                     © {{year}} Deepkit®
                 </div>
             </div>
             <nav class="social">
                 <a id="github-logo" href="https://github.com/deepkit/deepkit-framework" target="_blank">
-                    <img width="16" height="16" src="/assets/images/github.svg"/>
+                    <img width="16" height="16" alt="github" src="/assets/images/github.svg"/>
                 </a>
                 <a href="https://twitter.com/deepkitIO" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
@@ -32,6 +33,9 @@ import {Component} from '@angular/core';
             Made in Germany
         </div>
     `,
+    imports: [
+        RouterLink
+    ],
     styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {

@@ -33,51 +33,59 @@ import {LoadingComponent} from "@app/app/components/loading";
 
                         <nav>
                             <a routerLink="/{{page.url}}" class="active">Overview</a>
-                            <a routerLink="/documentation/questions" [fragment]="page.params.category">FAQ</a>
-                            <a routerLink="/documentation/{{page.params.category}}/examples">Examples</a>
+                            <a *ngIf="page.params.category" routerLink="/documentation/questions" [fragment]="page.params.category">FAQ</a>
+                            <a *ngIf="page.params.category" routerLink="/documentation/{{page.params.category}}/examples">Examples</a>
                             <a routerLink="/documentation/{{page.params.doc}}">Documentation</a>
-                            <a routerLink="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
+                            <a *ngIf="page.params.api"
+                               routerLink="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
                         </nav>
                     </div>
 
                     <app-description [value]="page.title + ' - ' + bodyToString(subline)"></app-description>
 
-                    <div class="package">{{page.params.package}}</div>
+                    <div *ngIf="page.params.package" class="package">{{page.params.package}}</div>
 
                     <app-render-content [content]="page.body"></app-render-content>
 
-                    <h2 id="faq" style="text-align: center">Questions & Answers</h2>
+                    <ng-container *ngIf="page.params.category">
+                        <h2 id="faq" style="text-align: center">Questions & Answers</h2>
 
-                    <div class="faqs">
-                        <div class="faq" *ngFor="let faq of faqs; let i = index">
-                            <div class="question">{{i + 1}}. {{faq.title}}</div>
-                            <div class="answer">
-                                <app-render-content [content]="faq.content"></app-render-content>
+                        <div class="faqs">
+                            <div class="faq" *ngFor="let faq of faqs; let i = index">
+                                <div class="question">{{i + 1}}. {{faq.title}}</div>
+                                <div class="answer">
+                                    <app-render-content [content]="faq.content"></app-render-content>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center">
+                                <p>
+                                    No answer for your question? Ask a question or see all questions.
+                                </p>
+                                <a class="button big" style="margin-right: 25px;"
+                                   routerLink="/documentation/questions/category/{{page.params.category}}">See all
+                                    questions</a>
+                                <a class="button big" routerLink="/documentation/questions/">Ask a question</a>
                             </div>
                         </div>
 
-                        <div style="text-align: center">
-                            <p>
-                                No answer for your question? Ask a question or see all questions.
-                            </p>
-                            <a class="button big" style="margin-right: 25px;" routerLink="/documentation/questions/category/{{page.params.category}}">See all questions</a>
-                            <a class="button big" routerLink="/documentation/questions/">Ask a question</a>
+                        <h2 id="examples">Examples</h2>
+
+                        <div class="app-examples">
+                            <a class="app-example-item"
+                               routerLink="/documentation/{{example.category}}/examples/{{example.slug}}"
+                               *ngFor="let example of examples">
+                                {{example.title}}
+                            </a>
                         </div>
-                    </div>
 
-                    <h2 id="examples">Examples</h2>
-
-                    <div class="app-examples">
-                        <a class="app-example-item" routerLink="/documentation/{{example.category}}/examples/{{example.slug}}" *ngFor="let example of examples">
-                            {{example.title}}
-                        </a>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 50px;">
-                        <p>
-                            <a class="button big" style="margin-right: 25px;" routerLink="/documentation/{{page.params.category}}/examples">See all examples</a>
-                        </p>
-                    </div>
+                        <div style="text-align: center; margin-top: 50px;">
+                            <p>
+                                <a class="button big" style="margin-right: 25px;"
+                                   routerLink="/documentation/{{page.params.category}}/examples">See all examples</a>
+                            </p>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </div>
@@ -105,11 +113,17 @@ export class LibraryComponent implements OnInit {
         this.page = await this.client.main.getPage('library/' + slug);
         if (!this.page) return;
         this.subline = parseBody(this.page.body).subline;
-        this.faqs = await this.client.main.getFAQ(this.page.params.category);
-        this.examples = await this.client.main.getExamples(this.page.params.category, false, 24);
-        console.log('page', this.page);
-        console.log('faqs', this.faqs);
-        console.log('examples', this.examples);
+
+        if (this.page.params.category) {
+            this.faqs = await this.client.main.getFAQ(this.page.params.category);
+            this.examples = await this.client.main.getExamples(this.page.params.category, false, 24);
+        } else {
+            this.faqs = [];
+            this.examples = [];
+        }
+        // console.log('page', this.page);
+        // console.log('faqs', this.faqs);
+        // console.log('examples', this.examples);
     }
 
     protected readonly bodyToString = bodyToString;

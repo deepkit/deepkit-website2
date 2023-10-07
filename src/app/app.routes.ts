@@ -13,6 +13,7 @@ import { ExampleComponent } from "@app/app/pages/documentation/example.component
 import { DocuSearchComponent } from "@app/app/pages/documentation/search.component";
 import { CommunityComponent } from "@app/app/pages/community.component";
 import { StaticPageComponent } from "@app/app/pages/static-page.component";
+import { NotFoundComponent } from "@app/app/pages/not-found.component";
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: StartpageComponent },
@@ -21,6 +22,9 @@ export const routes: Routes = [
     { path: 'enterprise', component: EnterpriseComponent },
     { path: 'community', component: CommunityComponent },
     { path: 'terms', component: StaticPageComponent, data: { page: 'terms' } },
+    { path: 'about-us', component: StaticPageComponent, data: { page: 'about-us' } },
+    { path: 'contact', component: StaticPageComponent, data: { page: 'contact' } },
+    { path: 'data-protection', component: StaticPageComponent, data: { page: 'data-protection' } },
 
     {
         path: 'documentation',
@@ -40,4 +44,7 @@ export const routes: Routes = [
             { path: '**', component: DocumentationPageComponent },
         ]
     },
+
+    // 404
+    { path: '**', component: NotFoundComponent },
 ];

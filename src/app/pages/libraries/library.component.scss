@@ -2,14 +2,25 @@
     display: flex;
     margin-top: 50px;
 
+    @media (max-width: 768px) {
+        flex-direction: column;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
     h1 {
         flex: 1;
     }
 }
 
 nav {
+    flex: 1;
+    max-width: 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
     a, a:link {
-        margin-left: 25px;
         color: #808080;
 
         &:hover {

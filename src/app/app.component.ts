@@ -10,7 +10,7 @@ import { FooterComponent } from "@app/app/components/footer.component";
     standalone: true,
     imports: [CommonModule, RouterOutlet, AppTitle, HeaderComponent, FooterComponent],
     template: `
-        <app-title value="Deepkit High-Performance TypeScript Framework"></app-title>
+        <app-title value="Deepkit Enterprise TypeScript Framework"></app-title>
 
         <dw-header [sticky]="activeRoute.firstChild?.snapshot?.data?.stickyHeader" [search]="activeRoute.firstChild?.snapshot?.data?.search"></dw-header>
 

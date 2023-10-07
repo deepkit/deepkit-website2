@@ -226,7 +226,7 @@ import { AppImagesComponent } from "@app/app/components/images.component";
                 </p>
 
                 <p>
-                    <a class="button big" routerLink="/library/debugger">Learn more</a>
+                    <a class="button big" routerLink="/library/framework">Learn more</a>
                 </p>
 
                 <app-images>

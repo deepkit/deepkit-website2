@@ -55,6 +55,12 @@ export class ContentRenderBox {
             flex: 1;
             margin-right: 55px;
             max-width: 480px;
+
+            ::ng-deep {
+                h2, h3 {
+                    text-align: left;
+                }
+            }
         }
 
         .code {
@@ -79,6 +85,12 @@ export class ContentRenderBox {
                 max-width: 680px;
             }
 
+            ::ng-deep {
+                h2, h3 {
+                    text-align: center;
+                }
+            }
+
             .code {
                 display: grid;
                 grid-gap: 45px;
@@ -87,6 +99,17 @@ export class ContentRenderBox {
                 grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             }
         }
+
+        @media (max-width: 800px) {
+            :host {
+                display: block;
+
+                .text {
+                    margin: 0 !important;
+                }
+            }
+        }
+
     `],
     template: `
         <div class="text">

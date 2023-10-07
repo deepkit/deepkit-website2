@@ -9,7 +9,7 @@ import { SearchComponent } from "@app/app/components/search.component";
     standalone: true,
     template: `
         <div class="wrapper" [class.showMenu]="showMenu">
-            <a class="logo" routerLink="/"><img src="/assets/images/deepkit_white.svg"/></a>
+            <a class="logo"  routerLink="/"><img alt="logo" style="width: 24px; height: 30px;" src="/assets/images/deepkit_white.svg"/></a>
             <!--            <a class="logo" *ngIf="startPage" routerLink="/"><img src="/assets/images/deepkit_white_text.svg"/></a>-->
 
             <app-search *ngIf="search"></app-search>

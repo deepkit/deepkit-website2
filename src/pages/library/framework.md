@@ -43,10 +43,6 @@ Write HTTP routes with class methods or simple async functions.
     Module hiarchy, configuration, APIs, database, profiler, and much more.
 </p>
 
-<p>
-    <a class="button big" routerLink="/library/debugger">Learn more</a>
-</p>
-
 <app-images>
     <app-image src="/assets/screenshots/debugger-http.png"></app-image>
     <app-image src="/assets/screenshots/debugger-modules.png"></app-image>

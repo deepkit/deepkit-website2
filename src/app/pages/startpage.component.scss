@@ -1,8 +1,13 @@
 .page {
-    background-image: url(/assets/images/startpage-banner.png);
+    background-image: url(/assets/images/startpage-banner.jpg);
     background-size: auto 650px;
     background-position: top center;
     background-repeat: no-repeat;
+
+    //if smaller than 1400, load smaller banner
+    @media (max-width: 1400px) {
+        background-image: url(/assets/images/startpage-banner-small.jpg);
+    }
 
     > .wrapper {
         text-align: center;
@@ -35,11 +40,12 @@ main {
 
 highlight-code {
     margin: 20px auto;
+    max-width: 100%;
 }
 
 .feature-end-to-end {
+
     highlight-code {
-        max-width: 525px;
         margin: 55px auto auto;
         position: relative;
         z-index: 100;
@@ -127,6 +133,7 @@ highlight-code {
         @media(max-width: 660px) {
             left: 0;
             overflow: auto;
+            margin-left: 0;
         }
     }
 }
@@ -158,6 +165,11 @@ highlight-code {
 
     @media(max-width: 1130px) {
         margin: 0;
+    }
+
+    .table {
+        max-width: 100%;
+        overflow: auto;
     }
 
     table {

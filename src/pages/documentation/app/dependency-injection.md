@@ -1,6 +1,9 @@
 # Dependency Injection
 
-All commands have full access to the Dependency Injection Container. You can define dependencies in the constructor of your command or controller and the Dependency Injection Container tries to resolve it. See the chapter [Dependency Injection](dependency-injection.md) for more information.
+All commands have full access to the Dependency Injection Container. You can define dependencies in the constructor of your
+command or controller and the Dependency Injection Container tries to resolve it. 
+
+See the chapter [Dependency Injection](../dependency-injection.md) for more information.
 
 ```typescript
 import { App, cli } from '@deepkit/app';

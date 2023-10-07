@@ -208,11 +208,6 @@ import { RouterLink } from "@angular/router";
                         </div>
                     </div>
 
-                    <div>
-                        //TODO: One time support ticket? 100 bucks and we answer your question within 24h.
-                        //TODO: Code review? 1000 bucks and we review your code and give you feedback.
-                    </div>
-
                     <div class="how">
                         <h3 class="text">
                             How does it work?

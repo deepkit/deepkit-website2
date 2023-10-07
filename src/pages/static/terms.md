@@ -29,6 +29,7 @@ For all offers applies:
 - We reserve the right to cancel anytime. If we cancel it, you get a refund for the remaining days.
 - We use Stripe as payment provider. By using our services, you agree to the Stripe terms and conditions.
 - We use whatever technology we think is best for the job. We do not use any technology you request.
+- We use Google Cloud Platform for our services. By using our services, you agree to the Google Cloud Platform terms and conditions.
 
 ## Offer: Startup Boost
 

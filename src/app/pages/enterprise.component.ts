@@ -222,7 +222,7 @@ import { RouterLink } from "@angular/router";
                     <div class="app-boxes">
                         <div class="app-box">
                             <h2>Prototype</h2>
-                            <div class="price">One-time $12,995</div>
+                            <div class="price">One-time $18,995</div>
                             <ul>
                                 <li>No hidden fees or ongoing costs</li>
                                 <li>Test your hypothesis</li>
@@ -243,7 +243,7 @@ import { RouterLink } from "@angular/router";
                         </div>
                         <div class="app-box">
                             <h2>Prototype+</h2>
-                            <div class="price">One-time $22,995</div>
+                            <div class="price">One-time $28,995</div>
                             <ul>
                                 <li>No hidden fees or ongoing costs</li>
                                 <li>Test your hypothesis</li>
@@ -257,6 +257,28 @@ import { RouterLink } from "@angular/router";
 
                             <p class="footer">
                                 3 weeks turnaround
+                            </p>
+                            <div class="actions">
+                                <a routerLink="/contact" class="button big">Buy now</a>
+                            </div>
+                        </div>
+                        <div class="app-box">
+                            <h2>Machine Learning</h2>
+                            <div class="price">One-time $39,995</div>
+                            <ul>
+                                <li>No hidden fees or ongoing costs</li>
+                                <li>Test your hypothesis</li>
+                                <li>Custom architecture/models</li>
+                                <li>Data cleaning</li>
+                                <li>Data augmentation & gen</li>
+                                <li>Python or C++</li>
+                                <li>Based on Pytorch/Libtorch</li>
+                                <li>Including server/GUI</li>
+                                <li>Training costs excluded</li>
+                            </ul>
+
+                            <p class="footer">
+                                2-3 weeks turnaround
                             </p>
                             <div class="actions">
                                 <a routerLink="/contact" class="button big">Buy now</a>

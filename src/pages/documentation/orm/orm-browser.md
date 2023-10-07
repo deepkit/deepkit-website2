@@ -6,7 +6,7 @@ Deepkit ORM Browser is a web-based tool to explore your database schema and data
 
 ## Installation
 
-The ORM Browser is part of the Deepkit Framework and enabled when debug mode is enabled.
+Deepkit ORM Browser is part of the Deepkit Framework and enabled when debug mode is enabled.
 
 ```typescript
 import { App } from '@deepkit/app';
@@ -32,7 +32,7 @@ new App({
 }).run();
 ```
 
-Alternatively, you can install the ORM Browser as a standalone package.
+Alternatively, you can install Deepkit ORM Browser as a standalone package.
 
 ```bash
 npm install @deepkit/orm-browser
@@ -51,11 +51,11 @@ class MainDatabase extends Database {
 export const database = new MainDatabase();
 ```
 
-Next, the ORM Browser server can be started.
+Next, Deepkit ORM Browser server can be started.
 
 ```sh
 ./node_modules/.bin/deepkit-orm-browser database.ts
 ```
 
-The ORM Browser is now available at http://localhost:9090.
+Deepkit ORM Browser is now available at http://localhost:9090.
 

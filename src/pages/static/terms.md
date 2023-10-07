@@ -30,6 +30,7 @@ For all offers applies:
 - We use Stripe as payment provider. By using our services, you agree to the Stripe terms and conditions.
 - We use whatever technology we think is best for the job. We do not use any technology you request.
 - We use Google Cloud Platform for our services. By using our services, you agree to the Google Cloud Platform terms and conditions.
+- We use ChatGPT and other AI services for our services.
 
 ## Offer: Startup Boost
 
@@ -59,3 +60,5 @@ We reserve the right to refuse any request by your or your team member, without 
 Our service offer "Prototype" and "Prototype+" are paid offers. We reserve the right to reject your application for this offer. We reserve the right to cancel this offer at any time.
 
 Once we agreed on the prototype, you have to pay the full amount upfront. If you cancel the prototype, you do not get a refund. If we cancel the prototype, you get a full refund relative to the remaining planned time.
+
+The prototype does not include extensive security testing. We do not guarantee that the prototype is secure. We do not guarantee that the prototype is production-ready. We do not guarantee that the prototype is bug-free.

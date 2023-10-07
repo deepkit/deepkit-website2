@@ -132,11 +132,11 @@ APP_DATABASE_USER=postgres
 
 ## Multiple Databases
 
-You can add as many database classes as you like and name them as you like. Be sure to change the name of each database so that it doesn't conflict with others when you use the ORM browser.
+You can add as many database classes as you like and name them as you like. Be sure to change the name of each database so that it doesn't conflict with others when you use Deepkit ORM Browser.
 
 ## Manage Data
 
-You now have everything set up to manage your database data with the Deepkit ORM Browser. To open the ORM Browser and manage the content, write all the steps from above in the `app.ts` file and start the server.
+You now have everything set up to manage your database data with the Deepkit ORM Browser. To open Deepkit ORM Browser and manage the content, write all the steps from above in the `app.ts` file and start the server.
 
 ```sh
 $ ts-node app.ts server:start

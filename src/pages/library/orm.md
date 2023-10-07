@@ -1,9 +1,9 @@
 ---
 title: Deepkit ORM
 package: "@deepkit/type"
-doc: database/getting-started
-api: database
-category: database
+doc: orm/getting-started
+api: orm
+category: orm
 ---
 
 <p class="introduction">

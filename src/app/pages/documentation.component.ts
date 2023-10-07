@@ -109,24 +109,24 @@ import { AskComponent } from "@app/app/components/ask.component";
                 <div class="category">
                     <div class="category-title">Database ORM</div>
 
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/database">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/getting-started">Getting started</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/examples">Examples</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/entity">Entity</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/session">Session</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/query">Query</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/transaction">Transaction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/inheritance">Inheritance</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/relations">Relations</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/events">Events</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/migrations">Migrations</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/orm-browser">ORM Browser</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/raw-access">Raw Access</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/seeding">Seeding</a>
-                    <a routerLinkActive="active" routerLink="/documentation/database/composite-primary-key">Composite primary key</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/orm">Introduction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/getting-started">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/examples">Examples</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/entity">Entity</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/session">Session</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/query">Query</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/transaction">Transaction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/inheritance">Inheritance</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/relations">Relations</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/events">Events</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/migrations">Migrations</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/orm-browser">ORM Browser</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/raw-access">Raw Access</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/seeding">Seeding</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/composite-primary-key">Composite primary key</a>
                     <div class="section-title">Plugins</div>
                     <section>
-                        <a routerLinkActive="active" routerLink="/documentation/database/plugin-soft-delete">Soft-Delete</a>
+                        <a routerLinkActive="active" routerLink="/documentation/orm/plugin-soft-delete">Soft-Delete</a>
                     </section>
                 </div>
 

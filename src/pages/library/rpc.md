@@ -173,9 +173,7 @@ class MyController {
 
 ## Streaming
 
-Streaming data to the client shouldn't be hard. That's why Deepkit RPC supports RxJS Observable, Subject, and BehaviorSubject natively.
-
-Just return an Observable in an action and the client receives an observable as well, that forwards all emitted values — of course automatically serialized.
+Streaming data to the client shouldn't be hard. That's why Deepkit RPC supports RxJS Observable, Subject, and BehaviorSubject natively. Just return an Observable in an action and the client receives an observable as well, that forwards all emitted values — of course automatically serialized.
 
 As soon as the client unsubscribes the Observable the same Observable is completed on the server side as well and triggers the unsubscribe callback.
 

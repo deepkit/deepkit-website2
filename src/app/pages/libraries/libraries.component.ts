@@ -165,7 +165,7 @@ import { AppImagesComponent } from "@app/app/components/images.component";
                 <h2>Deepkit ORM Browser</h2>
 
                 <p>
-                    The ORM Browser is a web application that allows you to browse your database schema, edit your data,
+                    Deepkit ORM Browser is a web application that allows you to browse your database schema, edit your data,
                     see migration changes, and seed your database. Everything based on your TypeScript entity types.
                 </p>
 

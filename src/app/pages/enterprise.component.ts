@@ -13,11 +13,17 @@ import { RouterLink } from "@angular/router";
                 max-width: 870px;
             }
 
-            .app-boxes {
-                margin: 35px auto;
-                grid-auto-flow: column;
-                grid-template-columns: unset;
-                justify-content: center;
+            &.bg {
+                border: 1px solid #262626;
+                background: #15191C;
+            }
+        }
+
+        .reference {
+
+            .wrapper {
+                max-width: 860px;
+                padding: 100px 50px;
             }
 
             &.bg {
@@ -26,11 +32,21 @@ import { RouterLink } from "@angular/router";
             }
         }
 
+        .box3 {
+            margin: 35px auto;
+            grid-auto-flow: column;
+            grid-template-columns: unset;
+            justify-content: center;
+
+            .app-box {
+                width: 260px;
+                max-width: 100%;
+            }
+        }
+
         .app-box {
             position: relative;
             text-align: left;
-
-            width: 260px;
 
             h2 {
                 font-size: 18px;
@@ -67,6 +83,11 @@ import { RouterLink } from "@angular/router";
         .how {
             margin-top: 50px;
             text-align: left;
+
+            p {
+                //max-width: 680px;
+                //text-align: justify;
+            }
 
             h3 {
                 font-weight: bold;
@@ -123,7 +144,7 @@ import { RouterLink } from "@angular/router";
                         architecture consulting, or just a helping hand.
                     </h3>
 
-                    <div class="app-boxes">
+                    <div class="app-boxes box3">
                         <div class="app-box">
                             <h2>Startup Boost</h2>
                             <div class="price">Free</div>
@@ -141,7 +162,8 @@ import { RouterLink } from "@angular/router";
                                 for the first time.
                             </p>
                             <div class="actions">
-                                <a target="_blank" href="https://discord.com/invite/PtfVf7B8UU" class="button big">Join Discord</a>
+                                <a target="_blank" href="https://discord.com/invite/PtfVf7B8UU" class="button big">Join
+                                    Discord</a>
                             </div>
                         </div>
                         <div class="app-box">
@@ -152,7 +174,7 @@ import { RouterLink } from "@angular/router";
                                 <li>Answer within 12h</li>
                                 <li>Pair programming</li>
                                 <li>Code examples</li>
-                                <li>Managed via Discord</li>
+                                <li>Via Discord/Microsoft Teams</li>
                                 <li>Design Patterns</li>
                                 <li>Invite your team</li>
                                 <li>Deepkit, TypeScript, HTML</li>
@@ -161,7 +183,7 @@ import { RouterLink } from "@angular/router";
                                 Cancel anytime
                             </p>
                             <div class="actions">
-                                <a routerLink="/contact" class="button big">Buy now</a>
+                                <a href="https://buy.stripe.com/6oE5m34V58KrcYE8wx" target="_blank" class="button big">Book now</a>
                             </div>
                         </div>
                         <div class="app-box">
@@ -181,11 +203,15 @@ import { RouterLink } from "@angular/router";
                                 2-7 days
                             </p>
                             <div class="actions">
-                                <a routerLink="/contact" class="button big">Buy now</a>
+                                <a href="https://book.stripe.com/14k15N73d6Cj2k0144" target="_blank" class="button big">Book now</a>
                             </div>
                         </div>
                     </div>
 
+                    <div>
+                        //TODO: One time support ticket? 100 bucks and we answer your question within 24h.
+                        //TODO: Code review? 1000 bucks and we review your code and give you feedback.
+                    </div>
 
                     <div class="how">
                         <h3 class="text">
@@ -193,14 +219,15 @@ import { RouterLink } from "@angular/router";
                         </h3>
 
                         <p>
-                            You book us and we help you. We use Discord for communication and screen sharing.
+                            You book us and we help you. We use Discord/Microsoft Teams for communication and screen
+                            sharing.
                         </p>
 
                         <p>
                             <strong>Unlimited Support:</strong> Limited to 1 project. Cancel anytime. When you cancel,
-                            no money refund. If we cancel, we refund the remaining time.
-                            You can invite your team to the Discord channel. Does not include writing code for you,
-                            except for code examples. Free bug fix for any bug in Deepkit.
+                            no money refund. If we cancel, we refund the remaining time. Does not include writing code
+                            for you,
+                            except for code examples. Free high priority bug fix for any bug in Deepkit.
                             See <a routerLink="/terms">Terms of Service</a> for details.
                         </p>
                     </div>
@@ -219,13 +246,13 @@ import { RouterLink } from "@angular/router";
                         No sales, no project manager, no scrum, no bullshit. Just results.
                     </h3>
 
-                    <div class="app-boxes">
+                    <div class="app-boxes box3">
                         <div class="app-box">
                             <h2>Prototype</h2>
                             <div class="price">One-time $18,995</div>
                             <ul>
                                 <li>No hidden fees or ongoing costs</li>
-                                <li>Test your hypothesis</li>
+                                <li>Proof of concept</li>
                                 <li>Bootstrap your project</li>
                                 <li>Based on your design</li>
                                 <li>Low test coverage</li>
@@ -238,7 +265,7 @@ import { RouterLink } from "@angular/router";
                                 1-2 weeks turnaround
                             </p>
                             <div class="actions">
-                                <a routerLink="/contact" class="button big">Buy now</a>
+                                <a href="https://buy.stripe.com/28o29RcnxaSz5wc9AE" target="_blank" class="button big">Buy now</a>
                             </div>
                         </div>
                         <div class="app-box">
@@ -246,7 +273,7 @@ import { RouterLink } from "@angular/router";
                             <div class="price">One-time $28,995</div>
                             <ul>
                                 <li>No hidden fees or ongoing costs</li>
-                                <li>Test your hypothesis</li>
+                                <li>Proof of concept</li>
                                 <li>Bootstrap your project</li>
                                 <li>Based on your design</li>
                                 <li>High test coverage</li>
@@ -259,7 +286,7 @@ import { RouterLink } from "@angular/router";
                                 3 weeks turnaround
                             </p>
                             <div class="actions">
-                                <a routerLink="/contact" class="button big">Buy now</a>
+                                <a href="https://buy.stripe.com/14k6q7afpaSz1fWcMP" target="_blank" class="button big">Buy now</a>
                             </div>
                         </div>
                         <div class="app-box">
@@ -281,7 +308,75 @@ import { RouterLink } from "@angular/router";
                                 2-3 weeks turnaround
                             </p>
                             <div class="actions">
-                                <a routerLink="/contact" class="button big">Buy now</a>
+                                <a href="https://buy.stripe.com/7sIbKrafp0dV3o45kp" target="_blank" class="button big">Buy now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="how">
+                        <h3 class="text">
+                            We build prototypes and MVPs
+                        </h3>
+                        <p>
+                            We build prototypes and small MVPs to test if your hypothesis/business model works &hyphen;
+                            fast.
+                            Our prototype is a fully functional application that implements the core features of your
+                            product. It's not a mockup, it's not a wireframe,
+                            it's not a clickable demo. It's a real application that you can use and test in production.
+                        </p>
+
+                        <p>
+                            The prototype we build is not a throw-away. It's the foundation of your product.
+                            We build it with the same quality standards as we would build a production application,
+                            but with less features and less tests. We apply the same architecture and design patterns
+                            as we would do for a production application to ensure that the prototype can be easily
+                            extended and maintained, eventually becoming the production application.
+                        </p>
+                    </div>
+
+                    <div class="app-boxes"
+                         style="grid-auto-flow: column; grid-auto-columns: minmax(450px, auto); grid-template-columns: unset;">
+                        <div class="app-box">
+                            <h2>MVP</h2>
+                            <ul>
+                                <li>
+                                    Need a more advanced prototype? We can build it for you. Contact us for a quote.
+                                </li>
+                                <li>
+                                    Per project price (not hourly)
+                                </li>
+                                <li>
+                                    No hidden fees or ongoing costs
+                                </li>
+                                <li>
+                                    Optionally with design and branding
+                                </li>
+                            </ul>
+                            <div class="actions">
+                                <a href="mailto:info@deepkit.io" class="button">Contact us</a>
+                            </div>
+                        </div>
+                        <div class="app-box">
+                            <h2>Investment</h2>
+                            <ul>
+                                <li>
+                                    No money, but a great idea?
+                                </li>
+                                <li>
+                                    We develop the prototype
+                                </li>
+                                <li>
+                                    We get a share of your company (at least 50%)
+                                </li>
+                                <li>
+                                    We create design and branding
+                                </li>
+                                <li>
+                                    We pay for the server costs
+                                </li>
+                            </ul>
+                            <div class="actions">
+                                <a href="mailto:info@deepkit.io" class="button">Contact us</a>
                             </div>
                         </div>
                     </div>
@@ -292,35 +387,56 @@ import { RouterLink } from "@angular/router";
                         </h3>
 
                         <p>
-                            We use Angular, TypeScript, and Deepkit Framework to build your prototype.
+                            You send us your idea, ideally with fully designed screens. We review it and tell you
+                            if it's doable in the given time frame. If yes, we send you an invoice and start
+                            working.<br/>
+                            We primarily use Angular, TypeScript, and Deepkit Framework with NodeJS, Docker, and
+                            PostgreSQL to build your prototype and
+                            host on Google Cloud Platform. We use Discord or Microsoft Teams for communication, screen
+                            sharing,and presentation of status updates. See <a routerLink="/terms">Terms of Service</a> for details.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="references offering">
-                <h2>References</h2>
+<!--            <div class="references offering">-->
+<!--                <h2>References</h2>-->
 
-                <h3 class="text">
-                    We build application for startups and enterprises since over 20 years. Here are some of highlights.
-                </h3>
+<!--                <h3 class="text">-->
+<!--                    We build application for startups and enterprises since over 18 years. Our open-source projects have-->
+<!--                    over 1 million downloads each month.-->
+<!--                </h3>-->
 
-                <h3 class="text">
-                    Our open-source projects have over 1 million downloads each month.
-                </h3>
+<!--                <h3 class="text">-->
+<!--                    Here are some of our highlights.-->
+<!--                </h3>-->
 
-                <div>
-                    // TODO
-                    // Auto CMS
-                    // AdFlow
-                    // TypeRunner
-                    // Finnwerk (CMS / Sauna shop)
-                    // Deepkit Framework
-                    // Deepkit ML
-                    // AETROS
-                    // JARVES
-                </div>
-            </div>
+<!--                <div style="margin-bottom: 50px;">-->
+<!--                    eCommerce Platform-->
+<!--                    // Design Tool-->
+<!--                    // TypeRunner-->
+<!--                    // Deepkit Framework-->
+<!--                    // Deepkit ML-->
+<!--                    // AETROS-->
+<!--                    // JARVES-->
+<!--                </div>-->
+
+<!--                <div class="reference bg">-->
+<!--                    <div class="wrapper">-->
+<!--                        <h3>eCommerce Platform</h3>-->
+
+<!--                        <p>-->
+<!--                            Custom eCommerce platform for a German company with several million Euros revenue-->
+<!--                            per year. From the design to the implementation, we built the whole platform from scratch using-->
+<!--                            TypeScript everywhere-->
+<!--                        </p>-->
+
+<!--                        <p>-->
+<!--                            Frontend and Backend based on Angular with SSR, Deepkit Framework, PostgreSQL, and Docker.-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     `
 })

@@ -4,11 +4,6 @@
     background-position: top center;
     background-repeat: no-repeat;
 
-    //if smaller than 1400, load smaller banner
-    @media (max-width: 1400px) {
-        background-image: url(/assets/images/startpage-banner-small.jpg);
-    }
-
     > .wrapper {
         text-align: center;
         padding-top: 420px;
@@ -28,6 +23,16 @@
             font-weight: 400;
             line-height: normal;
             padding: 17px 30px;
+        }
+    }
+
+    //if smaller than 1400, load smaller banner
+    @media (max-width: 1200px) {
+        background-image: url(/assets/images/startpage-banner-small.jpg);
+        background-size: auto 450px;
+
+        > .wrapper {
+            padding-top: 250px;
         }
     }
 }

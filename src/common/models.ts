@@ -7,13 +7,13 @@ export interface Content {
 }
 
 export const projectMap: { [name: string]: string } = {
-    'framework': 'Framework',
-    'runtime-types': 'Runtime Types',
-    'dependency-injection': 'Dependency Injection',
-    'cli': 'CLI',
-    'http': 'HTTP',
-    'rpc': 'RPC',
-    'database': 'Database ORM',
+    'framework': 'Deepkit Framework',
+    'runtime-types': 'Deepkit Runtime Types',
+    'dependency-injection': 'Deepkit Injector',
+    'cli': 'Deepkit CLI',
+    'http': 'Deepkit HTTP',
+    'rpc': 'Deepkit RPC',
+    'database': 'Deepkit ORM',
     'desktop-ui': 'Desktop UI',
     'general': 'General',
     'performance': 'Performance',
@@ -23,7 +23,8 @@ export const projectMap: { [name: string]: string } = {
     'template': 'Template',
     'introduction': 'Introduction',
     'migration': 'Migration',
-    'orm': 'ORM',
+    'orm': 'Deepkit ORM',
+    'app': 'Deepkit App',
 }
 
 export function link(q: CommunityQuestion) {

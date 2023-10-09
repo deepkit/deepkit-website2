@@ -70,6 +70,14 @@ export class SearchResultQuestion implements OnChanges {
             }
         }
 
+        @media (max-width: 760px) {
+            :host {
+                position: absolute;
+                left: 15px;
+                top: 26px;
+            }
+        }
+
         .overlay {
             position: fixed;
             top: 0px;

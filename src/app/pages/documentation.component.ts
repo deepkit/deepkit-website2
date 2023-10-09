@@ -25,6 +25,13 @@ import { AskComponent } from "@app/app/components/ask.component";
     styleUrls: ['./documentation.component.scss'],
     template: `
         <div class="page">
+            <div class="content-wrapper">
+                <div class="menu-trigger"><a (click)="showMenu=!showMenu" class="button">Chapters</a></div>
+                <div (click)="showMenu=false">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+
             <nav [class.showMenu]="showMenu">
                 <div style="margin-bottom: 25px;">
                     <a routerLinkActive="active" routerLink="/documentation/introduction">Introduction</a>
@@ -151,10 +158,6 @@ import { AskComponent } from "@app/app/components/ask.component";
 <!--                    <a routerLinkActive="active" routerLink="/documentation/desktop-ui/dialog">Dialog</a>-->
 <!--                </div>-->
             </nav>
-
-            <div style="margin-left: 225px; padding-top: 35px;">
-                <router-outlet></router-outlet>
-            </div>
         </div>
     `
 })
@@ -166,5 +169,8 @@ export class DocumentationComponent {
         public router: Router,
     ) {
         console.log('new DocumentationComponent');
+        router.events.subscribe(() => {
+            this.showMenu = false;
+        });
     }
 }

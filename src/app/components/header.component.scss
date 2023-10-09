@@ -79,14 +79,14 @@ nav {
 }
 
 :host.startPage {
-    @media(max-width: 600px) {
+    @media(max-width: 760px) {
         .burger {
             display: none;
         }
     }
 }
 
-@media(max-width: 600px) {
+@media(max-width: 760px) {
     a.logo {
         text-align: center;
         flex: 1;
@@ -95,11 +95,12 @@ nav {
             margin-right: 0 !important;
         }
     }
+
     .burger {
         display: block;
         position: absolute;
         right: 15px;
-        top: 33px;
+        top: 25px;
         border: 10px solid transparent;
     }
     nav {

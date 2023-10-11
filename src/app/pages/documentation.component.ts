@@ -27,7 +27,7 @@ import { AskComponent } from "@app/app/components/ask.component";
         <div class="page">
             <div class="content-wrapper">
                 <div class="menu-trigger"><a (click)="showMenu=!showMenu" class="button">Chapters</a></div>
-                <div (click)="showMenu=false">
+                <div (click)="showMenu=false; true">
                     <router-outlet></router-outlet>
                 </div>
             </div>

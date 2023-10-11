@@ -25,6 +25,7 @@ export const projectMap: { [name: string]: string } = {
     'migration': 'Migration',
     'orm': 'Deepkit ORM',
     'app': 'Deepkit App',
+    'filesystem': 'Deepkit Filesystem',
 }
 
 export function link(q: CommunityQuestion) {

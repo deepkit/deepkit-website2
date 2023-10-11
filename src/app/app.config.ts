@@ -7,10 +7,12 @@ import { createRpcWebSocketClientProvider } from "@deepkit/rpc";
 import { ControllerClient } from "@app/app/client";
 import { provideClientHydration } from "@angular/platform-browser";
 import { AppMetaStack } from '@app/app/components/title';
+import { PlatformHelper } from "@app/app/utils";
 
 export const appConfig: ApplicationConfig = {
     providers: [
         AppMetaStack,
+        PlatformHelper,
         provideClientHydration(),
         provideRouter(routes, withRouterConfig({}), withInMemoryScrolling({anchorScrolling: 'enabled',  scrollPositionRestoration: 'enabled'})),
         withZoneModule(),

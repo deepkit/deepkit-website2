@@ -68,4 +68,4 @@ class MyService {
 }
 ```
 
-This is especially useful when working with [Dependency Injection Scopes](../scopes).
+This is especially useful when working with [Dependency Injection Scopes](./scopes.md).

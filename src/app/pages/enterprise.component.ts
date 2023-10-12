@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { AppTitle } from "@app/app/components/title";
 
 
 @Component({
@@ -98,9 +99,11 @@ import { RouterLink } from "@angular/router";
 
     `],
     imports: [
-        RouterLink
+        RouterLink,
+        AppTitle
     ],
     template: `
+        <app-title value="Enterprise"></app-title>
         <div class="app-content-full">
             <div class="app-banner">
                 <div class="wrapper">

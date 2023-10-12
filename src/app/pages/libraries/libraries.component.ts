@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ImageComponent } from "@app/app/components/image.component";
 import { AppImagesComponent } from "@app/app/components/images.component";
+import { AppTitle } from "@app/app/components/title";
 
 
 @Component({
@@ -57,8 +58,10 @@ import { AppImagesComponent } from "@app/app/components/images.component";
         RouterLink,
         ImageComponent,
         AppImagesComponent,
+        AppTitle,
     ],
     template: `
+        <app-title value="Libraries"></app-title>
         <div class="app-content-full">
             <div class="app-banner left">
                 <div class="wrapper">

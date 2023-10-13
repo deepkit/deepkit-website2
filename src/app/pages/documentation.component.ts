@@ -232,6 +232,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
         if (scrollTop > 0) {
             this.scrolled = true;
             this.nav.nativeElement.scrollTop = scrollTop;
+            return;
         }
 
         this.nav.nativeElement.querySelectorAll('a.active').forEach((el: any) => {

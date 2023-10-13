@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { ControllerClient } from "@app/app/client";
 import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
-import { bodyToString, UiCodeExample, Content, Page, parseBody, CommunityQuestion } from "@app/common/models";
+import { bodyToString, CommunityQuestion, Content, Page, parseBody, UiCodeExample } from "@app/common/models";
 import { AppDescription, AppTitle } from "@app/app/components/title";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
 import { NgForOf, NgIf } from "@angular/common";
-import {LoadingComponent} from "@app/app/components/loading";
+import { LoadingComponent } from "@app/app/components/loading";
+import { PageResponse } from "@app/app/page-response";
 
 @Component({
     standalone: true,
@@ -98,6 +99,7 @@ export class LibraryComponent implements OnInit {
     examples: UiCodeExample[] = [];
 
     constructor(
+        private pageResponse: PageResponse,
         private client: ControllerClient,
         private activatedRoute: ActivatedRoute
     ) {
@@ -110,20 +112,20 @@ export class LibraryComponent implements OnInit {
     }
 
     async load(slug: string) {
-        this.page = await this.client.main.getPage('library/' + slug);
-        if (!this.page) return;
-        this.subline = parseBody(this.page.body).subline;
+        try {
+            this.page = await this.client.main.getPage('library/' + slug);
+            this.subline = parseBody(this.page.body).subline;
 
-        if (this.page.params.category) {
-            this.faqs = await this.client.main.getFAQ(this.page.params.category);
-            this.examples = await this.client.main.getExamples(this.page.params.category, false, 24);
-        } else {
-            this.faqs = [];
-            this.examples = [];
+            if (this.page.params.category) {
+                this.faqs = await this.client.main.getFAQ(this.page.params.category);
+                this.examples = await this.client.main.getExamples(this.page.params.category, false, 24);
+            } else {
+                this.faqs = [];
+                this.examples = [];
+            }
+        } catch {
+            this.pageResponse.notFound();
         }
-        // console.log('page', this.page);
-        // console.log('faqs', this.faqs);
-        // console.log('examples', this.examples);
     }
 
     protected readonly bodyToString = bodyToString;

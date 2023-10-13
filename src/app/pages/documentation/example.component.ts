@@ -6,6 +6,7 @@ import { ControllerClient } from "@app/app/client";
 import { projectMap, UiCodeExample } from "@app/common/models";
 import { LoadingComponent } from "@app/app/components/loading";
 import { ContentRenderComponent } from "@app/app/components/content-render.component";
+import { PageResponse } from "@app/app/page-response";
 
 
 @Component({
@@ -48,6 +49,7 @@ export class ExampleComponent implements OnInit {
     example?: UiCodeExample
 
     constructor(
+        private pageResponse: PageResponse,
         private activatedRoute: ActivatedRoute,
         private client: ControllerClient,
     ) {
@@ -66,6 +68,8 @@ export class ExampleComponent implements OnInit {
 
         try {
             this.example = await this.client.main.getExample(category, slug);
+        } catch {
+            this.pageResponse.notFound();
         } finally {
             this.loading = false;
         }

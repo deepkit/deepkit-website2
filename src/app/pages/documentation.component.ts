@@ -45,12 +45,10 @@ import { PlatformHelper } from "@app/app/utils";
 
                 <div class="category">
                     <div class="category-title">App</div>
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                       routerLink="/documentation/app">Getting started</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/app">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/arguments">Arguments & Flags</a>
-                    <a routerLinkActive="active" routerLink="/documentation/app/dependency-injection">Dependency
-                        Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/app/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/modules">Modules</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/services">Services</a>
                     <a routerLinkActive="active" routerLink="/documentation/app/events">Events</a>
@@ -60,8 +58,7 @@ import { PlatformHelper } from "@app/app/utils";
 
                 <div class="category">
                     <div class="category-title">Framework</div>
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                       routerLink="/documentation/framework">Getting started</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/framework">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/database">Database</a>
                     <a routerLinkActive="active" routerLink="/documentation/framework/testing">Testing</a>
@@ -71,20 +68,15 @@ import { PlatformHelper } from "@app/app/utils";
 
                 <div class="category">
                     <div class="category-title">Runtime Types</div>
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                       routerLink="/documentation/runtime-types">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/getting-started">Getting
-                        started</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/runtime-types">Introduction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/getting-started">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/types">Type Annotations</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/reflection">Reflection</a>
-                    <a routerLinkActive="active"
-                       routerLink="/documentation/runtime-types/serialization">Serialization</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/serialization">Serialization</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/validation">Validation</a>
-                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/custom-serializer">Custom
-                        serializer</a>
-                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/external-types">External
-                        Types</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/custom-serializer">Custom serializer</a>
+                    <a routerLinkActive="active" routerLink="/documentation/runtime-types/external-types">External Types</a>
                     <a routerLinkActive="active" routerLink="/documentation/runtime-types/bytecode">Bytecode</a>
                 </div>
 
@@ -92,21 +84,17 @@ import { PlatformHelper } from "@app/app/utils";
                     <div class="category-title">Dependency Injection</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
                        routerLink="/documentation/dependency-injection">Introduction</a>
-                    <a routerLinkActive="active" routerLink="/documentation/dependency-injection/getting-started">Getting
-                        started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/dependency-injection/getting-started">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/examples">Examples</a>
-                    <a routerLinkActive="active"
-                       routerLink="/documentation/dependency-injection/providers">Providers</a>
-                    <a routerLinkActive="active"
-                       routerLink="/documentation/dependency-injection/injection">Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/dependency-injection/providers">Providers</a>
+                    <a routerLinkActive="active" routerLink="/documentation/dependency-injection/injection">Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/configuration">Configuration</a>
                     <a routerLinkActive="active" routerLink="/documentation/dependency-injection/scopes">Scopes</a>
                 </div>
 
                 <div class="category">
                     <div class="category-title">Filesystem</div>
-                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                       routerLink="/documentation/filesystem">Getting started</a>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/filesystem">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/app">App</a>
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/local">Local</a>
@@ -114,8 +102,18 @@ import { PlatformHelper } from "@app/app/utils";
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/aws-s3">AWS S3</a>
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/ftp">FTP</a>
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/sftp">sFTP (SSH)</a>
-                    <a routerLinkActive="active" routerLink="/documentation/filesystem/google-storage">Google
-                        Storage</a>
+                    <a routerLinkActive="active" routerLink="/documentation/filesystem/google-storage">Google Storage</a>
+                </div>
+
+                <div class="category" *ngIf="false">
+                    <div class="category-title">Broker</div>
+                    <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/broker">Getting started</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/examples">Examples</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/cache">Cache</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/key-value">Key/Value</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/message-broker">Message Broker</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/message-queue">Message Queue</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/atomic-locks">Atomic Locks</a>
                 </div>
 
                 <div class="category">
@@ -126,8 +124,7 @@ import { PlatformHelper } from "@app/app/utils";
                     <a routerLinkActive="active" routerLink="/documentation/http/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/input-output">Input & Output</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/views">Views</a>
-                    <a routerLinkActive="active" routerLink="/documentation/http/dependency-injection">Dependency
-                        Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/http/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/events">Events</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/middleware">Middleware</a>
                     <a routerLinkActive="active" routerLink="/documentation/http/security">Security</a>
@@ -139,8 +136,7 @@ import { PlatformHelper } from "@app/app/utils";
                        routerLink="/documentation/rpc">Introduction</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/getting-started">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/examples">Examples</a>
-                    <a routerLinkActive="active" routerLink="/documentation/rpc/dependency-injection">Dependency
-                        Injection</a>
+                    <a routerLinkActive="active" routerLink="/documentation/rpc/dependency-injection">Dependency Injection</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/security">Security</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/errors">Errors</a>
                     <a routerLinkActive="active" routerLink="/documentation/rpc/transport">Transport</a>
@@ -208,7 +204,6 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
         public platform: PlatformHelper,
         public router: Router,
     ) {
-        console.log('new DocumentationComponent');
         this.sub = router.events.subscribe(() => {
             this.showMenu = false;
             this.scrollToActiveLink();

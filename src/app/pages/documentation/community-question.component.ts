@@ -10,6 +10,7 @@ import { NgIf } from "@angular/common";
 import { ErrorComponent } from "@app/app/components/error.component";
 import { AppTitle } from "@app/app/components/title";
 import { LoadingComponent } from "@app/app/components/loading";
+import { PageResponse } from "@app/app/page-response";
 
 @Component({
     standalone: true,
@@ -93,6 +94,7 @@ export class CommunityQuestionComponent implements OnInit {
     question?: CommunityQuestion;
 
     constructor(
+        private pageResponse: PageResponse,
         protected client: ControllerClient,
         protected router: Router,
         protected cd: ChangeDetectorRef,
@@ -121,6 +123,7 @@ export class CommunityQuestionComponent implements OnInit {
         try {
             this.question = await this.client.main.getQuestion(id, this.getAuthId(id));
         } catch (error: any) {
+            this.pageResponse.notFound();
             this.error = error;
         } finally {
             this.loading = false;
@@ -160,7 +163,7 @@ export class CommunityQuestionComponent implements OnInit {
             console.log('created question', !!this.question, question);
 
             if (!this.question && question.authId) {
-                //store the authId so that we can restore the question when reloading the page
+                //store the authId so that we can restore the question when reloading the pageResponse
                 localStorage.setItem('deepkit/community-question-authId-' + question.id, question.authId);
             }
 

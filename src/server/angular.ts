@@ -8,12 +8,13 @@ import { eventDispatcher } from '@deepkit/event';
 import { Logger } from '@deepkit/logger';
 import { ApplicationServer } from '@deepkit/framework';
 import { findParentPath } from '@deepkit/app';
+import { PageResponseModel } from "@app/app/page-response-model";
 
 Error.stackTraceLimit = 1500;
 
 export class AngularListener {
     protected routesFound = new Map<string, boolean>();
-    protected cachedResponses = new Map<string, string>();
+    protected cachedResponses = new Map<string, { html: string, statusCode: number }>();
 
     protected router?: Router;
     protected engine?: CommonEngine;
@@ -53,19 +54,23 @@ export class AngularListener {
             let response = this.cachedResponses.get(event.url);
             if (!response) {
                 const server = await this.getServer();
+                const page = new PageResponseModel();
                 const renderOptions: RenderOptions = {
                     ...this.renderOptions, url: event.url, providers: [
+                        { provide: 'page-response-model', useValue: page }
                         // { provide: RpcWebSocketClient, useValue: new DirectClient(this.server.getWorker().rpcKernel) },
                     ]
                 };
-                response = await server.engine.render(renderOptions);
+                const html = await server.engine.render(renderOptions);
+
+                response = { html, statusCode: page.statusCode ?? 200 };
                 this.cachedResponses.set(event.url, response);
             }
 
             event.routeFound(
                 new RouteConfig('angular', ['GET'], event.url, {
                     type: 'function', fn() {
-                        return new HtmlResponse(response || '');
+                        return new HtmlResponse(response!.html || '', response!.statusCode);
                     }
                 }),
                 () => ({ arguments: [], parameters: {} })

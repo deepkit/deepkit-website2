@@ -225,7 +225,7 @@ export class MainController {
     }
 
     @rpc.action()
-    async getPage(url: string): Promise<Page | undefined> {
+    async getPage(url: string): Promise<Page> {
         return await this.page.parse(url);
     }
 

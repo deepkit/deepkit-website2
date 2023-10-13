@@ -7,6 +7,7 @@ import { LoadingComponent } from "@app/app/components/loading";
 import { NgForOf, NgIf, ViewportScroller } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ControllerClient } from "@app/app/client";
+import { PageResponse } from "@app/app/page-response";
 
 @Component({
     standalone: true,
@@ -58,6 +59,7 @@ export class DocumentationPageComponent implements OnInit {
     public headers: { label: string, indent: number, link: string }[] = [];
 
     constructor(
+        private pageResponse: PageResponse,
         private activatedRoute: ActivatedRoute,
         private client: ControllerClient,
         private cd: ChangeDetectorRef,
@@ -109,6 +111,7 @@ export class DocumentationPageComponent implements OnInit {
 
             this.loadTableOfContent();
         } catch (error) {
+            this.pageResponse.notFound();
             console.log(error);
             this.page = undefined;
             this.error = String(error);

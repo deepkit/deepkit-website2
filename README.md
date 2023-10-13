@@ -1,5 +1,13 @@
 # Deepkit Website
 
+## Dev SSR
+
+```
+npm run app:build
+npm run ssr:build
+npm run server
+``
+
 
 Start locally
 

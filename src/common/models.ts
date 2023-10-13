@@ -26,6 +26,7 @@ export const projectMap: { [name: string]: string } = {
     'orm': 'Deepkit ORM',
     'app': 'Deepkit App',
     'filesystem': 'Deepkit Filesystem',
+    'broker': 'Deepkit Broker',
 }
 
 export function link(q: CommunityQuestion) {

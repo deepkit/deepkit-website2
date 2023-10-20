@@ -185,9 +185,19 @@ nav,
     }
 }
 
-@media (max-width: 768px) {
-    :host ::ng-deep .table-of-content {
-        display: none;
+@media (max-width: 880px) {
+    :host ::ng-deep {
+        .app-content {
+            margin-right: 0 !important;
+        }
+
+        codebox {
+            margin-right: 0 !important;
+        }
+
+        .table-of-content {
+            display: none;
+        }
     }
 }
 

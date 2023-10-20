@@ -1,3 +1,4 @@
 export class PageResponseModel {
-    statusCode = 200;
+    statusCode: number = 200;
+    redirect: string = '';
 }

@@ -17,8 +17,9 @@ import { HighlightCodeComponent } from "@app/app/components/highlight-code.compo
 import { Router } from "@angular/router";
 import { AppImagesComponent } from "@app/app/components/images.component";
 import { ImageComponent } from "@app/app/components/image.component";
+import { DomSanitizer } from "@angular/platform-browser";
 
-const whitelist = ['div', 'p', 'a', 'button', 'pre', 'span', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th', 'boxes', 'box'];
+const whitelist = ['div', 'p', 'a', 'button', 'iframe', 'pre', 'span', 'code', 'strong', 'hr', 'ul', 'li', 'ol', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'table', 'tbody', 'tr', 'td', 'th', 'boxes', 'box'];
 
 
 @Component({
@@ -34,6 +35,34 @@ const whitelist = ['div', 'p', 'a', 'button', 'pre', 'span', 'code', 'strong', '
 })
 export class ContentRenderBox {
     @Input() title: string = '';
+}
+
+@Component({
+    standalone: true,
+    selector: 'codebox',
+    styles: [`
+        iframe {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            width: 100%;
+            height: 600px;
+        }
+    `],
+    template: `
+        <iframe [src]="srcAllowed" allowfullscreen></iframe>
+    `
+})
+export class ContentCodeBox implements OnInit {
+    @Input() src: string = '';
+
+    srcAllowed: any;
+
+    constructor(private sanitizer: DomSanitizer) {
+    }
+
+    ngOnInit() {
+        this.srcAllowed = this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    }
 }
 
 
@@ -177,6 +206,7 @@ export class ContentRenderComponent implements OnInit, OnChanges {
             'app-images': AppImagesComponent,
             'app-image': ImageComponent,
             'feature': ContentRenderFeature,
+            'codebox': ContentCodeBox,
         };
 
         if ('string' === typeof content) {

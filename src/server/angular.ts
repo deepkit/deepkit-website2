@@ -1,4 +1,4 @@
-import { HtmlResponse, httpWorkflow, RouteConfig } from '@deepkit/http';
+import { HtmlResponse, httpWorkflow, Redirect, RouteConfig } from '@deepkit/http';
 import { join } from 'node:path';
 // @ts-ignore
 import type { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
@@ -14,7 +14,7 @@ Error.stackTraceLimit = 1500;
 
 export class AngularListener {
     protected routesFound = new Map<string, boolean>();
-    protected cachedResponses = new Map<string, { html: string, statusCode: number }>();
+    protected cachedResponses = new Map<string, { html: string, statusCode: number, redirect: string }>();
 
     protected router?: Router;
     protected engine?: CommonEngine;
@@ -63,13 +63,16 @@ export class AngularListener {
                 };
                 const html = await server.engine.render(renderOptions);
 
-                response = { html, statusCode: page.statusCode ?? 200 };
+                response = { html: page.redirect ? '' : html, statusCode: page.statusCode ?? 200, redirect: page.redirect };
                 this.cachedResponses.set(event.url, response);
             }
 
             event.routeFound(
                 new RouteConfig('angular', ['GET'], event.url, {
                     type: 'function', fn() {
+                        if (response!.redirect) {
+                            return Redirect.toUrl(response!.redirect, 301);
+                        }
                         return new HtmlResponse(response!.html || '', response!.statusCode);
                     }
                 }),

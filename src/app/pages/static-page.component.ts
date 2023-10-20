@@ -51,7 +51,6 @@ export class StaticPageComponent implements OnInit {
         this.page = await this.client.main.getPage('static/' + slug);
         if (!this.page) return;
         this.subline = parseBody(this.page.body).subline;
-        console.log('page', this.page);
     }
 
     protected readonly bodyToString = bodyToString;

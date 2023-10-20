@@ -20,3 +20,11 @@ class UserAPI {
             .findOne();
     }
 }
+
+router.get('/user/:id', async (
+    id: integer & Positive, database: DatabaseInterface
+) => {
+    return await database.query(User)
+        .filter({id})
+        .findOne();
+});

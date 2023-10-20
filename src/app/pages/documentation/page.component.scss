@@ -1,13 +1,27 @@
 :host {
-    display: flex;
+
 }
+
+.app-content {
+    margin-right: 230px;
+    overflow: visible;
+
+    ::ng-deep {
+        codebox {
+            max-width: unset;
+            display: block;
+            margin-right: -230px;
+        }
+    }
+}
+
 
 .table-of-content {
     text-align: left;
     width: 180px;
+    float: right;
     overflow: hidden;
     padding-top: 80px;
-    margin-left: 50px;
 
     a, a:link {
         display: block;

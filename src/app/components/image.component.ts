@@ -25,10 +25,6 @@ export class ImageComponent {
     @Input() src!: string;
     @Input() alt?: string;
 
-    constructor() {
-        console.log('ImageComponent');
-    }
-
     get altFromSrc(): string {
         let name = this.src.substr(this.src.lastIndexOf('.'));
         name = name.substr(name.lastIndexOf('/'));

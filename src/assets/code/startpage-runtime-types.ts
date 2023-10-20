@@ -16,4 +16,5 @@ const reflection = ReflectionClass.from<User>();
 
 // Type information of arbitrary type expressions
 // {kind: ReflectionKind.class, types: [...]
-typeOf<Pick<User, 'id' | 'username'>>();
+type CreateUser = Omit<User, 'id'>;
+typeOf<CreateUser>();

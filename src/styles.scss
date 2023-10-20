@@ -314,6 +314,7 @@ h3.text {
     }
 }
 
+codebox,
 pre.code {
     font-family: 'Source Code Pro', monospace;
     font-size: 14px;
@@ -364,6 +365,10 @@ pre.code {
             background-clip: padding-box;
         }
     }
+}
+
+codebox {
+    padding: 0;
 }
 
 .scroll-small {

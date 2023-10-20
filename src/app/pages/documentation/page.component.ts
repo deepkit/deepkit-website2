@@ -22,6 +22,12 @@ import { PageResponse } from "@app/app/page-response";
     ],
     styleUrls: ['./page.component.scss'],
     template: `
+
+        <div class="table-of-content">
+            <a [href]="router.url.split('#')[0] + '#' + h.link" class="intend-{{h.indent}}" *ngFor="let h of headers">
+                {{h.label}}
+            </a>
+        </div>
         <div class="app-content normalize-text">
             <app-loading *ngIf="loading"></app-loading>
 
@@ -38,12 +44,6 @@ import { PageResponse } from "@app/app/page-response";
                 <app-render-content [content]="page.body"></app-render-content>
             </div>
 <!--            <app-ask [fixed]="true"></app-ask>-->
-        </div>
-
-        <div class="table-of-content">
-            <a [href]="router.url.split('#')[0] + '#' + h.link" class="intend-{{h.indent}}" *ngFor="let h of headers">
-                {{h.label}}
-            </a>
         </div>
     `
 })
@@ -101,7 +101,6 @@ export class DocumentationPageComponent implements OnInit {
         this.loading = true;
         this.cd.detectChanges();
         this.headers = [];
-        console.log('load', path);
         this.currentPath = path;
 
         try {

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import { StartpageComponent } from "@app/app/pages/startpage.component";
 import { DocumentationComponent } from "@app/app/pages/documentation.component";
 import { EmptyComponent } from "@app/app/pages/empty.component";
@@ -15,7 +15,21 @@ import { CommunityComponent } from "@app/app/pages/community.component";
 import { StaticPageComponent } from "@app/app/pages/static-page.component";
 import { NotFoundComponent } from "@app/app/pages/not-found.component";
 
+function redirect(from: string, to: string): Route {
+    return {
+        path: from,
+        pathMatch: 'full',
+        redirectTo: to
+    };
+}
+
 export const routes: Routes = [
+    redirect('documentation/orm/plugin/soft-delete', 'documentation/orm/plugin-soft-delete'),
+    redirect('documentation/framework/cli', 'documentation/app'),
+    redirect('documentation/type/types', 'documentation/runtime-types'),
+    redirect('documentation/type/serialization', 'documentation/runtime-types/serialization'),
+    redirect('documentation/framework/rpc/controller', 'documentation/rpc/getting-started'),
+
     { path: '', pathMatch: 'full', component: StartpageComponent },
     { path: 'library', component: LibrariesComponent },
     { path: 'library/:id', component: LibraryComponent },

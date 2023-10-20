@@ -9,4 +9,8 @@ export class PageResponse {
     notFound() {
         this.model.statusCode = 404;
     }
+
+    redirect(url: string) {
+        this.model.redirect = url;
+    }
 }

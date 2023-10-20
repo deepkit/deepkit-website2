@@ -158,12 +158,12 @@ ${prompt}
 
         if (thread) {
             communityMessage.discordThreadId = thread.id;
-            const threadMessage = await database.query(CommunityMessage).filter({ discordThreadId: thread.id, thread: undefined }).findOne();
-            if (!threadMessage) {
-                logger.error('Could not find parent message for thread', thread.id);
-                await message.reply('Sorry, I could not process your message. Please try again later.');
-                return;
-            }
+            const threadMessage = await database.query(CommunityMessage).filter({ discordThreadId: thread.id, thread: undefined }).findOneOrUndefined();
+            // if (!threadMessage) {
+            //     logger.error('Could not find parent message for thread', thread.id);
+            //     await message.reply('Sorry, I could not process your message. Please try again later.');
+            //     return;
+            // }
             communityMessage.thread = threadMessage;
 
             //check if the author of the new message has role Contributor or is the owner of this thread

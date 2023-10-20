@@ -110,8 +110,7 @@ import { PlatformHelper } from "@app/app/utils";
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/broker">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/broker/examples">Examples</a>
                     <a routerLinkActive="active" routerLink="/documentation/broker/cache">Cache</a>
-                    <a routerLinkActive="active" routerLink="/documentation/broker/key-value">Key/Value</a>
-                    <a routerLinkActive="active" routerLink="/documentation/broker/message-broker">Message Broker</a>
+                    <a routerLinkActive="active" routerLink="/documentation/broker/message-bus">Message Bus</a>
                     <a routerLinkActive="active" routerLink="/documentation/broker/message-queue">Message Queue</a>
                     <a routerLinkActive="active" routerLink="/documentation/broker/atomic-locks">Atomic Locks</a>
                 </div>
@@ -152,7 +151,7 @@ import { PlatformHelper } from "@app/app/utils";
                     <a routerLinkActive="active" routerLink="/documentation/orm/entity">Entity</a>
                     <a routerLinkActive="active" routerLink="/documentation/orm/session">Session</a>
                     <a routerLinkActive="active" routerLink="/documentation/orm/query">Query</a>
-                    <a routerLinkActive="active" routerLink="/documentation/orm/transaction">Transaction</a>
+                    <a routerLinkActive="active" routerLink="/documentation/orm/transactions">Transaction</a>
                     <a routerLinkActive="active" routerLink="/documentation/orm/inheritance">Inheritance</a>
                     <a routerLinkActive="active" routerLink="/documentation/orm/relations">Relations</a>
                     <a routerLinkActive="active" routerLink="/documentation/orm/events">Events</a>

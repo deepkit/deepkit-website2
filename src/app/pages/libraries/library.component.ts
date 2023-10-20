@@ -37,8 +37,8 @@ import { PageResponse } from "@app/app/page-response";
                             <a *ngIf="page.params.category" routerLink="/documentation/questions" [fragment]="page.params.category">FAQ</a>
                             <a *ngIf="page.params.category" routerLink="/documentation/{{page.params.category}}/examples">Examples</a>
                             <a routerLink="/documentation/{{page.params.doc}}">Documentation</a>
-                            <a *ngIf="page.params.api"
-                               routerLink="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
+                            <a *ngIf="page.params.api" target="_blank"
+                               href="https://api.framework.deepkit.io/modules/{{page.params.api}}.html">API</a>
                         </nav>
                     </div>
 

@@ -56,6 +56,10 @@ And run it with `ts-node`:
 ./node_modules/.bin/ts-node app.ts
 ```
 
+## Interactive Example
+
+<codebox src="https://codesandbox.io/p/sandbox/deepkit-runtime-types-fjmc2f?file=index.ts"></codebox>
+
 ## Type compiler
 
 TypeScript itself does not allow to configure the type compiler via a `tsconfig.json`. It is necessary to either use the TypeScript compiler API directly or a build system like Webpack with _ts-loader_. To save this inconvenient way for Deepkit users, the Deepkit type compiler automatically installs itself in `node_modules/typescript` once `@deepkit/type-compiler` is installed (this is done via NPM install hooks).

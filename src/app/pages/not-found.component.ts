@@ -15,7 +15,6 @@ import { PageResponse } from "@app/app/page-response";
 })
 export class NotFoundComponent {
     constructor(pageResponse: PageResponse) {
-        console.log('notfoundComponent!');
         pageResponse.notFound();
     }
 }

@@ -32,7 +32,6 @@ let code = 1;
 \`\`\`
     `);
 
-    console.log('page.body', page.body.children);
     expect(page.body).toMatchObject({
         tag: 'pre',
         props: {

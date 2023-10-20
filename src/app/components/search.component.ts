@@ -64,13 +64,36 @@ export class SearchResultQuestion implements OnChanges {
         ContentRenderComponent
     ],
     styles: [`
+        :host {
+            max-width: 50%;
+        }
+
+        .search {
+            position: relative;
+            z-index: 2001;
+            display: flex;
+
+            a.button {
+                margin-left: 10px;
+                display: none;
+            }
+        }
         .search.active {
             .app-search-field {
-                width: 350px;
+                //width: 350px;
             }
         }
 
         @media (max-width: 760px) {
+            .search.active {
+                .app-search-field {
+                    width: unset;
+                }
+                a.button {
+                    display: block;
+                }
+            }
+
             :host {
                 position: absolute;
                 left: 15px;
@@ -84,6 +107,7 @@ export class SearchResultQuestion implements OnChanges {
             left: 0px;
             right: 0px;
             bottom: 0;
+            height: 100vh;
             z-index: 2000;
             background-color: rgba(0, 0, 0, 0.6);
             overflow: hidden;
@@ -114,6 +138,7 @@ export class SearchResultQuestion implements OnChanges {
                        placeholder="Search the docs" [(ngModel)]="query" (ngModelChange)="find()"/>
                 <img alt="search icon" src="/assets/images/icons-search.svg" style="width: 18px; height: 18px;"/>
             </div>
+            <a class="button" (click)="visible=false">Close</a>
         </div>
 
         <div class="overlay" *ngIf="visible" (click)="onOverlayClick($event)">
@@ -121,6 +146,7 @@ export class SearchResultQuestion implements OnChanges {
             <div class="wrapper">
                 <div class="box">
                     <div class="box-container scroll-small">
+
                         <div class="search-results" *ngIf="results">
                             <div [routerLink]="link(r)"
                                  (click)="visible=false" class="app-search-result-item" *ngFor="let r of results.community">

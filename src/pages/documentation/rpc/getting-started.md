@@ -1,6 +1,6 @@
 # Getting Started
 
-To use Deepkit RPC, it is necessary to have `@deepkit/type` correctly installed because it is based on Runtime Types. See [Runtime Type Installation](runtime-types.md#runtime-types-installation).
+To use Deepkit RPC, it is necessary to have `@deepkit/type` correctly installed because it is based on Runtime Types. See [Runtime Type Installation](../runtime-types.md).
 
 Once this is successfully done, `@deepkit/rpc` or the Deepkit Framework, which already uses the library under the hood, can be installed.
 

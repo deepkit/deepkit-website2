@@ -59,7 +59,7 @@ For a deployment, it is important that the TypeScript files are compiled correct
 
 In a production environment, you would not bind the server to `localhost`, but most likely to all devices via `0.0.0.0`. If you are not behind a reverse proxy, you would also set the port to 80. To configure these two settings, you need to customize the `FrameworkModule`. The two options we are interested in are `host` and `port`. In order for them to be configured externally via environment variables or via .dotenv files, we must first allow this. Fortunately, our code above has already done this with the `loadConfigFromEnv()` method.
 
-Please refer to the [Konfiguration](framework.md#confiruration) chapter to learn more about how to set the application configuration options.
+Please refer to the [Configuration](../app/configuration.md) chapter to learn more about how to set the application configuration options.
 
 To see what configuration options are available and what value they have, you can use the `ts-node app.ts app:config` command. You can also see them in the Framework Debugger.
 

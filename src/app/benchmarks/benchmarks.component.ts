@@ -294,7 +294,9 @@ export class BenchmarksComponent implements OnInit {
 
                 const y = showMs ? suit[p.entry].mean : suit[p.entry].hz;
 
-                this.lastValues[file + ':' + p.entry] = y;
+                if (!this.lastValues[file + ':' + p.entry]) {
+                    this.lastValues[file + ':' + p.entry] = y;
+                }
 
                 if (!d.first) {
                     d.first = y;

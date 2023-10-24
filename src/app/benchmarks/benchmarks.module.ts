@@ -9,6 +9,7 @@ import { MarkdownModule } from 'ngx-markdown';
 // @ts-ignore
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { AppTitle } from "@app/app/components/title";
+import { PerformanceChartComponent, PerformanceEntryDirective } from "@app/app/components/performance-chart.component";
 
 
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -28,6 +29,8 @@ const routes: Routes = [
         MarkdownModule.forRoot(),
         RouterModule.forChild(routes),
         AppTitle,
+        PerformanceChartComponent,
+        PerformanceEntryDirective,
     ]
 })
 export class BenchmarksModule {

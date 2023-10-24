@@ -158,6 +158,50 @@
             </div>
         </div>
 
+
+        <div class="feature-block">
+            <h2>HIGH PERFORMANCE</h2>
+
+            <p class="feature-text">
+                High performance in every fiber. From execution time to development time.
+            </p>
+            <p class="feature-text">
+                We are committed to building a framework that utilizes the power of isomorphic TypeScript and an ecosystem of libraries that are perfectly
+                optimized to work with each other to empower you to build applications faster than ever before.
+            </p>
+
+            <div class="banner-features">
+                <div>
+                    <h3>High Performance ORM</h3>
+                    <div>
+                        <performance-chart yAxis="ms / SQLite query 10k records">
+                            <performance-entry title="Sequelize" [value]="58.716"></performance-entry>
+                            <performance-entry title="MikroORM" [value]="42.840"></performance-entry>
+                            <performance-entry title="TypeORM" [value]="24.262"></performance-entry>
+                            <performance-entry title="Prisma" [value]="22.484"></performance-entry>
+                            <performance-entry title="Deepkit ORM" [value]="7.444"></performance-entry>
+                        </performance-chart>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Fastest MongoDB</h3>
+                    <div>
+                        <performance-chart yAxis="ms / MongoDB query 10k records">
+                            <performance-entry title="Mongoose" [value]="82.571"></performance-entry>
+                            <performance-entry title="MikroORM" [value]="72.434"></performance-entry>
+                            <performance-entry title="Prisma" [value]="66.450"></performance-entry>
+                            <performance-entry title="TypeORM" [value]="34.634"></performance-entry>
+                            <performance-entry title="Raw MongoClient" [value]="25.900"></performance-entry>
+                            <performance-entry title="Deepkit ORM" [value]="7.021"></performance-entry>
+                        </performance-chart>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper benchmark-link">
+                <a routerLink="/benchmarks">More information about our benchmarks</a>
+            </div>
+        </div>
     </main>
 
     <div class="feature-end-to-end feature-center color">

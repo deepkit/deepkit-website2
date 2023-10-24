@@ -112,6 +112,50 @@ function sortByMS(a: PlotData, b: PlotData) {
                         </table>
                     </div>
                 </div>
+
+
+            </div>
+
+            <div class="banner-features">
+                <div>
+                    <h3>Deepkit ORM Sqlite Performance</h3>
+                    <div>
+                        <performance-chart yAxis="ms / SQLite query 10k records">
+                            <performance-entry title="Sequelize" [value]="lastValues['orm/end-to-end/sqlite/sequelize-orm-10k:fetch']"></performance-entry>
+                            <performance-entry title="MikroORM" [value]="lastValues['orm/end-to-end/sqlite/mikro-orm-10k:fetch']"></performance-entry>
+                            <performance-entry title="TypeORM" [value]="lastValues['orm/end-to-end/sqlite/typeorm-10k:fetch']"></performance-entry>
+                            <performance-entry title="Prisma" [value]="lastValues['orm/end-to-end/sqlite/prisma-10k:fetch']"></performance-entry>
+                            <performance-entry title="Deepkit ORM" [value]="lastValues['orm/end-to-end/sqlite/deepkit-10k:fetch']"></performance-entry>
+                        </performance-chart>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Deepkit ORM MongoDB Performance</h3>
+                    <div>
+                        <performance-chart yAxis="ms / MongoDB query 10k records">
+                            <performance-entry title="Mongoose" [value]="lastValues['orm/end-to-end/mongo/mongoose-10k:fetch']"></performance-entry>
+                            <performance-entry title="MikroORM" [value]="lastValues['orm/end-to-end/mongo/mikro-orm-10k:fetch']"></performance-entry>
+                            <performance-entry title="Prisma" [value]="lastValues['orm/end-to-end/mongo/prisma-10k:fetch']"></performance-entry>
+                            <performance-entry title="TypeORM" [value]="lastValues['orm/end-to-end/mongo/typeorm-10k:fetch']"></performance-entry>
+                            <performance-entry title="Raw MongoClient" [value]="lastValues['orm/end-to-end/mongo/mongo-10k:fetch']"></performance-entry>
+                            <performance-entry title="Deepkit ORM" [value]="lastValues['orm/end-to-end/mongo/deepkit-10k:fetch']"></performance-entry>
+                        </performance-chart>
+                    </div>
+                </div>
+            </div>
+
+            <div class="banner-features">
+                <div>
+                    <h3>Deepkit RPC</h3>
+                    <div>
+                        <performance-chart yAxis="ops / second. More is better">
+                            <performance-entry title="gRPC.js" [value]="lastValues['rpc/grpc/grpc-js:action']"></performance-entry>
+                            <performance-entry title="Deepkit RPC" [value]="lastValues['rpc/rpc-tcp-server:action']"></performance-entry>
+                        </performance-chart>
+                    </div>
+                </div>
+
             </div>
 
             <h4>Available benchmarks</h4>
@@ -174,6 +218,8 @@ function sortByMS(a: PlotData, b: PlotData) {
 export class BenchmarksComponent implements OnInit {
     public graphs: Graph[] = [];
     public runs: BenchmarkRun[] = [];
+    public lastValues: {[name: string]: number} = {};
+
     protected defaultLayout: Partial<Layout> = {
         plot_bgcolor: "rgba(0,0,0,0)",
         paper_bgcolor: "rgba(0,0,0,0)",
@@ -247,6 +293,8 @@ export class BenchmarksComponent implements OnInit {
                 }
 
                 const y = showMs ? suit[p.entry].mean : suit[p.entry].hz;
+
+                this.lastValues[file + ':' + p.entry] = y;
 
                 if (!d.first) {
                     d.first = y;
@@ -509,6 +557,16 @@ export class BenchmarksComponent implements OnInit {
         }, {
             markdown: `
             This benchmark tests the performance of serializing 10.000 JavaScript objects to BSON.
+        `
+        });
+
+        this.createGraph('rpc', 'RPC', {
+            'rpc/grpc/grpc-js': { label: 'gRPC', entry: 'action' },
+            'rpc/rpc-tcp-server': { label: 'deepkit/rpc', entry: 'action' },
+        }, {
+            markdown: `
+            This benchmark tests the performance of Deepkit RPC, executing a simple hello world procedure in sequence as often as possible.
+            No parallelism is used. Everything (server and client) run in the same process and communicate via TCP.
         `
         });
 

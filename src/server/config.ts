@@ -2,7 +2,7 @@ export class AppConfig {
     environment: 'prod' | 'dev' = 'dev';
 
     databaseHost: string = 'localhost';
-    databasePort: number = 5432;
+    databasePort: number = 5433;
     databaseName: string = 'deepkit-website';
     databaseUser: string = 'postgres';
     databasePassword: string = '';

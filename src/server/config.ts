@@ -3,9 +3,11 @@ export class AppConfig {
 
     databaseHost: string = 'localhost';
     databasePort: number = 5432;
-    databaseName: string = 'postgres';
+    databaseName: string = 'deepkit-website';
     databaseUser: string = 'postgres';
     databasePassword: string = '';
+
+    benchmarkSecret: string = 'notSet';
 
     algoliaAppId: string = 'K2EE7TWRCB';
     algoliaApiKey: string = '';

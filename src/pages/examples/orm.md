@@ -4,7 +4,6 @@ title: User Entity with Password Hashing
 import {entity, AutoIncrement, PrimaryKey, cast} from "@deepkit/type";
 import {Database} from '@deepkit/orm';
 import * as bcrypt from 'bcrypt';
-import Union from "ajv/lib/vocabularies/jtd/union";
 
 @entity.collection('users')
 class User {

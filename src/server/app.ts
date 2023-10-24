@@ -19,6 +19,7 @@ import { Url } from "@app/server/url";
 import { MarkdownParser } from "@app/common/markdown";
 import { migrate } from "@app/server/commands/migrate";
 import { importExamples, importQuestions } from "@app/server/commands/import";
+import { BenchmarkController, BenchmarkHttpController } from "@app/server/controller/benchmark.controller";
 
 (global as any).window = undefined;
 (global as any).document = undefined;
@@ -28,6 +29,8 @@ new App({
     controllers: [
         MainController,
         WebController,
+        BenchmarkController,
+        BenchmarkHttpController,
     ],
     listeners: [
         AngularListener,

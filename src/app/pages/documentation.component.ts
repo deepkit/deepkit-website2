@@ -105,7 +105,7 @@ import { PlatformHelper } from "@app/app/utils";
                     <a routerLinkActive="active" routerLink="/documentation/filesystem/google-storage">Google Storage</a>
                 </div>
 
-                <div class="category" *ngIf="false">
+                <div class="category">
                     <div class="category-title">Broker</div>
                     <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/documentation/broker">Getting started</a>
                     <a routerLinkActive="active" routerLink="/documentation/broker/examples">Examples</a>

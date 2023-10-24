@@ -12,7 +12,7 @@ app.run();
 ```
 
 ```bash
-ts-node app.ts hello
+./node_modules/.bin/ts-node app.ts hello
 ```
 
 ##-------------------------------------------------##

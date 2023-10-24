@@ -9,9 +9,6 @@ export class AppConfig {
 
     benchmarkSecret: string = 'notSet';
 
-    algoliaAppId: string = 'K2EE7TWRCB';
-    algoliaApiKey: string = '';
-
     openaiApiKey: string = '';
 
     //see https://platform.openai.com/account/rate-limits

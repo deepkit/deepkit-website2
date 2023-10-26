@@ -7,7 +7,7 @@ Requires node v20.
 ```sh
 npm ci
 
-# fronten watcher
+# frontend watcher
 npm run app:start
 
 # server watcher

@@ -4,7 +4,7 @@
 
 Requires node v20.
 
-```sj
+```sh
 npm ci
 
 # fronten watcher

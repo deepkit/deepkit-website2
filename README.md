@@ -7,10 +7,10 @@ Requires node v20.
 ```sj
 npm ci
 
-# one terminal
+# fronten watcher
 npm run app:start
 
-# another temrinal
+# server watcher
 npm run server:watch 
 ```
 
